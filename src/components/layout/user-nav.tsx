@@ -12,46 +12,27 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
-import type { User } from "@/lib/types";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
 
 export function UserNav() {
-  const router = useRouter();
-  const [user, setUser] = useState<User | null>(null);
-
-  useEffect(() => {
-    const userData = localStorage.getItem("user");
-    if (userData) {
-      setUser(JSON.parse(userData));
-    }
-  }, []);
-
-  const handleLogout = () => {
-    localStorage.removeItem("user");
-    router.push("/login");
-  };
-
-  const avatar = PlaceHolderImages.find(p => p.id === (user?.avatar || '1'));
-  const fallback = user?.name?.substring(0, 2).toUpperCase() || 'AD';
+  const adminAvatar = PlaceHolderImages.find(p => p.id === "1");
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="relative h-8 w-8 rounded-full">
           <Avatar className="h-9 w-9">
-             <AvatarImage src={avatar?.imageUrl} alt={user?.name || "avatar"} data-ai-hint={avatar?.imageHint}/>
-            <AvatarFallback>{fallback}</AvatarFallback>
+             <AvatarImage src={adminAvatar?.imageUrl} alt="@shadcn" data-ai-hint={adminAvatar?.imageHint}/>
+            <AvatarFallback>AD</AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none">{user?.name || "User"}</p>
+            <p className="text-sm font-medium leading-none">Admin User</p>
             <p className="text-xs leading-none text-muted-foreground">
-              {user?.email || "user@example.com"}
+              admin@example.com
             </p>
           </div>
         </DropdownMenuLabel>
@@ -62,8 +43,8 @@ export function UserNav() {
           <DropdownMenuItem>Settings</DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={handleLogout}>
-          Log out
+        <DropdownMenuItem asChild>
+          <Link href="/login">Log out</Link>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
