@@ -1,6 +1,7 @@
 "use client";
 
-import { useFormState, useFormStatus } from "react-dom";
+import { useActionState } from "react";
+import { useFormStatus } from "react-dom";
 import { generateReportAction, type ReportState } from "./actions";
 import { Button } from "@/components/ui/button";
 import {
@@ -26,7 +27,7 @@ function SubmitButton() {
 
 export default function ReportsPage() {
   const initialState: ReportState = {};
-  const [state, formAction] = useFormState(generateReportAction, initialState);
+  const [state, formAction] = useActionState(generateReportAction, initialState);
 
   const today = new Date().toISOString().split("T")[0];
 
