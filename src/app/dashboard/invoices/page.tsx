@@ -1,3 +1,6 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -22,10 +25,33 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { MoreHorizontal, PlusCircle } from "lucide-react";
-import { invoices } from "@/lib/data";
+import { invoices as initialInvoices } from "@/lib/data";
 import { Badge } from "@/components/ui/badge";
+import type { Invoice, UserRole } from "@/lib/types";
 
 export default function InvoicesPage() {
+  const [invoices, setInvoices] = useState<Invoice[]>(initialInvoices);
+  const [userRole, setUserRole] = useState<UserRole | null>(null);
+  const [userName, setUserName] = useState<string | null>(null);
+
+  useEffect(() => {
+    const role = localStorage.getItem("userRole") as UserRole;
+    const name = localStorage.getItem("userName");
+    setUserRole(role || "Customer");
+    setUserName(name || "Customer User");
+  }, []);
+
+  const canManageInvoices = userRole === "Admin" || userRole === "Staff";
+
+  const filteredInvoices =
+    userRole === "Customer"
+      ? invoices.filter((invoice) => invoice.customerName === userName)
+      : invoices;
+  
+  if (userRole === null) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className="flex flex-col gap-8">
       <div className="flex items-center justify-between">
@@ -35,15 +61,17 @@ export default function InvoicesPage() {
           </h1>
           <p className="text-muted-foreground">Manage and track invoices.</p>
         </div>
-        <Button>
-          <PlusCircle className="mr-2 h-4 w-4" /> Create Invoice
-        </Button>
+        {canManageInvoices && (
+          <Button>
+            <PlusCircle className="mr-2 h-4 w-4" /> Create Invoice
+          </Button>
+        )}
       </div>
       <Card>
         <CardHeader>
           <CardTitle>Invoice List</CardTitle>
           <CardDescription>
-            A list of all generated invoices.
+            A list of all {canManageInvoices ? "" : "your"} generated invoices.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -51,7 +79,7 @@ export default function InvoicesPage() {
             <TableHeader>
               <TableRow>
                 <TableHead>Invoice ID</TableHead>
-                <TableHead>Customer</TableHead>
+                {canManageInvoices && <TableHead>Customer</TableHead>}
                 <TableHead>Status</TableHead>
                 <TableHead>Issue Date</TableHead>
                 <TableHead>Due Date</TableHead>
@@ -62,17 +90,27 @@ export default function InvoicesPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {invoices.map((invoice) => (
+              {filteredInvoices.map((invoice) => (
                 <TableRow key={invoice.id}>
                   <TableCell className="font-medium">{invoice.id}</TableCell>
-                  <TableCell>{invoice.customerName}</TableCell>
+                  {canManageInvoices && <TableCell>{invoice.customerName}</TableCell>}
                   <TableCell>
-                    <Badge variant={invoice.status === 'Paid' ? 'default' : invoice.status === 'Unpaid' ? 'secondary' : 'destructive'} 
-                           className={
-                             invoice.status === 'Paid' ? 'bg-green-500/20 text-green-700 hover:bg-green-500/30' : 
-                             invoice.status === 'Unpaid' ? 'bg-yellow-500/20 text-yellow-700 hover:bg-yellow-500/30' : 
-                             'bg-red-500/20 text-red-700 hover:bg-red-500/30'
-                           }>
+                    <Badge
+                      variant={
+                        invoice.status === "Paid"
+                          ? "default"
+                          : invoice.status === "Unpaid"
+                          ? "secondary"
+                          : "destructive"
+                      }
+                      className={
+                        invoice.status === "Paid"
+                          ? "bg-green-500/20 text-green-700 hover:bg-green-500/30"
+                          : invoice.status === "Unpaid"
+                          ? "bg-yellow-500/20 text-yellow-700 hover:bg-yellow-500/30"
+                          : "bg-red-500/20 text-red-700 hover:bg-red-500/30"
+                      }
+                    >
                       {invoice.status}
                     </Badge>
                   </TableCell>
@@ -86,20 +124,30 @@ export default function InvoicesPage() {
                     ${invoice.amount.toFixed(2)}
                   </TableCell>
                   <TableCell>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button aria-haspopup="true" size="icon" variant="ghost">
-                          <MoreHorizontal className="h-4 w-4" />
-                          <span className="sr-only">Toggle menu</span>
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                        <DropdownMenuItem>View Invoice</DropdownMenuItem>
-                        <DropdownMenuItem>Mark as Paid</DropdownMenuItem>
-                        <DropdownMenuItem>Send Reminder</DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
+                    <div className="flex justify-end">
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button
+                            aria-haspopup="true"
+                            size="icon"
+                            variant="ghost"
+                          >
+                            <MoreHorizontal className="h-4 w-4" />
+                            <span className="sr-only">Toggle menu</span>
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                          <DropdownMenuItem>View Invoice</DropdownMenuItem>
+                          {canManageInvoices && (
+                            <>
+                              <DropdownMenuItem>Mark as Paid</DropdownMenuItem>
+                              <DropdownMenuItem>Send Reminder</DropdownMenuItem>
+                            </>
+                          )}
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </div>
                   </TableCell>
                 </TableRow>
               ))}
