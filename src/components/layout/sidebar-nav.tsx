@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  Sidebar,
   SidebarContent,
   SidebarHeader,
   SidebarMenu,
@@ -49,7 +48,7 @@ export function SidebarNav() {
         <SidebarMenu>
           {links.map((link) => (
             <SidebarMenuItem key={link.href}>
-              <Link href={link.href} legacyBehavior passHref>
+              <Link href={link.href}>
                 <SidebarMenuButton
                   isActive={pathname === link.href}
                   tooltip={link.label}
@@ -65,7 +64,7 @@ export function SidebarNav() {
       <SidebarFooter>
         <SidebarMenu>
             <SidebarMenuItem>
-                <Link href="#" legacyBehavior passHref>
+                <Link href="#">
                     <SidebarMenuButton tooltip="Settings">
                         <Settings/>
                         <span>Settings</span>
@@ -73,7 +72,7 @@ export function SidebarNav() {
                 </Link>
             </SidebarMenuItem>
             <SidebarMenuItem>
-                <Link href="/login" legacyBehavior passHref>
+                <Link href="/login">
                     <SidebarMenuButton tooltip="Logout">
                         <LogOut/>
                         <span>Logout</span>
