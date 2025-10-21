@@ -13,65 +13,28 @@ import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Building } from "lucide-react";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { useState } from "react";
-import type { UserRole } from "@/lib/types";
-import { users } from "@/lib/data";
 
 export default function LoginPage() {
   const router = useRouter();
-  const [role, setRole] = useState<UserRole>("Customer");
-  const [email, setEmail] = useState("customer@example.com");
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    const selectedUser = users.find(u => u.email === email && u.role === role);
-    const userName = selectedUser ? selectedUser.name : "Customer User";
-    
-    localStorage.setItem("userRole", role);
-    localStorage.setItem("userName", userName);
+    // In a real app, you'd handle authentication here.
+    // For this demo, we'll just redirect to the dashboard.
     router.push("/dashboard");
   };
-
-  const handleRoleChange = (value: UserRole) => {
-    setRole(value);
-    const userForRole = users.find(user => user.role === value);
-    if (userForRole) {
-      setEmail(userForRole.email);
-    }
-  }
 
   return (
     <Card className="mx-auto max-w-sm">
       <CardHeader className="space-y-1 text-center">
         <div className="flex justify-center items-center gap-2">
-          <Building className="h-8 w-8 text-primary" />
-          <CardTitle className="text-3xl font-headline">SalesHostel Digital</CardTitle>
+            <Building className="h-8 w-8 text-primary" />
+            <CardTitle className="text-3xl font-headline">SalesHostel Digital</CardTitle>
         </div>
-        <CardDescription>Enter your credentials below to login</CardDescription>
+        <CardDescription>Enter your email below to login to your account</CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleLogin} className="grid gap-4">
-           <div className="grid gap-2">
-            <Label htmlFor="role">Login as</Label>
-            <Select onValueChange={handleRoleChange} defaultValue="Customer">
-              <SelectTrigger id="role">
-                <SelectValue placeholder="Select a role" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="Admin">Admin</SelectItem>
-                <SelectItem value="Staff">Staff</SelectItem>
-                <SelectItem value="Supplier">Supplier</SelectItem>
-                <SelectItem value="Customer">Customer</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
           <div className="grid gap-2">
             <Label htmlFor="email">Email</Label>
             <Input
@@ -79,8 +42,7 @@ export default function LoginPage() {
               type="email"
               placeholder="m@example.com"
               required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              defaultValue="admin@example.com"
             />
           </div>
           <div className="grid gap-2">
