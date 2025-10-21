@@ -20,12 +20,21 @@ import {
 import { Building } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { UserRole } from "@/lib/types";
 
 export default function SignupPage() {
   const router = useRouter();
+  const [role, setRole] = useState<UserRole>("Customer");
 
   const handleSignup = (e: React.FormEvent) => {
     e.preventDefault();
+    const form = e.target as HTMLFormElement;
+    const name = (form.elements.namedItem("full-name") as HTMLInputElement).value;
+    const email = (form.elements.namedItem("email") as HTMLInputElement).value;
+    
+    const mockUser = { name, email, role };
+    localStorage.setItem("user", JSON.stringify(mockUser));
     router.push("/dashboard");
   };
 
@@ -59,15 +68,15 @@ export default function SignupPage() {
           </div>
           <div className="grid gap-2">
             <Label htmlFor="role">Role</Label>
-            <Select required>
+            <Select required onValueChange={(value) => setRole(value as UserRole)} defaultValue={role}>
               <SelectTrigger id="role">
                 <SelectValue placeholder="Select your role" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="customer">Customer</SelectItem>
-                <SelectItem value="staff">Staff</SelectItem>
-                <SelectItem value="supplier">Supplier</SelectItem>
-                <SelectItem value="admin">Admin</SelectItem>
+                <SelectItem value="Customer">Customer</SelectItem>
+                <SelectItem value="Staff">Staff</SelectItem>
+                <SelectItem value="Supplier">Supplier</SelectItem>
+                <SelectItem value="Admin">Admin</SelectItem>
               </SelectContent>
             </Select>
           </div>

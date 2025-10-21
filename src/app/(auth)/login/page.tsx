@@ -13,14 +13,30 @@ import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Building } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useState } from "react";
+import { UserRole } from "@/lib/types";
 
 export default function LoginPage() {
   const router = useRouter();
+  const [role, setRole] = useState<UserRole>("Admin");
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     // In a real app, you'd handle authentication here.
-    // For this demo, we'll just redirect to the dashboard.
+    // For this demo, we'll store the role in localStorage.
+    const mockUser = {
+        name: `${role} User`,
+        email: `${role.toLowerCase()}@example.com`,
+        role: role
+    }
+    localStorage.setItem("user", JSON.stringify(mockUser));
     router.push("/dashboard");
   };
 
@@ -53,6 +69,20 @@ export default function LoginPage() {
               </Link>
             </div>
             <Input id="password" type="password" required defaultValue="password" />
+          </div>
+           <div className="grid gap-2">
+            <Label htmlFor="role">Login as</Label>
+            <Select onValueChange={(value) => setRole(value as UserRole)} defaultValue={role}>
+              <SelectTrigger id="role">
+                <SelectValue placeholder="Select a role" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="Admin">Admin</SelectItem>
+                <SelectItem value="Staff">Staff</SelectItem>
+                <SelectItem value="Supplier">Supplier</SelectItem>
+                <SelectItem value="Customer">Customer</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
           <Button type="submit" className="w-full">
             Login

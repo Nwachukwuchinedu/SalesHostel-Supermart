@@ -20,19 +20,37 @@ import {
   Settings,
 } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import type { UserRole, User } from "@/lib/types";
 
-const links = [
-  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/dashboard/products", label: "Products", icon: Box },
-  { href: "/dashboard/supplies", label: "Supplies", icon: Truck },
-  { href: "/dashboard/purchases", label: "Purchases", icon: ShoppingCart },
-  { href: "/dashboard/invoices", label: "Invoices", icon: FileText },
-  { href: "/dashboard/reports", label: "Reports", icon: BarChart },
+const allLinks = [
+  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard, roles: ["Admin", "Staff"] },
+  { href: "/dashboard/products", label: "Products", icon: Box, roles: ["Admin", "Staff", "Customer"] },
+  { href: "/dashboard/supplies", label: "Supplies", icon: Truck, roles: ["Admin", "Supplier"] },
+  { href: "/dashboard/purchases", label: "Purchases", icon: ShoppingCart, roles: ["Admin", "Staff", "Customer"] },
+  { href: "/dashboard/invoices", label: "Invoices", icon: FileText, roles: ["Admin", "Staff", "Customer"] },
+  { href: "/dashboard/reports", label: "Reports", icon: BarChart, roles: ["Admin"] },
 ];
 
 export function SidebarNav() {
   const pathname = usePathname();
+  const router = useRouter();
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const userData = localStorage.getItem("user");
+    if (userData) {
+      setUser(JSON.parse(userData));
+    }
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    router.push("/login");
+  };
+
+  const availableLinks = allLinks.filter(link => user?.role && link.roles.includes(user.role));
 
   return (
     <>
@@ -46,7 +64,7 @@ export function SidebarNav() {
       </SidebarHeader>
       <SidebarContent>
         <SidebarMenu>
-          {links.map((link) => (
+          {availableLinks.map((link) => (
             <SidebarMenuItem key={link.href}>
               <Link href={link.href}>
                 <SidebarMenuButton
@@ -72,12 +90,10 @@ export function SidebarNav() {
                 </Link>
             </SidebarMenuItem>
             <SidebarMenuItem>
-                <Link href="/login">
-                    <SidebarMenuButton tooltip="Logout">
-                        <LogOut/>
-                        <span>Logout</span>
-                    </SidebarMenuButton>
-                </Link>
+                <SidebarMenuButton tooltip="Logout" onClick={handleLogout}>
+                    <LogOut/>
+                    <span>Logout</span>
+                </SidebarMenuButton>
             </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>
