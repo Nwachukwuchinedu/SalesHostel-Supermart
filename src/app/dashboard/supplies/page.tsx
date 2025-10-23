@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -21,10 +24,37 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { MoreHorizontal, PlusCircle } from "lucide-react";
-import { supplies } from "@/lib/data";
+import { supplies as initialSupplies } from "@/lib/data";
+import type { Supply } from "@/lib/types";
+import { SupplyForm } from "./supply-form";
 
 export default function SuppliesPage() {
+  const [supplies, setSupplies] = useState<Supply[]>(initialSupplies);
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [selectedSupply, setSelectedSupply] = useState<Supply | null>(null);
+
+  const handleAddSupply = () => {
+    setSelectedSupply(null);
+    setIsFormOpen(true);
+  };
+
+  const handleFormSubmit = (values: Omit<Supply, 'id' | 'uniqueName'>) => {
+    const newSupply: Supply = {
+        id: `SUP${Date.now()}`,
+        uniqueName: values.productName.toLowerCase().replace(/\s+/g, "-"),
+        ...values
+    }
+    setSupplies([...supplies, newSupply]);
+    setIsFormOpen(false);
+  };
+
   return (
     <div className="flex flex-col gap-8">
       <div className="flex items-center justify-between">
@@ -34,7 +64,7 @@ export default function SuppliesPage() {
           </h1>
           <p className="text-muted-foreground">Track incoming product supplies.</p>
         </div>
-        <Button>
+        <Button onClick={handleAddSupply}>
           <PlusCircle className="mr-2 h-4 w-4" /> Add Supply
         </Button>
       </div>
@@ -70,19 +100,21 @@ export default function SuppliesPage() {
                     {supply.quantity} {supply.quantityType}
                   </TableCell>
                   <TableCell>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button aria-haspopup="true" size="icon" variant="ghost">
-                          <MoreHorizontal className="h-4 w-4" />
-                          <span className="sr-only">Toggle menu</span>
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                        <DropdownMenuItem>Edit</DropdownMenuItem>
-                        <DropdownMenuItem>Delete</DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
+                    <div className="flex justify-end">
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button aria-haspopup="true" size="icon" variant="ghost">
+                            <MoreHorizontal className="h-4 w-4" />
+                            <span className="sr-only">Toggle menu</span>
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                          <DropdownMenuItem>Edit</DropdownMenuItem>
+                          <DropdownMenuItem>Delete</DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </div>
                   </TableCell>
                 </TableRow>
               ))}
@@ -90,6 +122,20 @@ export default function SuppliesPage() {
           </Table>
         </CardContent>
       </Card>
+
+      <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>
+              {selectedSupply ? "Edit Supply" : "Add New Supply"}
+            </DialogTitle>
+          </DialogHeader>
+          <SupplyForm
+            onSubmit={handleFormSubmit}
+            onCancel={() => setIsFormOpen(false)}
+          />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
