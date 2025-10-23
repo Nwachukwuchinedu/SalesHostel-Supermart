@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -21,11 +24,27 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { MoreHorizontal, PlusCircle } from "lucide-react";
-import { purchases } from "@/lib/data";
+import { purchases as initialPurchases } from "@/lib/data";
 import { Badge } from "@/components/ui/badge";
+import type { Purchase } from "@/lib/types";
+import { PurchaseForm } from "./purchase-form";
 
 export default function PurchasesPage() {
+  const [purchases, setPurchases] = useState<Purchase[]>(initialPurchases);
+  const [isFormOpen, setIsFormOpen] = useState(false);
+
+  const handleFormSubmit = (newPurchase: Purchase) => {
+    setPurchases([newPurchase, ...purchases]);
+    setIsFormOpen(false);
+  };
+
   return (
     <div className="flex flex-col gap-8">
       <div className="flex items-center justify-between">
@@ -33,9 +52,11 @@ export default function PurchasesPage() {
           <h1 className="text-3xl font-headline font-bold tracking-tight">
             Purchases
           </h1>
-          <p className="text-muted-foreground">Manage customer purchases and orders.</p>
+          <p className="text-muted-foreground">
+            Manage customer purchases and orders.
+          </p>
         </div>
-        <Button>
+        <Button onClick={() => setIsFormOpen(true)}>
           <PlusCircle className="mr-2 h-4 w-4" /> New Purchase
         </Button>
       </div>
@@ -66,7 +87,18 @@ export default function PurchasesPage() {
                     {purchase.customerName}
                   </TableCell>
                   <TableCell>
-                    <Badge variant={purchase.paymentStatus === 'Paid' ? 'default' : 'secondary'} className={purchase.paymentStatus === 'Paid' ? 'bg-green-500/20 text-green-700 hover:bg-green-500/30' : 'bg-yellow-500/20 text-yellow-700 hover:bg-yellow-500/30'}>
+                    <Badge
+                      variant={
+                        purchase.paymentStatus === "Paid"
+                          ? "default"
+                          : "secondary"
+                      }
+                      className={
+                        purchase.paymentStatus === "Paid"
+                          ? "bg-green-500/20 text-green-700 hover:bg-green-500/30"
+                          : "bg-yellow-500/20 text-yellow-700 hover:bg-yellow-500/30"
+                      }
+                    >
                       {purchase.paymentStatus}
                     </Badge>
                   </TableCell>
@@ -77,20 +109,26 @@ export default function PurchasesPage() {
                     ${purchase.total.toFixed(2)}
                   </TableCell>
                   <TableCell>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button aria-haspopup="true" size="icon" variant="ghost">
-                          <MoreHorizontal className="h-4 w-4" />
-                          <span className="sr-only">Toggle menu</span>
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                        <DropdownMenuItem>View Details</DropdownMenuItem>
-                        <DropdownMenuItem>View Receipt</DropdownMenuItem>
-                        <DropdownMenuItem>Mark as Paid</DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
+                    <div className="flex justify-end">
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button
+                            aria-haspopup="true"
+                            size="icon"
+                            variant="ghost"
+                          >
+                            <MoreHorizontal className="h-4 w-4" />
+                            <span className="sr-only">Toggle menu</span>
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                          <DropdownMenuItem>View Details</DropdownMenuItem>
+                          <DropdownMenuItem>View Receipt</DropdownMenuItem>
+                          <DropdownMenuItem>Mark as Paid</DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </div>
                   </TableCell>
                 </TableRow>
               ))}
@@ -98,6 +136,18 @@ export default function PurchasesPage() {
           </Table>
         </CardContent>
       </Card>
+
+      <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
+        <DialogContent className="sm:max-w-3xl">
+          <DialogHeader>
+            <DialogTitle>Create New Purchase</DialogTitle>
+          </DialogHeader>
+          <PurchaseForm
+            onSubmit={handleFormSubmit}
+            onCancel={() => setIsFormOpen(false)}
+          />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
