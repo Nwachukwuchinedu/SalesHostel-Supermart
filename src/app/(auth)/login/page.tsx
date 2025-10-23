@@ -13,14 +13,32 @@ import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Building } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import type { UserRole } from "@/lib/types";
+import { users } from "@/lib/data";
 
 export default function LoginPage() {
   const router = useRouter();
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // In a real app, you'd handle authentication here.
-    // For this demo, we'll just redirect to the dashboard.
+    const formData = new FormData(e.currentTarget);
+    const role = formData.get("role") as UserRole;
+    const selectedUser = users.find(u => u.role === role);
+
+    if (selectedUser) {
+        localStorage.setItem("userRole", selectedUser.role);
+        localStorage.setItem("userName", selectedUser.name);
+        localStorage.setItem("userAvatar", selectedUser.avatar);
+        localStorage.setItem("userEmail", selectedUser.email);
+    }
+    
     router.push("/dashboard");
   };
 
@@ -31,28 +49,23 @@ export default function LoginPage() {
             <Building className="h-8 w-8 text-primary" />
             <CardTitle className="text-3xl font-headline">SalesHostel Digital</CardTitle>
         </div>
-        <CardDescription>Enter your email below to login to your account</CardDescription>
+        <CardDescription>Select a role to login to your account</CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleLogin} className="grid gap-4">
           <div className="grid gap-2">
-            <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              type="email"
-              placeholder="m@example.com"
-              required
-              defaultValue="admin@example.com"
-            />
-          </div>
-          <div className="grid gap-2">
-            <div className="flex items-center">
-              <Label htmlFor="password">Password</Label>
-              <Link href="#" className="ml-auto inline-block text-sm underline">
-                Forgot your password?
-              </Link>
-            </div>
-            <Input id="password" type="password" required defaultValue="password" />
+            <Label htmlFor="role">Role</Label>
+            <Select name="role" defaultValue="Admin" required>
+              <SelectTrigger id="role">
+                <SelectValue placeholder="Select a role" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="Admin">Admin</SelectItem>
+                <SelectItem value="Staff">Staff</SelectItem>
+                <SelectItem value="Supplier">Supplier</SelectItem>
+                <SelectItem value="Customer">Customer</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
           <Button type="submit" className="w-full">
             Login

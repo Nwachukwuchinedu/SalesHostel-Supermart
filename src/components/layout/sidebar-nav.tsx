@@ -21,18 +21,32 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
+import type { UserRole } from "@/lib/types";
 
-const links = [
-  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/dashboard/products", label: "Products", icon: Box },
-  { href: "/dashboard/supplies", label: "Supplies", icon: Truck },
-  { href: "/dashboard/purchases", label: "Purchases", icon: ShoppingCart },
-  { href: "/dashboard/invoices", label: "Invoices", icon: FileText },
-  { href: "/dashboard/reports", label: "Reports", icon: BarChart },
+const allLinks = [
+  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard, roles: ["Admin", "Staff", "Supplier", "Customer"] },
+  { href: "/dashboard/products", label: "Products", icon: Box, roles: ["Admin", "Staff", "Supplier"] },
+  { href: "/dashboard/supplies", label: "Supplies", icon: Truck, roles: ["Admin", "Supplier"] },
+  { href: "/dashboard/purchases", label: "Purchases", icon: ShoppingCart, roles: ["Admin", "Staff"] },
+  { href: "/dashboard/invoices", label: "Invoices", icon: FileText, roles: ["Admin", "Staff", "Customer"] },
+  { href: "/dashboard/reports", label: "Reports", icon: BarChart, roles: ["Admin"] },
 ];
 
 export function SidebarNav() {
   const pathname = usePathname();
+  const [userRole, setUserRole] = useState<UserRole | null>(null);
+
+  useEffect(() => {
+    const role = localStorage.getItem("userRole") as UserRole;
+    setUserRole(role || "Customer");
+  }, []);
+
+  const links = allLinks.filter(link => userRole && link.roles.includes(userRole));
+  
+  if (!userRole) {
+    return null; // or a loading state
+  }
 
   return (
     <>
