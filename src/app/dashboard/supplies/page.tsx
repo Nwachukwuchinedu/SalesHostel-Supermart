@@ -25,6 +25,16 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+  } from "@/components/ui/alert-dialog"
+import {
   Dialog,
   DialogContent,
   DialogHeader,
@@ -39,20 +49,47 @@ export default function SuppliesPage() {
   const [supplies, setSupplies] = useState<Supply[]>(initialSupplies);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [selectedSupply, setSelectedSupply] = useState<Supply | null>(null);
+  const [isAlertOpen, setIsAlertOpen] = useState(false);
+  const [supplyToDelete, setSupplyToDelete] = useState<string | null>(null);
 
   const handleAddSupply = () => {
     setSelectedSupply(null);
     setIsFormOpen(true);
   };
+  
+  const handleEditSupply = (supply: Supply) => {
+    setSelectedSupply(supply);
+    setIsFormOpen(true);
+  };
+
+  const handleDeleteClick = (supplyId: string) => {
+    setSupplyToDelete(supplyId);
+    setIsAlertOpen(true);
+  }
+
+  const handleDeleteConfirm = () => {
+    if (supplyToDelete) {
+        setSupplies(supplies.filter((s) => s.id !== supplyToDelete));
+    }
+    setIsAlertOpen(false);
+    setSupplyToDelete(null);
+  }
 
   const handleFormSubmit = (values: Omit<Supply, 'id' | 'uniqueName'>) => {
-    const newSupply: Supply = {
-        id: `SUP${Date.now()}`,
-        uniqueName: values.productName.toLowerCase().replace(/\s+/g, "-"),
-        ...values
+    if(selectedSupply) {
+        // Update existing supply
+        setSupplies(supplies.map(s => s.id === selectedSupply.id ? { ...selectedSupply, ...values } : s))
+    } else {
+        // Add new supply
+        const newSupply: Supply = {
+            id: `SUP${Date.now()}`,
+            uniqueName: values.productName.toLowerCase().replace(/\s+/g, "-"),
+            ...values
+        }
+        setSupplies([...supplies, newSupply]);
     }
-    setSupplies([...supplies, newSupply]);
     setIsFormOpen(false);
+    setSelectedSupply(null);
   };
 
   return (
@@ -110,8 +147,8 @@ export default function SuppliesPage() {
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                          <DropdownMenuItem>Edit</DropdownMenuItem>
-                          <DropdownMenuItem>Delete</DropdownMenuItem>
+                          <DropdownMenuItem onSelect={() => handleEditSupply(supply)}>Edit</DropdownMenuItem>
+                          <DropdownMenuItem onSelect={() => handleDeleteClick(supply.id)}>Delete</DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
                     </div>
@@ -131,11 +168,26 @@ export default function SuppliesPage() {
             </DialogTitle>
           </DialogHeader>
           <SupplyForm
+            initialData={selectedSupply}
             onSubmit={handleFormSubmit}
             onCancel={() => setIsFormOpen(false)}
           />
         </DialogContent>
       </Dialog>
+      <AlertDialog open={isAlertOpen} onOpenChange={setIsAlertOpen}>
+        <AlertDialogContent>
+            <AlertDialogHeader>
+                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                <AlertDialogDescription>
+                    This action cannot be undone. This will permanently delete this supply record.
+                </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction onClick={handleDeleteConfirm}>Continue</AlertDialogAction>
+            </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

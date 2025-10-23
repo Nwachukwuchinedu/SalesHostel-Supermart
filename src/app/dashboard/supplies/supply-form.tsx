@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/select";
 import type { Supply } from "@/lib/types";
 import { products } from "@/lib/data";
+import { useEffect } from "react";
 
 const formSchema = z.object({
   productName: z.string().min(1, "Please select a product."),
@@ -34,7 +35,7 @@ const formSchema = z.object({
 type SupplyFormValues = z.infer<typeof formSchema>;
 
 interface SupplyFormProps {
-  initialData?: Partial<Supply> | null;
+  initialData?: Supply | null;
   onSubmit: (values: SupplyFormValues) => void;
   onCancel: () => void;
 }
@@ -49,11 +50,7 @@ export function SupplyForm({
     defaultValues: initialData
       ? {
           ...initialData,
-          date: initialData.date ? initialData.date.split('T')[0] : new Date().toISOString().split('T')[0],
-          productName: initialData.productName || "",
-          supplier: initialData.supplier || "",
-          quantity: initialData.quantity || 0,
-          quantityType: initialData.quantityType || "pcs",
+          date: new Date(initialData.date).toISOString().split('T')[0],
         }
       : {
           productName: "",
@@ -63,6 +60,23 @@ export function SupplyForm({
           date: new Date().toISOString().split('T')[0],
         },
   });
+
+  useEffect(() => {
+    if (initialData) {
+        form.reset({
+            ...initialData,
+            date: new Date(initialData.date).toISOString().split('T')[0],
+        });
+    } else {
+        form.reset({
+            productName: "",
+            supplier: "",
+            quantity: 0,
+            quantityType: "pcs",
+            date: new Date().toISOString().split('T')[0],
+        })
+    }
+  }, [initialData, form]);
 
   const handleSubmit = (values: SupplyFormValues) => {
     onSubmit(values);
@@ -77,7 +91,7 @@ export function SupplyForm({
           render={({ field }) => (
             <FormItem>
               <FormLabel>Product</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <Select onValueChange={field.onChange} defaultValue={field.value} value={field.value}>
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue placeholder="Select a product" />
@@ -131,6 +145,7 @@ export function SupplyForm({
                 <Select
                   onValueChange={field.onChange}
                   defaultValue={field.value}
+                  value={field.value}
                 >
                   <FormControl>
                     <SelectTrigger>
