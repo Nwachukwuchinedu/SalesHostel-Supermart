@@ -206,7 +206,7 @@ export default function ProductsPage() {
       </Card>
 
       <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
-        <DialogContent className="sm:max-w-2xl">
+        <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>
               {selectedProduct ? "Edit Product" : "Add New Product"}
