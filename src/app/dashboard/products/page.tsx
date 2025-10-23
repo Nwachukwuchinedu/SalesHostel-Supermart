@@ -23,7 +23,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { MoreHorizontal, PlusCircle } from "lucide-react";
 import { products } from "@/lib/data";
-import { Badge } from "@/components/ui/badge";
 
 export default function ProductsPage() {
   return (
@@ -52,7 +51,6 @@ export default function ProductsPage() {
               <TableRow>
                 <TableHead>Name</TableHead>
                 <TableHead>Group</TableHead>
-                <TableHead>Tags</TableHead>
                 <TableHead className="text-right">Price</TableHead>
                 <TableHead>
                   <span className="sr-only">Actions</span>
@@ -64,15 +62,6 @@ export default function ProductsPage() {
                 <TableRow key={product.id}>
                   <TableCell className="font-medium">{product.name}</TableCell>
                   <TableCell>{product.group}</TableCell>
-                  <TableCell>
-                    <div className="flex gap-1">
-                      {product.tags.map((tag) => (
-                        <Badge key={tag} variant="secondary">
-                          {tag}
-                        </Badge>
-                      ))}
-                    </div>
-                  </TableCell>
                   <TableCell className="text-right">
                     ${product.price.toFixed(2)}
                   </TableCell>
