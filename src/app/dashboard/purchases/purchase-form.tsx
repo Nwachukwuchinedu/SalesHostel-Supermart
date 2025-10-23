@@ -25,6 +25,7 @@ import { products } from "@/lib/data";
 import type { Purchase } from "@/lib/types";
 import { PlusCircle, Trash2 } from "lucide-react";
 import { useEffect } from "react";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const productSchema = z.object({
   productId: z.string().min(1, "Please select a product."),
@@ -146,57 +147,59 @@ export function PurchaseForm({ onSubmit, onCancel }: PurchaseFormProps) {
 
         <div>
           <FormLabel>Products</FormLabel>
-          <div className="space-y-4 mt-2">
-            {fields.map((field, index) => (
-              <div key={field.id} className="flex items-end gap-4 p-4 border rounded-lg">
-                <Controller
-                  control={form.control}
-                  name={`products.${index}.productId`}
-                  render={({ field: controllerField }) => (
-                    <FormItem className="flex-1">
-                        {index === 0 && <FormLabel>Product</FormLabel>}
-                      <Select onValueChange={controllerField.onChange} defaultValue={controllerField.value}>
+          <ScrollArea className="h-56 rounded-md border mt-2">
+            <div className="p-4 space-y-4">
+                {fields.map((field, index) => (
+                <div key={field.id} className="flex items-end gap-4 p-4 border rounded-lg">
+                    <Controller
+                    control={form.control}
+                    name={`products.${index}.productId`}
+                    render={({ field: controllerField }) => (
+                        <FormItem className="flex-1">
+                            {index === 0 && <FormLabel>Product</FormLabel>}
+                        <Select onValueChange={controllerField.onChange} defaultValue={controllerField.value}>
+                            <FormControl>
+                            <SelectTrigger>
+                                <SelectValue placeholder="Select a product" />
+                            </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                            {products.map((product) => (
+                                <SelectItem key={product.id} value={product.id}>
+                                {product.name}
+                                </SelectItem>
+                            ))}
+                            </SelectContent>
+                        </Select>
+                        <FormMessage />
+                        </FormItem>
+                    )}
+                    />
+                    <Controller
+                    control={form.control}
+                    name={`products.${index}.quantity`}
+                    render={({ field: controllerField }) => (
+                        <FormItem>
+                        {index === 0 && <FormLabel>Quantity</FormLabel>}
                         <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select a product" />
-                          </SelectTrigger>
+                            <Input type="number" min="1" {...controllerField} />
                         </FormControl>
-                        <SelectContent>
-                          {products.map((product) => (
-                            <SelectItem key={product.id} value={product.id}>
-                              {product.name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <Controller
-                  control={form.control}
-                  name={`products.${index}.quantity`}
-                  render={({ field: controllerField }) => (
-                    <FormItem>
-                      {index === 0 && <FormLabel>Quantity</FormLabel>}
-                      <FormControl>
-                        <Input type="number" min="1" {...controllerField} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <Button type="button" variant="destructive" size="icon" onClick={() => remove(index)}>
-                  <Trash2 className="h-4 w-4" />
-                </Button>
-              </div>
-            ))}
-             {form.formState.errors.products && !form.formState.errors.products.root && (
-                <p className="text-sm font-medium text-destructive">
-                    {form.formState.errors.products.message}
-                </p>
-             )}
-          </div>
+                        <FormMessage />
+                        </FormItem>
+                    )}
+                    />
+                    <Button type="button" variant="destructive" size="icon" onClick={() => remove(index)}>
+                    <Trash2 className="h-4 w-4" />
+                    </Button>
+                </div>
+                ))}
+                {form.formState.errors.products && !form.formState.errors.products.root && (
+                    <p className="text-sm font-medium text-destructive">
+                        {form.formState.errors.products.message}
+                    </p>
+                )}
+            </div>
+          </ScrollArea>
           <Button
             type="button"
             variant="outline"
