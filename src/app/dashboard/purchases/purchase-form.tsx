@@ -1,3 +1,4 @@
+
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -94,7 +95,7 @@ export function PurchaseForm({ onSubmit, onCancel }: PurchaseFormProps) {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
+      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <FormField
             control={form.control}
@@ -147,10 +148,10 @@ export function PurchaseForm({ onSubmit, onCancel }: PurchaseFormProps) {
 
         <div>
           <FormLabel>Products</FormLabel>
-          <ScrollArea className="h-56 rounded-md border mt-2">
+          <ScrollArea className="h-40 rounded-md border mt-2">
             <div className="p-4 space-y-4">
                 {fields.map((field, index) => (
-                <div key={field.id} className="flex items-end gap-4 p-4 border rounded-lg">
+                <div key={field.id} className="flex items-end gap-2 p-2 border rounded-lg">
                     <Controller
                     control={form.control}
                     name={`products.${index}.productId`}
@@ -182,7 +183,7 @@ export function PurchaseForm({ onSubmit, onCancel }: PurchaseFormProps) {
                         <FormItem>
                         {index === 0 && <FormLabel>Quantity</FormLabel>}
                         <FormControl>
-                            <Input type="number" min="1" {...controllerField} />
+                            <Input type="number" min="1" className="w-20" {...controllerField} />
                         </FormControl>
                         <FormMessage />
                         </FormItem>
@@ -204,7 +205,7 @@ export function PurchaseForm({ onSubmit, onCancel }: PurchaseFormProps) {
             type="button"
             variant="outline"
             size="sm"
-            className="mt-4"
+            className="mt-2"
             onClick={() => append({ productId: "", quantity: 1 })}
           >
             <PlusCircle className="mr-2 h-4 w-4" />
