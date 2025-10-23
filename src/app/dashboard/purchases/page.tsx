@@ -68,72 +68,74 @@ export default function PurchasesPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Customer</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Date</TableHead>
-                <TableHead className="text-right">Total</TableHead>
-                <TableHead>
-                  <span className="sr-only">Actions</span>
-                </TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {purchases.map((purchase) => (
-                <TableRow key={purchase.id}>
-                  <TableCell className="font-medium">
-                    {purchase.customerName}
-                  </TableCell>
-                  <TableCell>
-                    <Badge
-                      variant={
-                        purchase.paymentStatus === "Paid"
-                          ? "default"
-                          : "secondary"
-                      }
-                      className={
-                        purchase.paymentStatus === "Paid"
-                          ? "bg-green-500/20 text-green-700 hover:bg-green-500/30"
-                          : "bg-yellow-500/20 text-yellow-700 hover:bg-yellow-500/30"
-                      }
-                    >
-                      {purchase.paymentStatus}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>
-                    {new Date(purchase.date).toLocaleDateString()}
-                  </TableCell>
-                  <TableCell className="text-right">
-                    ${purchase.total.toFixed(2)}
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex justify-end">
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button
-                            aria-haspopup="true"
-                            size="icon"
-                            variant="ghost"
-                          >
-                            <MoreHorizontal className="h-4 w-4" />
-                            <span className="sr-only">Toggle menu</span>
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                          <DropdownMenuItem>View Details</DropdownMenuItem>
-                          <DropdownMenuItem>View Receipt</DropdownMenuItem>
-                          <DropdownMenuItem>Mark as Paid</DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </div>
-                  </TableCell>
+          <div className="overflow-x-auto">
+            <Table>
+                <TableHeader>
+                <TableRow>
+                    <TableHead>Customer</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Date</TableHead>
+                    <TableHead className="text-right">Total</TableHead>
+                    <TableHead>
+                    <span className="sr-only">Actions</span>
+                    </TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+                </TableHeader>
+                <TableBody>
+                {purchases.map((purchase) => (
+                    <TableRow key={purchase.id}>
+                    <TableCell className="font-medium">
+                        {purchase.customerName}
+                    </TableCell>
+                    <TableCell>
+                        <Badge
+                        variant={
+                            purchase.paymentStatus === "Paid"
+                            ? "default"
+                            : "secondary"
+                        }
+                        className={
+                            purchase.paymentStatus === "Paid"
+                            ? "bg-green-500/20 text-green-700 hover:bg-green-500/30"
+                            : "bg-yellow-500/20 text-yellow-700 hover:bg-yellow-500/30"
+                        }
+                        >
+                        {purchase.paymentStatus}
+                        </Badge>
+                    </TableCell>
+                    <TableCell>
+                        {new Date(purchase.date).toLocaleDateString()}
+                    </TableCell>
+                    <TableCell className="text-right">
+                        ${purchase.total.toFixed(2)}
+                    </TableCell>
+                    <TableCell>
+                        <div className="flex justify-end">
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                            <Button
+                                aria-haspopup="true"
+                                size="icon"
+                                variant="ghost"
+                            >
+                                <MoreHorizontal className="h-4 w-4" />
+                                <span className="sr-only">Toggle menu</span>
+                            </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                            <DropdownMenuItem>View Details</DropdownMenuItem>
+                            <DropdownMenuItem>View Receipt</DropdownMenuItem>
+                            <DropdownMenuItem>Mark as Paid</DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                        </div>
+                    </TableCell>
+                    </TableRow>
+                ))}
+                </TableBody>
+            </Table>
+          </div>
         </CardContent>
       </Card>
 
