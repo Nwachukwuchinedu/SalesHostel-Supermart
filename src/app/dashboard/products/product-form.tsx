@@ -67,62 +67,66 @@ export function ProductForm({
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Product Name</FormLabel>
-              <FormControl>
-                <Input placeholder="e.g., Organic Apples" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="group"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Group</FormLabel>
-              <FormControl>
-                <Input placeholder="e.g., Fruits" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="price"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Price</FormLabel>
-              <FormControl>
-                <Input type="number" step="0.01" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="tags"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Tags</FormLabel>
-              <FormControl>
-                <Input placeholder="e.g., organic, fruit, fresh" {...field} />
-              </FormControl>
-              <FormDescription>
-                Comma-separated list of tags.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <FormField
+            control={form.control}
+            name="name"
+            render={({ field }) => (
+                <FormItem>
+                <FormLabel>Product Name</FormLabel>
+                <FormControl>
+                    <Input placeholder="e.g., Organic Apples" {...field} />
+                </FormControl>
+                <FormMessage />
+                </FormItem>
+            )}
+            />
+            <FormField
+            control={form.control}
+            name="group"
+            render={({ field }) => (
+                <FormItem>
+                <FormLabel>Group</FormLabel>
+                <FormControl>
+                    <Input placeholder="e.g., Fruits" {...field} />
+                </FormControl>
+                <FormMessage />
+                </FormItem>
+            )}
+            />
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <FormField
+            control={form.control}
+            name="price"
+            render={({ field }) => (
+                <FormItem>
+                <FormLabel>Price</FormLabel>
+                <FormControl>
+                    <Input type="number" step="0.01" {...field} />
+                </FormControl>
+                <FormMessage />
+                </FormItem>
+            )}
+            />
+            <FormField
+            control={form.control}
+            name="tags"
+            render={({ field }) => (
+                <FormItem>
+                <FormLabel>Tags</FormLabel>
+                <FormControl>
+                    <Input placeholder="e.g., organic, fruit, fresh" {...field} />
+                </FormControl>
+                <FormDescription className="hidden md:block">
+                    Comma-separated list of tags.
+                </FormDescription>
+                <FormMessage />
+                </FormItem>
+            )}
+            />
+        </div>
         <FormField
           control={form.control}
           name="description"
