@@ -76,7 +76,7 @@ export function SupplyForm({
             date: new Date().toISOString().split('T')[0],
         })
     }
-  }, [initialData, form]);
+  }, [initialData, form.reset]);
 
   const handleSubmit = (values: SupplyFormValues) => {
     onSubmit(values);
