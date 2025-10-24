@@ -75,86 +75,84 @@ export default function InvoicesPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="overflow-x-auto">
-            <Table>
-                <TableHeader>
-                <TableRow>
-                    <TableHead>Invoice ID</TableHead>
-                    {canManageInvoices && <TableHead>Customer</TableHead>}
-                    <TableHead>Status</TableHead>
-                    <TableHead>Issue Date</TableHead>
-                    <TableHead>Due Date</TableHead>
-                    <TableHead className="text-right">Amount</TableHead>
-                    <TableHead>
-                    <span className="sr-only">Actions</span>
-                    </TableHead>
-                </TableRow>
-                </TableHeader>
-                <TableBody>
-                {filteredInvoices.map((invoice) => (
-                    <TableRow key={invoice.id}>
-                    <TableCell className="font-medium">{invoice.id}</TableCell>
-                    {canManageInvoices && <TableCell>{invoice.customerName}</TableCell>}
-                    <TableCell>
-                        <Badge
-                        variant={
-                            invoice.status === "Paid"
-                            ? "default"
-                            : invoice.status === "Unpaid"
-                            ? "secondary"
-                            : "destructive"
-                        }
-                        className={
-                            invoice.status === "Paid"
-                            ? "bg-green-500/20 text-green-700 hover:bg-green-500/30"
-                            : invoice.status === "Unpaid"
-                            ? "bg-yellow-500/20 text-yellow-700 hover:bg-yellow-500/30"
-                            : "bg-red-500/20 text-red-700 hover:bg-red-500/30"
-                        }
-                        >
-                        {invoice.status}
-                        </Badge>
-                    </TableCell>
-                    <TableCell>
-                        {new Date(invoice.issueDate).toLocaleDateString()}
-                    </TableCell>
-                    <TableCell>
-                        {new Date(invoice.dueDate).toLocaleDateString()}
-                    </TableCell>
-                    <TableCell className="text-right">
-                        ${invoice.amount.toFixed(2)}
-                    </TableCell>
-                    <TableCell>
-                        <div className="flex justify-end">
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                            <Button
-                                aria-haspopup="true"
-                                size="icon"
-                                variant="ghost"
-                            >
-                                <MoreHorizontal className="h-4 w-4" />
-                                <span className="sr-only">Toggle menu</span>
-                            </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                            <DropdownMenuItem>View Invoice</DropdownMenuItem>
-                            {canManageInvoices && (
-                                <>
-                                <DropdownMenuItem>Mark as Paid</DropdownMenuItem>
-                                <DropdownMenuItem>Send Reminder</DropdownMenuItem>
-                                </>
-                            )}
-                            </DropdownMenuContent>
-                        </DropdownMenu>
-                        </div>
-                    </TableCell>
-                    </TableRow>
-                ))}
-                </TableBody>
-            </Table>
-          </div>
+          <Table>
+              <TableHeader>
+              <TableRow>
+                  <TableHead>Invoice ID</TableHead>
+                  {canManageInvoices && <TableHead>Customer</TableHead>}
+                  <TableHead>Status</TableHead>
+                  <TableHead>Issue Date</TableHead>
+                  <TableHead>Due Date</TableHead>
+                  <TableHead className="text-right">Amount</TableHead>
+                  <TableHead>
+                  <span className="sr-only">Actions</span>
+                  </TableHead>
+              </TableRow>
+              </TableHeader>
+              <TableBody>
+              {filteredInvoices.map((invoice) => (
+                  <TableRow key={invoice.id}>
+                  <TableCell className="font-medium">{invoice.id}</TableCell>
+                  {canManageInvoices && <TableCell>{invoice.customerName}</TableCell>}
+                  <TableCell>
+                      <Badge
+                      variant={
+                          invoice.status === "Paid"
+                          ? "default"
+                          : invoice.status === "Unpaid"
+                          ? "secondary"
+                          : "destructive"
+                      }
+                      className={
+                          invoice.status === "Paid"
+                          ? "bg-green-500/20 text-green-700 hover:bg-green-500/30"
+                          : invoice.status === "Unpaid"
+                          ? "bg-yellow-500/20 text-yellow-700 hover:bg-yellow-500/30"
+                          : "bg-red-500/20 text-red-700 hover:bg-red-500/30"
+                      }
+                      >
+                      {invoice.status}
+                      </Badge>
+                  </TableCell>
+                  <TableCell>
+                      {new Date(invoice.issueDate).toLocaleDateString()}
+                  </TableCell>
+                  <TableCell>
+                      {new Date(invoice.dueDate).toLocaleDateString()}
+                  </TableCell>
+                  <TableCell className="text-right">
+                      ${invoice.amount.toFixed(2)}
+                  </TableCell>
+                  <TableCell>
+                      <div className="flex justify-end">
+                      <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                          <Button
+                              aria-haspopup="true"
+                              size="icon"
+                              variant="ghost"
+                          >
+                              <MoreHorizontal className="h-4 w-4" />
+                              <span className="sr-only">Toggle menu</span>
+                          </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                          <DropdownMenuItem>View Invoice</DropdownMenuItem>
+                          {canManageInvoices && (
+                              <>
+                              <DropdownMenuItem>Mark as Paid</DropdownMenuItem>
+                              <DropdownMenuItem>Send Reminder</DropdownMenuItem>
+                              </>
+                          )}
+                          </DropdownMenuContent>
+                      </DropdownMenu>
+                      </div>
+                  </TableCell>
+                  </TableRow>
+              ))}
+              </TableBody>
+          </Table>
         </CardContent>
       </Card>
     </div>
