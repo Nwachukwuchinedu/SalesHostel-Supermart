@@ -113,50 +113,52 @@ export default function SuppliesPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Table>
-              <TableHeader>
-              <TableRow>
-                  <TableHead>Product Name</TableHead>
-                  <TableHead>Supplier</TableHead>
-                  <TableHead>Date</TableHead>
-                  <TableHead className="text-right">Quantity</TableHead>
-                  <TableHead>
-                  <span className="sr-only">Actions</span>
-                  </TableHead>
-              </TableRow>
-              </TableHeader>
-              <TableBody>
-              {supplies.map((supply) => (
-                  <TableRow key={supply.id}>
-                  <TableCell className="font-medium">
-                      {supply.productName}
-                  </TableCell>
-                  <TableCell>{supply.supplier}</TableCell>
-                  <TableCell>{new Date(supply.date).toLocaleDateString()}</TableCell>
-                  <TableCell className="text-right">
-                      {supply.quantity} {supply.quantityType}
-                  </TableCell>
-                  <TableCell>
-                      <div className="flex justify-end">
-                      <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                          <Button aria-haspopup="true" size="icon" variant="ghost">
-                              <MoreHorizontal className="h-4 w-4" />
-                              <span className="sr-only">Toggle menu</span>
-                          </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                          <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                          <DropdownMenuItem onSelect={() => handleEditSupply(supply)}>Edit</DropdownMenuItem>
-                          <DropdownMenuItem onSelect={() => handleDeleteClick(supply.id)}>Delete</DropdownMenuItem>
-                          </DropdownMenuContent>
-                      </DropdownMenu>
-                      </div>
-                  </TableCell>
-                  </TableRow>
-              ))}
-              </TableBody>
-          </Table>
+          <div className="relative w-full overflow-auto max-h-[60vh]">
+            <Table>
+                <TableHeader>
+                <TableRow>
+                    <TableHead>Product Name</TableHead>
+                    <TableHead>Supplier</TableHead>
+                    <TableHead>Date</TableHead>
+                    <TableHead className="text-right">Quantity</TableHead>
+                    <TableHead>
+                    <span className="sr-only">Actions</span>
+                    </TableHead>
+                </TableRow>
+                </TableHeader>
+                <TableBody>
+                {supplies.map((supply) => (
+                    <TableRow key={supply.id}>
+                    <TableCell className="font-medium">
+                        {supply.productName}
+                    </TableCell>
+                    <TableCell>{supply.supplier}</TableCell>
+                    <TableCell>{new Date(supply.date).toLocaleDateString()}</TableCell>
+                    <TableCell className="text-right">
+                        {supply.quantity} {supply.quantityType}
+                    </TableCell>
+                    <TableCell>
+                        <div className="flex justify-end">
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                            <Button aria-haspopup="true" size="icon" variant="ghost">
+                                <MoreHorizontal className="h-4 w-4" />
+                                <span className="sr-only">Toggle menu</span>
+                            </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                            <DropdownMenuItem onSelect={() => handleEditSupply(supply)}>Edit</DropdownMenuItem>
+                            <DropdownMenuItem onSelect={() => handleDeleteClick(supply.id)}>Delete</DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                        </div>
+                    </TableCell>
+                    </TableRow>
+                ))}
+                </TableBody>
+            </Table>
+          </div>
         </CardContent>
       </Card>
 

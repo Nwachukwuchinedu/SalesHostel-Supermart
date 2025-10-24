@@ -150,58 +150,60 @@ export default function ProductsPage() {
           </div>
         </CardHeader>
         <CardContent>
-          <Table>
-              <TableHeader>
-              <TableRow>
-                  <TableHead>Name</TableHead>
-                  <TableHead>Group</TableHead>
-                  <TableHead>Price</TableHead>
-                  {canManageProducts && (
-                  <TableHead>
-                      <span className="sr-only">Actions</span>
-                  </TableHead>
-                  )}
-              </TableRow>
-              </TableHeader>
-              <TableBody>
-              {filteredProducts.map((product) => (
-                  <TableRow key={product.id}>
-                  <TableCell className="font-medium">{product.name}</TableCell>
-                  <TableCell>{product.group}</TableCell>
-                  <TableCell>${product.price.toFixed(2)}</TableCell>
-                  {canManageProducts && (
-                      <TableCell>
-                      <div className="flex justify-end">
-                          <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                              <Button
-                              aria-haspopup="true"
-                              size="icon"
-                              variant="ghost"
-                              >
-                              <MoreHorizontal className="h-4 w-4" />
-                              <span className="sr-only">Toggle menu</span>
-                              </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                              <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                              <DropdownMenuItem
-                              onSelect={() => handleEditProduct(product)}
-                              >
-                              Edit
-                              </DropdownMenuItem>
-                              <DropdownMenuItem onSelect={() => handleDeleteClick(product.id)}>
-                              Delete
-                              </DropdownMenuItem>
-                          </DropdownMenuContent>
-                          </DropdownMenu>
-                      </div>
-                      </TableCell>
-                  )}
-                  </TableRow>
-              ))}
-              </TableBody>
-          </Table>
+          <div className="relative w-full overflow-auto max-h-[60vh]">
+            <Table>
+                <TableHeader>
+                <TableRow>
+                    <TableHead>Name</TableHead>
+                    <TableHead>Group</TableHead>
+                    <TableHead>Price</TableHead>
+                    {canManageProducts && (
+                    <TableHead>
+                        <span className="sr-only">Actions</span>
+                    </TableHead>
+                    )}
+                </TableRow>
+                </TableHeader>
+                <TableBody>
+                {filteredProducts.map((product) => (
+                    <TableRow key={product.id}>
+                    <TableCell className="font-medium">{product.name}</TableCell>
+                    <TableCell>{product.group}</TableCell>
+                    <TableCell>${product.price.toFixed(2)}</TableCell>
+                    {canManageProducts && (
+                        <TableCell>
+                        <div className="flex justify-end">
+                            <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button
+                                aria-haspopup="true"
+                                size="icon"
+                                variant="ghost"
+                                >
+                                <MoreHorizontal className="h-4 w-4" />
+                                <span className="sr-only">Toggle menu</span>
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                                <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                                <DropdownMenuItem
+                                onSelect={() => handleEditProduct(product)}
+                                >
+                                Edit
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onSelect={() => handleDeleteClick(product.id)}>
+                                Delete
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                            </DropdownMenu>
+                        </div>
+                        </TableCell>
+                    )}
+                    </TableRow>
+                ))}
+                </TableBody>
+            </Table>
+          </div>
         </CardContent>
       </Card>
 
