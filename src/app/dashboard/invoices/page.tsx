@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from "react";
@@ -75,7 +76,6 @@ export default function InvoicesPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="relative w-full overflow-auto max-h-[60vh]">
             <Table>
                 <TableHeader>
                 <TableRow>
@@ -154,7 +154,6 @@ export default function InvoicesPage() {
                 ))}
                 </TableBody>
             </Table>
-          </div>
         </CardContent>
       </Card>
     </div>

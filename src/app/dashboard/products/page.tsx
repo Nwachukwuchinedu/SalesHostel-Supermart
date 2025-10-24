@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
@@ -150,7 +151,6 @@ export default function ProductsPage() {
           </div>
         </CardHeader>
         <CardContent>
-          <div className="relative w-full overflow-auto max-h-[60vh]">
             <Table>
                 <TableHeader>
                 <TableRow>
@@ -203,7 +203,6 @@ export default function ProductsPage() {
                 ))}
                 </TableBody>
             </Table>
-          </div>
         </CardContent>
       </Card>
 
