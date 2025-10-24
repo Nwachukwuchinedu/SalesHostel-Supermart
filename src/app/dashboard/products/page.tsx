@@ -150,7 +150,7 @@ export default function ProductsPage() {
             />
           </div>
         </CardHeader>
-        <CardContent>
+        <CardContent className="pt-0">
             <Table>
                 <TableHeader>
                 <TableRow>

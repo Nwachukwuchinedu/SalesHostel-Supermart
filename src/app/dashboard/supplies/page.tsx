@@ -113,7 +113,7 @@ export default function SuppliesPage() {
             A log of all supplies received from suppliers.
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="pt-0">
             <Table>
                 <TableHeader>
                 <TableRow>

@@ -75,7 +75,7 @@ export default function InvoicesPage() {
             A list of all {canManageInvoices ? "" : "your"} generated invoices.
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="pt-0">
             <Table>
                 <TableHeader>
                 <TableRow>

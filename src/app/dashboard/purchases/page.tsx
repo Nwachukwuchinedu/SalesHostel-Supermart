@@ -68,7 +68,7 @@ export default function PurchasesPage() {
             A list of all purchases made by customers.
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="pt-0">
             <Table>
                 <TableHeader>
                 <TableRow>
