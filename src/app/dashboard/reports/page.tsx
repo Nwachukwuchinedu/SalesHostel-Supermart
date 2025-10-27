@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useActionState } from "react";
@@ -15,6 +16,15 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Wand, Bot } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { users } from "@/lib/data";
+import { useState } from "react";
 
 function SubmitButton() {
   const { pending } = useFormStatus();
@@ -28,8 +38,13 @@ function SubmitButton() {
 export default function ReportsPage() {
   const initialState: ReportState = {};
   const [state, formAction] = useActionState(generateReportAction, initialState);
+  const [reportType, setReportType] = useState<string>("general");
 
   const today = new Date().toISOString().split("T")[0];
+
+  const customers = users.filter((u) => u.role === "Customer");
+  const suppliers = users.filter((u) => u.role === "Supplier");
+  const staff = users.filter((u) => u.role === "Staff");
 
   return (
     <div className="flex flex-col gap-8">
@@ -47,7 +62,7 @@ export default function ReportsPage() {
           <CardHeader>
             <CardTitle>Generate a New Report</CardTitle>
             <CardDescription>
-              Select a date range to generate a sales report and get AI-powered
+              Select a date range and filters to generate a sales report and get AI-powered
               insights.
             </CardDescription>
           </CardHeader>
@@ -66,6 +81,59 @@ export default function ReportsPage() {
                   <p className="text-sm text-destructive">{state.fields.endDate}</p>
               )}
             </div>
+            <div className="grid gap-2">
+                <Label htmlFor="reportType">Report Type</Label>
+                <Select name="reportType" defaultValue="general" onValueChange={setReportType}>
+                    <SelectTrigger id="reportType">
+                        <SelectValue placeholder="Select report type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="general">General</SelectItem>
+                        <SelectItem value="customer">By Customer</SelectItem>
+                        <SelectItem value="supplier">By Supplier</SelectItem>
+                        <SelectItem value="staff">By Staff</SelectItem>
+                    </SelectContent>
+                </Select>
+            </div>
+            {reportType === 'customer' && (
+                <div className="grid gap-2">
+                    <Label htmlFor="customer">Customer</Label>
+                    <Select name="filterValue">
+                        <SelectTrigger id="customer">
+                            <SelectValue placeholder="Select a customer" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {customers.map(c => <SelectItem key={c.id} value={c.name}>{c.name}</SelectItem>)}
+                        </SelectContent>
+                    </Select>
+                </div>
+            )}
+            {reportType === 'supplier' && (
+                <div className="grid gap-2">
+                    <Label htmlFor="supplier">Supplier</Label>
+                    <Select name="filterValue">
+                        <SelectTrigger id="supplier">
+                            <SelectValue placeholder="Select a supplier" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {suppliers.map(s => <SelectItem key={s.id} value={s.name}>{s.name}</SelectItem>)}
+                        </SelectContent>
+                    </Select>
+                </div>
+            )}
+            {reportType === 'staff' && (
+                <div className="grid gap-2">
+                    <Label htmlFor="staff">Staff</Label>
+                    <Select name="filterValue">
+                        <SelectTrigger id="staff">
+                            <SelectValue placeholder="Select a staff member" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {staff.map(s => <SelectItem key={s.id} value={s.name}>{s.name}</SelectItem>)}
+                        </SelectContent>
+                    </Select>
+                </div>
+            )}
           </CardContent>
           <CardFooter className="border-t px-6 py-4">
             <SubmitButton />

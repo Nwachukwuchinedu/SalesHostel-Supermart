@@ -1,3 +1,4 @@
+
 "use server";
 
 import { generateFinancialInsights } from "@/ai/flows/ai-powered-insights";
@@ -15,6 +16,8 @@ export interface ReportState {
 const ReportSchema = z.object({
   startDate: z.string().min(1, { message: "Start date is required" }),
   endDate: z.string().min(1, { message: "End date is required" }),
+  reportType: z.string(),
+  filterValue: z.string().optional(),
 });
 
 export async function generateReportAction(
@@ -24,6 +27,8 @@ export async function generateReportAction(
   const validatedFields = ReportSchema.safeParse({
     startDate: formData.get("startDate"),
     endDate: formData.get("endDate"),
+    reportType: formData.get("reportType"),
+    filterValue: formData.get("filterValue"),
   });
 
   if (!validatedFields.success) {
@@ -36,12 +41,10 @@ export async function generateReportAction(
     };
   }
 
-  const { startDate, endDate } = validatedFields.data;
+  const { startDate, endDate, reportType, filterValue } = validatedFields.data;
 
   try {
-    const [salesReportResult, insightsResult] = await Promise.all([
-      generateSalesReport({ startDate, endDate }),
-      generateFinancialInsights({
+    const insightsInput: Parameters<typeof generateFinancialInsights>[0] = {
         // These are mock values for the demo
         totalProducts: 345,
         totalSupplies: 4,
@@ -49,7 +52,17 @@ export async function generateReportAction(
         totalSales: 45231.89,
         dateRange: `${startDate} to ${endDate}`,
         statusFilter: "All",
-      }),
+        reportType: reportType
+    };
+
+    if (reportType !== "general" && filterValue) {
+        insightsInput.filterValue = filterValue;
+    }
+
+
+    const [salesReportResult, insightsResult] = await Promise.all([
+      generateSalesReport({ startDate, endDate }),
+      generateFinancialInsights(insightsInput),
     ]);
 
     return {

@@ -1,3 +1,4 @@
+
 'use server';
 
 /**
@@ -18,6 +19,8 @@ const FinancialInsightsInputSchema = z.object({
   totalSales: z.number().describe('Total sales amount.'),
   dateRange: z.string().optional().describe('The date range for the report.'),
   statusFilter: z.string().optional().describe('The status filter applied to the report.'),
+  reportType: z.string().describe("The type of report: general, customer, supplier, or staff."),
+  filterValue: z.string().optional().describe("The specific value for the filter (e.g., customer name, supplier name).")
 });
 export type FinancialInsightsInput = z.infer<typeof FinancialInsightsInputSchema>;
 
@@ -37,6 +40,10 @@ const prompt = ai.definePrompt({
   prompt: `You are a financial analyst providing insights from a sales report.
   Analyze the following data and highlight important trends and potential issues.
 
+  Report Type: {{{reportType}}}
+  {{#if filterValue}}
+  Filter: {{{filterValue}}}
+  {{/if}}
   Total Products: {{{totalProducts}}}
   Total Supplies: {{{totalSupplies}}}
   Total Purchases: {{{totalPurchases}}}
@@ -44,7 +51,7 @@ const prompt = ai.definePrompt({
   Date Range: {{{dateRange}}}
   Status Filter: {{{statusFilter}}}
 
-  Provide a summary of the insights, highlighting key trends, potential issues, and opportunities for improvement.`,
+  Provide a summary of the insights, highlighting key trends, potential issues, and opportunities for improvement. Tailor the insights based on the report type and filter provided.`,
 });
 
 const generateFinancialInsightsFlow = ai.defineFlow(
