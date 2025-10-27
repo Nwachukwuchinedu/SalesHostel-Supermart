@@ -25,15 +25,19 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { MoreHorizontal, PlusCircle } from "lucide-react";
 import { invoices as initialInvoices } from "@/lib/data";
 import { Badge } from "@/components/ui/badge";
 import type { Invoice, UserRole } from "@/lib/types";
+import { InvoiceForm } from "./invoice-form";
 
 export default function InvoicesPage() {
   const [invoices, setInvoices] = useState<Invoice[]>(initialInvoices);
   const [userRole, setUserRole] = useState<UserRole | null>(null);
   const [userName, setUserName] = useState<string | null>(null);
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
 
   useEffect(() => {
     const role = localStorage.getItem("userRole") as UserRole;
@@ -43,6 +47,20 @@ export default function InvoicesPage() {
   }, []);
 
   const canManageInvoices = userRole === "Admin" || userRole === "Staff";
+
+  const handleCreateInvoice = () => {
+    setSelectedInvoice(null);
+    setIsFormOpen(true);
+  }
+
+  const handleFormSubmit = (invoice: Invoice) => {
+    if (selectedInvoice) {
+      setInvoices(invoices.map(i => i.id === invoice.id ? invoice : i));
+    } else {
+      setInvoices([invoice, ...invoices]);
+    }
+    setIsFormOpen(false);
+  }
 
   const filteredInvoices =
     userRole === "Customer"
@@ -63,7 +81,7 @@ export default function InvoicesPage() {
           <p className="text-muted-foreground">Manage and track invoices.</p>
         </div>
         {canManageInvoices && (
-          <Button>
+          <Button onClick={handleCreateInvoice}>
             <PlusCircle className="mr-2 h-4 w-4" /> Create Invoice
           </Button>
         )}
@@ -76,7 +94,7 @@ export default function InvoicesPage() {
           </CardDescription>
         </CardHeader>
         <CardContent className="pt-0">
-          <div className="overflow-x-auto">
+          <div className="overflow-auto max-h-[60vh]">
             <Table>
                 <TableHeader>
                 <TableRow>
@@ -158,6 +176,19 @@ export default function InvoicesPage() {
           </div>
         </CardContent>
       </Card>
+
+      <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
+        <DialogContent>
+            <DialogHeader>
+                <DialogTitle>{selectedInvoice ? "Edit Invoice" : "Create Invoice"}</DialogTitle>
+            </DialogHeader>
+            <InvoiceForm
+                initialData={selectedInvoice}
+                onSubmit={handleFormSubmit}
+                onCancel={() => setIsFormOpen(false)}
+            />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

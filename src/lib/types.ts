@@ -1,3 +1,4 @@
+
 export type UserRole = "Admin" | "Staff" | "Supplier" | "Customer";
 
 export type User = {
@@ -45,4 +46,5 @@ export type Invoice = {
   status: "Paid" | "Unpaid" | "Overdue";
   dueDate: string;
   issueDate: string;
+  purchase?: Purchase;
 };

@@ -1,3 +1,4 @@
+
 import type { User, Product, Supply, Purchase, Invoice } from "./types";
 
 export const users: User[] = [
@@ -26,6 +27,8 @@ export const purchases: Purchase[] = [
   { id: "PUR001", customerName: "John Doe", products: [{ name: "Organic Apples", quantity: 2, price: 2.99 }, { name: "Whole Wheat Bread", quantity: 1, price: 4.50 }], total: 10.48, paymentStatus: "Paid", date: "2023-10-05" },
   { id: "PUR002", customerName: "Jane Smith", products: [{ name: "Almond Milk", quantity: 2, price: 3.75 }], total: 7.50, paymentStatus: "Paid", date: "2023-10-06" },
   { id: "PUR003", customerName: "Bob Johnson", products: [{ name: "Chicken Breast", quantity: 1.5, price: 9.99 }, { name: "Cheddar Cheese", quantity: 1, price: 5.25 }], total: 20.24, paymentStatus: "Pending", date: "2023-10-07" },
+  { id: "PUR004", customerName: "Alice Williams", products: [{ name: "Organic Apples", quantity: 5, price: 2.99 }], total: 14.95, paymentStatus: "Pending", date: "2023-10-08" },
+  { id: "PUR005", customerName: "Customer User", products: [{ name: "Whole Wheat Bread", quantity: 2, price: 4.50 }], total: 9.00, paymentStatus: "Pending", date: "2023-10-09" },
 ];
 
 export const invoices: Invoice[] = [
