@@ -25,12 +25,20 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+  DialogDescription,
+} from "@/components/ui/dialog";
 import { MoreHorizontal, PlusCircle } from "lucide-react";
-import { invoices as initialInvoices } from "@/lib/data";
+import { invoices as initialInvoices, purchases } from "@/lib/data";
 import { Badge } from "@/components/ui/badge";
-import type { Invoice, UserRole } from "@/lib/types";
+import type { Invoice, UserRole, Purchase } from "@/lib/types";
 import { InvoiceForm } from "./invoice-form";
+import { Separator } from "@/components/ui/separator";
 
 export default function InvoicesPage() {
   const [invoices, setInvoices] = useState<Invoice[]>(initialInvoices);
@@ -38,6 +46,8 @@ export default function InvoicesPage() {
   const [userName, setUserName] = useState<string | null>(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  const [isReceiptOpen, setIsReceiptOpen] = useState(false);
 
   useEffect(() => {
     const role = localStorage.getItem("userRole") as UserRole;
@@ -51,22 +61,45 @@ export default function InvoicesPage() {
   const handleCreateInvoice = () => {
     setSelectedInvoice(null);
     setIsFormOpen(true);
-  }
+  };
+
+  const handleEditInvoice = (invoice: Invoice) => {
+    setSelectedInvoice(invoice);
+    setIsDetailsOpen(false);
+    setIsFormOpen(true);
+  };
 
   const handleFormSubmit = (invoice: Invoice) => {
-    if (selectedInvoice) {
-      setInvoices(invoices.map(i => i.id === invoice.id ? invoice : i));
+    if (selectedInvoice && invoices.find(i => i.id === invoice.id)) {
+      setInvoices(invoices.map((i) => (i.id === invoice.id ? invoice : i)));
     } else {
       setInvoices([invoice, ...invoices]);
     }
     setIsFormOpen(false);
+    setSelectedInvoice(null);
+  };
+  
+  const handleMarkAsPaid = (invoiceId: string) => {
+    setInvoices(invoices.map(i => i.id === invoiceId ? {...i, status: 'Paid'} : i));
+  }
+
+  const handleViewDetails = (invoice: Invoice) => {
+    const purchase = purchases.find(p => p.id === invoice.purchaseId);
+    setSelectedInvoice({...invoice, purchase});
+    setIsDetailsOpen(true);
+  }
+
+  const handleViewReceipt = (invoice: Invoice) => {
+     const purchase = purchases.find(p => p.id === invoice.purchaseId);
+    setSelectedInvoice({...invoice, purchase});
+    setIsReceiptOpen(true);
   }
 
   const filteredInvoices =
     userRole === "Customer"
       ? invoices.filter((invoice) => invoice.customerName === userName)
       : invoices;
-  
+
   if (userRole === null) {
     return <div>Loading...</div>;
   }
@@ -96,82 +129,82 @@ export default function InvoicesPage() {
         <CardContent className="pt-0">
           <div className="overflow-auto max-h-[60vh]">
             <Table>
-                <TableHeader>
+              <TableHeader>
                 <TableRow>
-                    <TableHead>Invoice ID</TableHead>
-                    {canManageInvoices && <TableHead>Customer</TableHead>}
-                    <TableHead>Status</TableHead>
-                    <TableHead>Issue Date</TableHead>
-                    <TableHead>Due Date</TableHead>
-                    <TableHead className="text-right">Amount</TableHead>
-                    <TableHead>
+                  <TableHead>Invoice ID</TableHead>
+                  {canManageInvoices && <TableHead>Customer</TableHead>}
+                  <TableHead>Status</TableHead>
+                  <TableHead>Issue Date</TableHead>
+                  <TableHead>Due Date</TableHead>
+                  <TableHead className="text-right">Amount</TableHead>
+                  <TableHead>
                     <span className="sr-only">Actions</span>
-                    </TableHead>
+                  </TableHead>
                 </TableRow>
-                </TableHeader>
-                <TableBody>
+              </TableHeader>
+              <TableBody>
                 {filteredInvoices.map((invoice) => (
-                    <TableRow key={invoice.id}>
+                  <TableRow key={invoice.id}>
                     <TableCell className="font-medium">{invoice.id}</TableCell>
-                    {canManageInvoices && <TableCell>{invoice.customerName}</TableCell>}
+                    {canManageInvoices && (
+                      <TableCell>{invoice.customerName}</TableCell>
+                    )}
                     <TableCell>
-                        <Badge
+                      <Badge
                         variant={
-                            invoice.status === "Paid"
+                          invoice.status === "Paid"
                             ? "default"
                             : invoice.status === "Unpaid"
                             ? "secondary"
                             : "destructive"
                         }
                         className={
-                            invoice.status === "Paid"
+                          invoice.status === "Paid"
                             ? "bg-green-500/20 text-green-700 hover:bg-green-500/30"
                             : invoice.status === "Unpaid"
                             ? "bg-yellow-500/20 text-yellow-700 hover:bg-yellow-500/30"
                             : "bg-red-500/20 text-red-700 hover:bg-red-500/30"
                         }
-                        >
+                      >
                         {invoice.status}
-                        </Badge>
+                      </Badge>
                     </TableCell>
                     <TableCell>
-                        {new Date(invoice.issueDate).toLocaleDateString()}
+                      {new Date(invoice.issueDate).toLocaleDateString()}
                     </TableCell>
                     <TableCell>
-                        {new Date(invoice.dueDate).toLocaleDateString()}
+                      {new Date(invoice.dueDate).toLocaleDateString()}
                     </TableCell>
                     <TableCell className="text-right">
-                        ${invoice.amount.toFixed(2)}
+                      ${invoice.amount.toFixed(2)}
                     </TableCell>
                     <TableCell>
-                        <div className="flex justify-end">
+                      <div className="flex justify-end">
                         <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
+                          <DropdownMenuTrigger asChild>
                             <Button
-                                aria-haspopup="true"
-                                size="icon"
-                                variant="ghost"
+                              aria-haspopup="true"
+                              size="icon"
+                              variant="ghost"
                             >
-                                <MoreHorizontal className="h-4 w-4" />
-                                <span className="sr-only">Toggle menu</span>
+                              <MoreHorizontal className="h-4 w-4" />
+                              <span className="sr-only">Toggle menu</span>
                             </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
                             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                            <DropdownMenuItem>View Invoice</DropdownMenuItem>
-                            {canManageInvoices && (
-                                <>
-                                <DropdownMenuItem>Mark as Paid</DropdownMenuItem>
-                                <DropdownMenuItem>Send Reminder</DropdownMenuItem>
-                                </>
+                            <DropdownMenuItem onSelect={() => handleViewDetails(invoice)}>View Invoice</DropdownMenuItem>
+                             <DropdownMenuItem onSelect={() => handleViewReceipt(invoice)}>View Receipt</DropdownMenuItem>
+                            {canManageInvoices && invoice.status !== "Paid" && (
+                              <DropdownMenuItem onSelect={() => handleMarkAsPaid(invoice.id)}>Mark as Paid</DropdownMenuItem>
                             )}
-                            </DropdownMenuContent>
+                          </DropdownMenuContent>
                         </DropdownMenu>
-                        </div>
+                      </div>
                     </TableCell>
-                    </TableRow>
+                  </TableRow>
                 ))}
-                </TableBody>
+              </TableBody>
             </Table>
           </div>
         </CardContent>
@@ -179,16 +212,123 @@ export default function InvoicesPage() {
 
       <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
         <DialogContent>
+          <DialogHeader>
+            <DialogTitle>
+              {selectedInvoice ? "Edit Invoice" : "Create Invoice"}
+            </DialogTitle>
+          </DialogHeader>
+          <InvoiceForm
+            initialData={selectedInvoice}
+            onSubmit={handleFormSubmit}
+            onCancel={() => setIsFormOpen(false)}
+          />
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isDetailsOpen} onOpenChange={setIsDetailsOpen}>
+        <DialogContent>
             <DialogHeader>
-                <DialogTitle>{selectedInvoice ? "Edit Invoice" : "Create Invoice"}</DialogTitle>
+                <DialogTitle>Invoice Details</DialogTitle>
+                <DialogDescription>
+                    Details for invoice ID: {selectedInvoice?.id}
+                </DialogDescription>
             </DialogHeader>
-            <InvoiceForm
-                initialData={selectedInvoice}
-                onSubmit={handleFormSubmit}
-                onCancel={() => setIsFormOpen(false)}
-            />
+            {selectedInvoice && (
+                 <div className="space-y-4 text-sm">
+                    <div className="grid grid-cols-2">
+                        <div><strong>Customer:</strong> {selectedInvoice.customerName}</div>
+                        <div className="text-right"><strong>Issue Date:</strong> {new Date(selectedInvoice.issueDate).toLocaleDateString()}</div>
+                    </div>
+                    <div className="grid grid-cols-2">
+                        <div><strong>Status:</strong> {selectedInvoice.status}</div>
+                        <div className="text-right"><strong>Due Date:</strong> {new Date(selectedInvoice.dueDate).toLocaleDateString()}</div>
+                    </div>
+                    <Separator />
+                    <h4 className="font-semibold">Billed Items</h4>
+                    {selectedInvoice.purchase ? (
+                        <>
+                        <Table>
+                            <TableHeader>
+                                <TableRow>
+                                    <TableHead>Product</TableHead>
+                                    <TableHead>Quantity</TableHead>
+                                    <TableHead className="text-right">Price</TableHead>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                                {selectedInvoice.purchase.products.map((p, i) => (
+                                    <TableRow key={i}>
+                                        <TableCell>{p.name}</TableCell>
+                                        <TableCell>{p.quantity}</TableCell>
+                                        <TableCell className="text-right">${p.price.toFixed(2)}</TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                        <Separator />
+                        <div className="text-right font-bold text-lg">
+                            Total: ${selectedInvoice.amount.toFixed(2)}
+                        </div>
+                        </>
+                    ) : (
+                        <p>Purchase details not available.</p>
+                    )}
+                 </div>
+            )}
+             <DialogFooter>
+                <Button variant="outline" onClick={() => setIsDetailsOpen(false)}>Close</Button>
+                {canManageInvoices && (
+                  <Button onClick={() => handleEditInvoice(selectedInvoice!)}>Edit</Button>
+                )}
+            </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      
+      <Dialog open={isReceiptOpen} onOpenChange={setIsReceiptOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Receipt</DialogTitle>
+          </DialogHeader>
+          {selectedInvoice?.purchase && (
+            <div className="space-y-6 text-sm">
+                <div className="text-center">
+                    <h3 className="font-bold text-lg font-headline">SalesHostel Digital</h3>
+                    <p className="text-muted-foreground">123 Market St, San Francisco, CA</p>
+                </div>
+                <Separator />
+                <div className="grid grid-cols-2 gap-2">
+                    <div><strong>Receipt For:</strong> {selectedInvoice.customerName}</div>
+                    <div className="text-right"><strong>Date:</strong> {new Date(selectedInvoice.purchase.date).toLocaleDateString()}</div>
+                    <div><strong>Receipt ID:</strong> {selectedInvoice.purchase.id}</div>
+                </div>
+                <Separator />
+                <div className="space-y-2">
+                    {selectedInvoice.purchase.products.map((item, index) => (
+                        <div key={index} className="flex justify-between">
+                            <span>{item.quantity}x {item.name}</span>
+                            <span>${(item.quantity * item.price).toFixed(2)}</span>
+                        </div>
+                    ))}
+                </div>
+                <Separator />
+                <div className="flex justify-between font-bold text-base">
+                    <span>Total</span>
+                    <span>${selectedInvoice.purchase.total.toFixed(2)}</span>
+                </div>
+                 <Separator />
+                 <div className="text-center text-muted-foreground">
+                    <p>Thank you for your purchase!</p>
+                 </div>
+            </div>
+          )}
+           <DialogFooter>
+                <Button onClick={() => setIsReceiptOpen(false)}>Close</Button>
+                <Button onClick={() => window.print()}>Print</Button>
+            </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>
   );
 }
+
+    
