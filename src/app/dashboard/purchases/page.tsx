@@ -30,20 +30,44 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
+  DialogFooter,
 } from "@/components/ui/dialog";
 import { MoreHorizontal, PlusCircle } from "lucide-react";
 import { purchases as initialPurchases } from "@/lib/data";
 import { Badge } from "@/components/ui/badge";
 import type { Purchase } from "@/lib/types";
 import { PurchaseForm } from "./purchase-form";
+import { Separator } from "@/components/ui/separator";
 
 export default function PurchasesPage() {
   const [purchases, setPurchases] = useState<Purchase[]>(initialPurchases);
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  const [isReceiptOpen, setIsReceiptOpen] = useState(false);
+  const [selectedPurchase, setSelectedPurchase] = useState<Purchase | null>(null);
 
   const handleFormSubmit = (newPurchase: Purchase) => {
     setPurchases([newPurchase, ...purchases]);
     setIsFormOpen(false);
+  };
+
+  const handleMarkAsPaid = (purchaseId: string) => {
+    setPurchases(
+      purchases.map((p) =>
+        p.id === purchaseId ? { ...p, paymentStatus: "Paid" } : p
+      )
+    );
+  };
+
+  const handleViewDetails = (purchase: Purchase) => {
+    setSelectedPurchase(purchase);
+    setIsDetailsOpen(true);
+  };
+
+  const handleViewReceipt = (purchase: Purchase) => {
+    setSelectedPurchase(purchase);
+    setIsReceiptOpen(true);
   };
 
   return (
@@ -69,72 +93,76 @@ export default function PurchasesPage() {
           </CardDescription>
         </CardHeader>
         <CardContent className="pt-0">
+          <div className="overflow-x-auto">
             <Table>
-                <TableHeader>
+              <TableHeader>
                 <TableRow>
-                    <TableHead>Customer</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Date</TableHead>
-                    <TableHead className="text-right">Total</TableHead>
-                    <TableHead>
+                  <TableHead>Customer</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead>Date</TableHead>
+                  <TableHead className="text-right">Total</TableHead>
+                  <TableHead>
                     <span className="sr-only">Actions</span>
-                    </TableHead>
+                  </TableHead>
                 </TableRow>
-                </TableHeader>
-                <TableBody>
+              </TableHeader>
+              <TableBody>
                 {purchases.map((purchase) => (
-                    <TableRow key={purchase.id}>
+                  <TableRow key={purchase.id}>
                     <TableCell className="font-medium">
-                        {purchase.customerName}
+                      {purchase.customerName}
                     </TableCell>
                     <TableCell>
-                        <Badge
+                      <Badge
                         variant={
-                            purchase.paymentStatus === "Paid"
+                          purchase.paymentStatus === "Paid"
                             ? "default"
                             : "secondary"
                         }
                         className={
-                            purchase.paymentStatus === "Paid"
+                          purchase.paymentStatus === "Paid"
                             ? "bg-green-500/20 text-green-700 hover:bg-green-500/30"
                             : "bg-yellow-500/20 text-yellow-700 hover:bg-yellow-500/30"
                         }
-                        >
+                      >
                         {purchase.paymentStatus}
-                        </Badge>
+                      </Badge>
                     </TableCell>
                     <TableCell>
-                        {new Date(purchase.date).toLocaleDateString()}
+                      {new Date(purchase.date).toLocaleDateString()}
                     </TableCell>
                     <TableCell className="text-right">
-                        ${purchase.total.toFixed(2)}
+                      ${purchase.total.toFixed(2)}
                     </TableCell>
                     <TableCell>
-                        <div className="flex justify-end">
+                      <div className="flex justify-end">
                         <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
+                          <DropdownMenuTrigger asChild>
                             <Button
-                                aria-haspopup="true"
-                                size="icon"
-                                variant="ghost"
+                              aria-haspopup="true"
+                              size="icon"
+                              variant="ghost"
                             >
-                                <MoreHorizontal className="h-4 w-4" />
-                                <span className="sr-only">Toggle menu</span>
+                              <MoreHorizontal className="h-4 w-4" />
+                              <span className="sr-only">Toggle menu</span>
                             </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
                             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                            <DropdownMenuItem>View Details</DropdownMenuItem>
-                            <DropdownMenuItem>View Receipt</DropdownMenuItem>
-                            <DropdownMenuItem>Mark as Paid</DropdownMenuItem>
-                            </DropdownMenuContent>
+                            <DropdownMenuItem onSelect={() => handleViewDetails(purchase)}>View Details</DropdownMenuItem>
+                            <DropdownMenuItem onSelect={() => handleViewReceipt(purchase)}>View Receipt</DropdownMenuItem>
+                            {purchase.paymentStatus !== "Paid" && (
+                                <DropdownMenuItem onSelect={() => handleMarkAsPaid(purchase.id)}>Mark as Paid</DropdownMenuItem>
+                            )}
+                          </DropdownMenuContent>
                         </DropdownMenu>
-                        </div>
+                      </div>
                     </TableCell>
-                    </TableRow>
+                  </TableRow>
                 ))}
-                </TableBody>
+              </TableBody>
             </Table>
+          </div>
         </CardContent>
       </Card>
 
@@ -149,6 +177,93 @@ export default function PurchasesPage() {
           />
         </DialogContent>
       </Dialog>
+
+      <Dialog open={isDetailsOpen} onOpenChange={setIsDetailsOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Purchase Details</DialogTitle>
+            <DialogDescription>
+              Details for purchase ID: {selectedPurchase?.id}
+            </DialogDescription>
+          </DialogHeader>
+          {selectedPurchase && (
+            <div className="space-y-4">
+              <div><strong>Customer:</strong> {selectedPurchase.customerName}</div>
+              <div><strong>Date:</strong> {new Date(selectedPurchase.date).toLocaleDateString()}</div>
+              <div><strong>Status:</strong> {selectedPurchase.paymentStatus}</div>
+              <Separator />
+              <h4 className="font-semibold">Products</h4>
+              <Table>
+                <TableHeader>
+                    <TableRow>
+                        <TableHead>Product</TableHead>
+                        <TableHead>Quantity</TableHead>
+                        <TableHead className="text-right">Price</TableHead>
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
+                    {selectedPurchase.products.map((p, i) => (
+                        <TableRow key={i}>
+                            <TableCell>{p.name}</TableCell>
+                            <TableCell>{p.quantity}</TableCell>
+                            <TableCell className="text-right">${p.price.toFixed(2)}</TableCell>
+                        </TableRow>
+                    ))}
+                </TableBody>
+              </Table>
+              <Separator />
+              <div className="text-right font-bold text-lg">
+                Total: ${selectedPurchase.total.toFixed(2)}
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+      
+      <Dialog open={isReceiptOpen} onOpenChange={setIsReceiptOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Receipt</DialogTitle>
+          </DialogHeader>
+          {selectedPurchase && (
+            <div className="space-y-6 text-sm">
+                <div className="text-center">
+                    <h3 className="font-bold text-lg font-headline">SalesHostel Digital</h3>
+                    <p className="text-muted-foreground">123 Market St, San Francisco, CA</p>
+                </div>
+                <Separator />
+                <div className="grid grid-cols-2 gap-2">
+                    <div><strong>Receipt For:</strong> {selectedPurchase.customerName}</div>
+                    <div className="text-right"><strong>Date:</strong> {new Date(selectedPurchase.date).toLocaleDateString()}</div>
+                    <div><strong>Receipt ID:</strong> {selectedPurchase.id}</div>
+                </div>
+                <Separator />
+                <div className="space-y-2">
+                    {selectedPurchase.products.map((item, index) => (
+                        <div key={index} className="flex justify-between">
+                            <span>{item.quantity}x {item.name}</span>
+                            <span>${(item.quantity * item.price).toFixed(2)}</span>
+                        </div>
+                    ))}
+                </div>
+                <Separator />
+                <div className="flex justify-between font-bold text-base">
+                    <span>Total</span>
+                    <span>${selectedPurchase.total.toFixed(2)}</span>
+                </div>
+                 <Separator />
+                 <div className="text-center text-muted-foreground">
+                    <p>Thank you for your purchase!</p>
+                 </div>
+            </div>
+          )}
+           <DialogFooter>
+                <Button onClick={() => setIsReceiptOpen(false)}>Close</Button>
+                <Button onClick={() => window.print()}>Print</Button>
+            </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
     </div>
   );
 }
