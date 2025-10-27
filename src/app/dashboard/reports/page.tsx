@@ -26,6 +26,8 @@ import {
 import { users } from "@/lib/data";
 import { useState } from "react";
 
+export const maxDuration = 120;
+
 function SubmitButton() {
   const { pending } = useFormStatus();
   return (
