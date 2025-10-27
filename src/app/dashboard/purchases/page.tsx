@@ -47,9 +47,29 @@ export default function PurchasesPage() {
   const [isReceiptOpen, setIsReceiptOpen] = useState(false);
   const [selectedPurchase, setSelectedPurchase] = useState<Purchase | null>(null);
 
-  const handleFormSubmit = (newPurchase: Purchase) => {
-    setPurchases([newPurchase, ...purchases]);
+  const handleCreateNew = () => {
+    setSelectedPurchase(null);
+    setIsFormOpen(true);
+  }
+
+  const handleEditPurchase = (purchase: Purchase) => {
+    setSelectedPurchase(purchase);
+    setIsDetailsOpen(false);
+    setIsFormOpen(true);
+  };
+
+  const handleFormSubmit = (purchaseValues: Purchase) => {
+    if (selectedPurchase) {
+      // Update existing purchase
+      setPurchases(
+        purchases.map((p) => (p.id === selectedPurchase.id ? purchaseValues : p))
+      );
+    } else {
+      // Add new purchase
+      setPurchases([purchaseValues, ...purchases]);
+    }
     setIsFormOpen(false);
+    setSelectedPurchase(null);
   };
 
   const handleMarkAsPaid = (purchaseId: string) => {
@@ -81,7 +101,7 @@ export default function PurchasesPage() {
             Manage customer purchases and orders.
           </p>
         </div>
-        <Button onClick={() => setIsFormOpen(true)}>
+        <Button onClick={handleCreateNew}>
           <PlusCircle className="mr-2 h-4 w-4" /> New Purchase
         </Button>
       </div>
@@ -169,9 +189,10 @@ export default function PurchasesPage() {
       <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
         <DialogContent className="sm:max-w-3xl">
           <DialogHeader>
-            <DialogTitle>Create New Purchase</DialogTitle>
+            <DialogTitle>{selectedPurchase ? 'Edit Purchase' : 'Create New Purchase'}</DialogTitle>
           </DialogHeader>
           <PurchaseForm
+            initialData={selectedPurchase}
             onSubmit={handleFormSubmit}
             onCancel={() => setIsFormOpen(false)}
           />
@@ -217,6 +238,10 @@ export default function PurchasesPage() {
               </div>
             </div>
           )}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsDetailsOpen(false)}>Close</Button>
+            <Button onClick={() => handleEditPurchase(selectedPurchase!)}>Edit</Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
       

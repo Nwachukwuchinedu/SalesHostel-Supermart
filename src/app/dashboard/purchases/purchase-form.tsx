@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -25,7 +24,7 @@ import {
 import { products } from "@/lib/data";
 import type { Purchase } from "@/lib/types";
 import { PlusCircle, Trash2 } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 const productSchema = z.object({
@@ -43,22 +42,43 @@ const formSchema = z.object({
 type PurchaseFormValues = z.infer<typeof formSchema>;
 
 interface PurchaseFormProps {
+  initialData?: Purchase | null;
   onSubmit: (values: Purchase) => void;
   onCancel: () => void;
 }
 
-export function PurchaseForm({ onSubmit, onCancel }: PurchaseFormProps) {
+export function PurchaseForm({ initialData, onSubmit, onCancel }: PurchaseFormProps) {
+    const defaultValues = useMemo(() => {
+        if (initialData) {
+            const productIds = initialData.products.map(p => {
+                const product = products.find(prod => prod.name === p.name);
+                return { productId: product?.id || "", quantity: p.quantity };
+            });
+            return {
+                ...initialData,
+                date: new Date(initialData.date).toISOString().split('T')[0],
+                products: productIds.length > 0 ? productIds : [{ productId: "", quantity: 1 }],
+            };
+        }
+        return {
+            customerName: "",
+            paymentStatus: "Pending" as "Paid" | "Pending",
+            date: new Date().toISOString().split("T")[0],
+            products: [{ productId: "", quantity: 1 }],
+        };
+    }, [initialData]);
+
   const form = useForm<PurchaseFormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      customerName: "",
-      paymentStatus: "Pending",
-      date: new Date().toISOString().split("T")[0],
-      products: [{ productId: "", quantity: 1 }],
-    },
+    defaultValues,
   });
 
-  const { fields, append, remove, update } = useFieldArray({
+  useEffect(() => {
+    form.reset(defaultValues);
+  }, [defaultValues, form]);
+
+
+  const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: "products",
   });
@@ -78,7 +98,7 @@ export function PurchaseForm({ onSubmit, onCancel }: PurchaseFormProps) {
   const handleSubmit = (values: PurchaseFormValues) => {
     const total = calculateTotal();
     const purchaseData: Purchase = {
-      id: `PUR${Date.now()}`,
+      id: initialData?.id || `PUR${Date.now()}`,
       ...values,
       products: values.products.map(item => {
         const product = products.find(p => p.id === item.productId)!;
@@ -157,8 +177,8 @@ export function PurchaseForm({ onSubmit, onCancel }: PurchaseFormProps) {
                     name={`products.${index}.productId`}
                     render={({ field: controllerField }) => (
                         <FormItem className="flex-1">
-                            {index === 0 && <FormLabel>Product</FormLabel>}
-                        <Select onValueChange={controllerField.onChange} defaultValue={controllerField.value}>
+                            {index === 0 && <FormLabel className="hidden">Product</FormLabel>}
+                        <Select onValueChange={controllerField.onChange} value={controllerField.value}>
                             <FormControl>
                             <SelectTrigger>
                                 <SelectValue placeholder="Select a product" />
@@ -181,7 +201,7 @@ export function PurchaseForm({ onSubmit, onCancel }: PurchaseFormProps) {
                     name={`products.${index}.quantity`}
                     render={({ field: controllerField }) => (
                         <FormItem>
-                        {index === 0 && <FormLabel>Quantity</FormLabel>}
+                        {index === 0 && <FormLabel className="hidden">Quantity</FormLabel>}
                         <FormControl>
                             <Input type="number" min="1" className="w-20" {...controllerField} />
                         </FormControl>
@@ -221,7 +241,7 @@ export function PurchaseForm({ onSubmit, onCancel }: PurchaseFormProps) {
             <Button type="button" variant="outline" onClick={onCancel}>
                 Cancel
             </Button>
-            <Button type="submit">Create Purchase</Button>
+            <Button type="submit">{initialData ? "Save Changes" : "Create Purchase"}</Button>
             </div>
         </div>
       </form>
