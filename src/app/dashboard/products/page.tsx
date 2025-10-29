@@ -46,6 +46,7 @@ import { MoreHorizontal, PlusCircle, Search } from "lucide-react";
 import { products as initialProducts } from "@/lib/data";
 import { ProductForm } from "./product-form";
 import type { Product, UserRole } from "@/lib/types";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>(initialProducts);
@@ -57,7 +58,6 @@ export default function ProductsPage() {
   const [productToDelete, setProductToDelete] = useState<string | null>(null);
 
   useEffect(() => {
-    // In a real app, you would fetch user role from your auth context
     const role = localStorage.getItem("userRole") as UserRole;
     setUserRole(role || "Customer");
   }, []);
@@ -89,13 +89,11 @@ export default function ProductsPage() {
 
   const handleFormSubmit = (values: Product) => {
     if (selectedProduct) {
-      // Update existing product
       setProducts(
         products.map((p) => (p.id === selectedProduct.id ? values : p))
       );
     } else {
-      // Add new product
-      setProducts([...products, values]);
+      setProducts([values, ...products]);
     }
     setIsFormOpen(false);
     setSelectedProduct(null);
@@ -106,6 +104,7 @@ export default function ProductsPage() {
     return products.filter(
       (product) =>
         product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        product.uniqueName.toLowerCase().includes(searchTerm.toLowerCase()) ||
         product.group.toLowerCase().includes(searchTerm.toLowerCase()) ||
         product.tags.some((tag) =>
           tag.toLowerCase().includes(searchTerm.toLowerCase())
@@ -151,63 +150,74 @@ export default function ProductsPage() {
           </div>
         </CardHeader>
         <CardContent className="pt-0">
-            <Table>
-                <TableHeader>
-                <TableRow>
-                    <TableHead>Name</TableHead>
-                    <TableHead>Group</TableHead>
-                    <TableHead>Price</TableHead>
-                    {canManageProducts && (
-                    <TableHead>
-                        <span className="sr-only">Actions</span>
-                    </TableHead>
-                    )}
-                </TableRow>
-                </TableHeader>
-                <TableBody>
-                {filteredProducts.map((product) => (
-                    <TableRow key={product.id}>
-                    <TableCell className="font-medium">{product.name}</TableCell>
-                    <TableCell>{product.group}</TableCell>
-                    <TableCell>${product.price.toFixed(2)}</TableCell>
-                    {canManageProducts && (
-                        <TableCell>
-                        <div className="flex justify-end">
-                            <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <Button
-                                aria-haspopup="true"
-                                size="icon"
-                                variant="ghost"
-                                >
-                                <MoreHorizontal className="h-4 w-4" />
-                                <span className="sr-only">Toggle menu</span>
-                                </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                                <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                <DropdownMenuItem
-                                onSelect={() => handleEditProduct(product)}
-                                >
-                                Edit
-                                </DropdownMenuItem>
-                                <DropdownMenuItem onSelect={() => handleDeleteClick(product.id)}>
-                                Delete
-                                </DropdownMenuItem>
-                            </DropdownMenuContent>
-                            </DropdownMenu>
-                        </div>
-                        </TableCell>
-                    )}
+            <div className="overflow-x-auto">
+                <Table>
+                    <TableHeader>
+                    <TableRow>
+                        <TableHead className="w-[80px]">Image</TableHead>
+                        <TableHead>Name</TableHead>
+                        <TableHead>Group</TableHead>
+                        <TableHead>Stock</TableHead>
+                        <TableHead className="text-right">Price</TableHead>
+                        {canManageProducts && (
+                        <TableHead>
+                            <span className="sr-only">Actions</span>
+                        </TableHead>
+                        )}
                     </TableRow>
-                ))}
-                </TableBody>
-            </Table>
+                    </TableHeader>
+                    <TableBody>
+                    {filteredProducts.map((product) => (
+                        <TableRow key={product.id}>
+                        <TableCell>
+                            <Avatar className="h-9 w-9">
+                                <AvatarImage src={product.imageUrl} alt={product.name}/>
+                                <AvatarFallback>{product.name.charAt(0)}</AvatarFallback>
+                            </Avatar>
+                        </TableCell>
+                        <TableCell className="font-medium">{product.name}</TableCell>
+                        <TableCell>{product.group}</TableCell>
+                        <TableCell>{product.quantityAvailable}</TableCell>
+                        <TableCell className="text-right">${product.sellingPrice.toFixed(2)}</TableCell>
+                        {canManageProducts && (
+                            <TableCell>
+                            <div className="flex justify-end">
+                                <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button
+                                    aria-haspopup="true"
+                                    size="icon"
+                                    variant="ghost"
+                                    >
+                                    <MoreHorizontal className="h-4 w-4" />
+                                    <span className="sr-only">Toggle menu</span>
+                                    </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end">
+                                    <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                                    <DropdownMenuItem
+                                    onSelect={() => handleEditProduct(product)}
+                                    >
+                                    Edit
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem onSelect={() => handleDeleteClick(product.id)}>
+                                    Delete
+                                    </DropdownMenuItem>
+                                </DropdownMenuContent>
+                                </DropdownMenu>
+                            </div>
+                            </TableCell>
+                        )}
+                        </TableRow>
+                    ))}
+                    </TableBody>
+                </Table>
+            </div>
         </CardContent>
       </Card>
 
       <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="sm:max-w-lg">
           <DialogHeader>
             <DialogTitle>
               {selectedProduct ? "Edit Product" : "Add New Product"}

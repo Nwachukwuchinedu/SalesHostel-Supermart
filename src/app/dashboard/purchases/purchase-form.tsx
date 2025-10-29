@@ -89,7 +89,7 @@ export function PurchaseForm({ initialData, onSubmit, onCancel }: PurchaseFormPr
     return watchedProducts.reduce((total, item) => {
       const product = products.find((p) => p.id === item.productId);
       if (product) {
-        return total + product.price * item.quantity;
+        return total + product.sellingPrice * item.quantity;
       }
       return total;
     }, 0);
@@ -105,7 +105,7 @@ export function PurchaseForm({ initialData, onSubmit, onCancel }: PurchaseFormPr
         return {
             name: product.name,
             quantity: item.quantity,
-            price: product.price
+            price: product.sellingPrice
         }
       }),
       total,
@@ -186,8 +186,8 @@ export function PurchaseForm({ initialData, onSubmit, onCancel }: PurchaseFormPr
                             </FormControl>
                             <SelectContent>
                             {products.map((product) => (
-                                <SelectItem key={product.id} value={product.id}>
-                                {product.name}
+                                <SelectItem key={product.id} value={product.id} disabled={product.quantityAvailable === 0}>
+                                {product.name} ({product.quantityAvailable} in stock)
                                 </SelectItem>
                             ))}
                             </SelectContent>

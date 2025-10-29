@@ -14,7 +14,10 @@ export type Product = {
   name: string;
   group: string;
   uniqueName: string;
-  price: number;
+  costPrice: number;
+  sellingPrice: number;
+  quantityAvailable: number;
+  imageUrl?: string;
   tags: string[];
   description: string;
 };

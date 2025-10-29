@@ -1,3 +1,4 @@
+
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -19,8 +20,12 @@ import type { Product } from "@/lib/types";
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters."),
+  uniqueName: z.string().min(1, "Unique name is required."),
   group: z.string().min(2, "Group must be at least 2 characters."),
-  price: z.coerce.number().positive("Price must be a positive number."),
+  costPrice: z.coerce.number().positive("Cost price must be a positive number."),
+  sellingPrice: z.coerce.number().positive("Selling price must be a positive number."),
+  quantityAvailable: z.coerce.number().min(0, "Quantity cannot be negative.").default(0),
+  imageUrl: z.string().url("Please enter a valid URL.").optional().or(z.literal('')),
   tags: z.string().min(1, "Please add at least one tag."),
   description: z.string(),
 });
@@ -47,18 +52,20 @@ export function ProductForm({
         }
       : {
           name: "",
+          uniqueName: "",
           group: "",
-          price: 0,
+          costPrice: 0,
+          sellingPrice: 0,
+          quantityAvailable: 0,
+          imageUrl: "",
           tags: "",
           description: "",
         },
   });
 
   const handleSubmit = (values: ProductFormValues) => {
-    const uniqueName = values.name.toLowerCase().replace(/\s+/g, "-");
     const productData: Product = {
       id: initialData?.id || `PROD${Date.now()}`,
-      uniqueName: initialData?.uniqueName || uniqueName,
       ...values,
       tags: values.tags.split(",").map((tag) => tag.trim()),
     };
@@ -76,7 +83,7 @@ export function ProductForm({
                 <FormItem>
                 <FormLabel>Product Name</FormLabel>
                 <FormControl>
-                    <Input placeholder="e.g., Organic Apples" {...field} />
+                    <Input placeholder="e.g., Bag of Rice" {...field} />
                 </FormControl>
                 <FormMessage />
                 </FormItem>
@@ -84,12 +91,12 @@ export function ProductForm({
             />
             <FormField
             control={form.control}
-            name="group"
+            name="uniqueName"
             render={({ field }) => (
                 <FormItem>
-                <FormLabel>Group</FormLabel>
+                <FormLabel>Unique Name</FormLabel>
                 <FormControl>
-                    <Input placeholder="e.g., Fruits" {...field} />
+                    <Input placeholder="e.g., Rice" {...field} />
                 </FormControl>
                 <FormMessage />
                 </FormItem>
@@ -99,10 +106,38 @@ export function ProductForm({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormField
             control={form.control}
-            name="price"
+            name="group"
             render={({ field }) => (
                 <FormItem>
-                <FormLabel>Price</FormLabel>
+                <FormLabel>Group</FormLabel>
+                <FormControl>
+                    <Input placeholder="e.g., Grains" {...field} />
+                </FormControl>
+                <FormMessage />
+                </FormItem>
+            )}
+            />
+             <FormField
+            control={form.control}
+            name="quantityAvailable"
+            render={({ field }) => (
+                <FormItem>
+                <FormLabel>Quantity Available</FormLabel>
+                <FormControl>
+                    <Input type="number" {...field} />
+                </FormControl>
+                <FormMessage />
+                </FormItem>
+            )}
+            />
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <FormField
+            control={form.control}
+            name="costPrice"
+            render={({ field }) => (
+                <FormItem>
+                <FormLabel>Cost Price</FormLabel>
                 <FormControl>
                     <Input type="number" step="0.01" {...field} />
                 </FormControl>
@@ -112,6 +147,33 @@ export function ProductForm({
             />
             <FormField
             control={form.control}
+            name="sellingPrice"
+            render={({ field }) => (
+                <FormItem>
+                <FormLabel>Selling Price</FormLabel>
+                <FormControl>
+                    <Input type="number" step="0.01" {...field} />
+                </FormControl>
+                <FormMessage />
+                </FormItem>
+            )}
+            />
+        </div>
+         <FormField
+          control={form.control}
+          name="imageUrl"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Product Image URL</FormLabel>
+              <FormControl>
+                <Input placeholder="https://example.com/image.png" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+            control={form.control}
             name="tags"
             render={({ field }) => (
                 <FormItem>
@@ -119,14 +181,13 @@ export function ProductForm({
                 <FormControl>
                     <Input placeholder="e.g., organic, fruit, fresh" {...field} />
                 </FormControl>
-                <FormDescription className="hidden md:block">
+                <FormDescription>
                     Comma-separated list of tags.
                 </FormDescription>
                 <FormMessage />
                 </FormItem>
             )}
             />
-        </div>
         <FormField
           control={form.control}
           name="description"
