@@ -47,6 +47,7 @@ import { products as initialProducts } from "@/lib/data";
 import { ProductForm } from "./product-form";
 import type { Product, UserRole } from "@/lib/types";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>(initialProducts);
@@ -223,11 +224,15 @@ export default function ProductsPage() {
               {selectedProduct ? "Edit Product" : "Add New Product"}
             </DialogTitle>
           </DialogHeader>
-          <ProductForm
-            initialData={selectedProduct}
-            onSubmit={handleFormSubmit}
-            onCancel={() => setIsFormOpen(false)}
-          />
+          <ScrollArea className="max-h-[70vh]">
+            <div className="p-6">
+              <ProductForm
+                initialData={selectedProduct}
+                onSubmit={handleFormSubmit}
+                onCancel={() => setIsFormOpen(false)}
+              />
+            </div>
+          </ScrollArea>
         </DialogContent>
       </Dialog>
 
