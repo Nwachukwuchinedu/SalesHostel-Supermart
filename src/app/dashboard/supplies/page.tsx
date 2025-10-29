@@ -162,7 +162,7 @@ export default function SuppliesPage() {
       </Card>
 
       <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="sm:max-w-md max-w-[calc(100vw-2rem)]">
           <DialogHeader>
             <DialogTitle>
               {selectedSupply ? "Edit Supply" : "Add New Supply"}

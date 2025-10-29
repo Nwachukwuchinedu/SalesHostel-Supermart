@@ -187,7 +187,7 @@ export default function PurchasesPage() {
       </Card>
 
       <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
-        <DialogContent className="sm:max-w-3xl">
+        <DialogContent className="sm:max-w-3xl max-w-[calc(100vw-2rem)]">
           <DialogHeader>
             <DialogTitle>{selectedPurchase ? 'Edit Purchase' : 'Create New Purchase'}</DialogTitle>
           </DialogHeader>
@@ -200,7 +200,7 @@ export default function PurchasesPage() {
       </Dialog>
 
       <Dialog open={isDetailsOpen} onOpenChange={setIsDetailsOpen}>
-        <DialogContent>
+        <DialogContent className="max-w-[calc(100vw-2rem)]">
           <DialogHeader>
             <DialogTitle>Purchase Details</DialogTitle>
             <DialogDescription>
@@ -246,7 +246,7 @@ export default function PurchasesPage() {
       </Dialog>
       
       <Dialog open={isReceiptOpen} onOpenChange={setIsReceiptOpen}>
-        <DialogContent>
+        <DialogContent className="max-w-[calc(100vw-2rem)]">
           <DialogHeader>
             <DialogTitle>Receipt</DialogTitle>
           </DialogHeader>

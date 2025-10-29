@@ -211,7 +211,7 @@ export default function InvoicesPage() {
       </Card>
 
       <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
-        <DialogContent>
+        <DialogContent className="max-w-[calc(100vw-2rem)]">
           <DialogHeader>
             <DialogTitle>
               {selectedInvoice ? "Edit Invoice" : "Create Invoice"}
@@ -226,7 +226,7 @@ export default function InvoicesPage() {
       </Dialog>
 
       <Dialog open={isDetailsOpen} onOpenChange={setIsDetailsOpen}>
-        <DialogContent>
+        <DialogContent className="max-w-[calc(100vw-2rem)]">
             <DialogHeader>
                 <DialogTitle>Invoice Details</DialogTitle>
                 <DialogDescription>
@@ -285,7 +285,7 @@ export default function InvoicesPage() {
       </Dialog>
       
       <Dialog open={isReceiptOpen} onOpenChange={setIsReceiptOpen}>
-        <DialogContent>
+        <DialogContent className="max-w-[calc(100vw-2rem)]">
           <DialogHeader>
             <DialogTitle>Receipt</DialogTitle>
           </DialogHeader>

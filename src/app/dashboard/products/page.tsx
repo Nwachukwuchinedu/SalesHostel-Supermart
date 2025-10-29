@@ -218,7 +218,7 @@ export default function ProductsPage() {
       </Card>
 
       <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
-        <DialogContent className="sm:max-w-lg">
+        <DialogContent className="sm:max-w-lg max-w-[calc(100vw-2rem)]">
           <DialogHeader>
             <DialogTitle>
               {selectedProduct ? "Edit Product" : "Add New Product"}
