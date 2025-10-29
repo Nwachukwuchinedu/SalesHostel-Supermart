@@ -59,10 +59,10 @@ export default function PurchasesPage() {
   };
 
   const handleFormSubmit = (purchaseValues: Purchase) => {
-    if (selectedPurchase) {
+    if (selectedPurchase && purchases.find(p => p.id === purchaseValues.id)) {
       // Update existing purchase
       setPurchases(
-        purchases.map((p) => (p.id === selectedPurchase.id ? purchaseValues : p))
+        purchases.map((p) => (p.id === purchaseValues.id ? purchaseValues : p))
       );
     } else {
       // Add new purchase
@@ -79,6 +79,14 @@ export default function PurchasesPage() {
       )
     );
   };
+
+  const handleMarkAsPending = (purchaseId: string) => {
+    setPurchases(
+      purchases.map((p) =>
+        p.id === purchaseId ? { ...p, paymentStatus: "Pending" } : p
+      )
+    );
+  }
 
   const handleViewDetails = (purchase: Purchase) => {
     setSelectedPurchase(purchase);
@@ -171,7 +179,9 @@ export default function PurchasesPage() {
                             <DropdownMenuLabel>Actions</DropdownMenuLabel>
                             <DropdownMenuItem onSelect={() => handleViewDetails(purchase)}>View Details</DropdownMenuItem>
                             <DropdownMenuItem onSelect={() => handleViewReceipt(purchase)}>View Receipt</DropdownMenuItem>
-                            {purchase.paymentStatus !== "Paid" && (
+                            {purchase.paymentStatus === "Paid" ? (
+                                <DropdownMenuItem onSelect={() => handleMarkAsPending(purchase.id)}>Mark as Pending</DropdownMenuItem>
+                            ) : (
                                 <DropdownMenuItem onSelect={() => handleMarkAsPaid(purchase.id)}>Mark as Paid</DropdownMenuItem>
                             )}
                           </DropdownMenuContent>
