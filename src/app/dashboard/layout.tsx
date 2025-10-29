@@ -14,14 +14,14 @@ export default function DashboardLayout({
         <SidebarNav />
       </Sidebar>
       <SidebarInset>
-        <div className="flex h-full flex-col">
+        <div className="flex h-full flex-col overflow-hidden">
             <header className="flex h-16 items-center justify-between border-b bg-card px-4 md:px-6 flex-shrink-0">
                 <SidebarTrigger className="md:hidden" />
                 <div className="ml-auto">
                     <UserNav />
                 </div>
             </header>
-            <main className="flex-1 overflow-y-auto p-4 md:p-8">
+            <main className="flex-1 overflow-auto p-4 md:p-8 min-w-0">
             {children}
             </main>
         </div>
