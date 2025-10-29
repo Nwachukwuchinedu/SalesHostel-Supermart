@@ -82,6 +82,10 @@ export default function InvoicesPage() {
   const handleMarkAsPaid = (invoiceId: string) => {
     setInvoices(invoices.map(i => i.id === invoiceId ? {...i, status: 'Paid'} : i));
   }
+  
+  const handleMarkAsUnpaid = (invoiceId: string) => {
+    setInvoices(invoices.map(i => i.id === invoiceId ? {...i, status: 'Unpaid'} : i));
+  }
 
   const handleViewDetails = (invoice: Invoice) => {
     const purchase = purchases.find(p => p.id === invoice.purchaseId);
@@ -195,8 +199,12 @@ export default function InvoicesPage() {
                             <DropdownMenuLabel>Actions</DropdownMenuLabel>
                             <DropdownMenuItem onSelect={() => handleViewDetails(invoice)}>View Invoice</DropdownMenuItem>
                              <DropdownMenuItem onSelect={() => handleViewReceipt(invoice)}>View Receipt</DropdownMenuItem>
-                            {canManageInvoices && invoice.status !== "Paid" && (
-                              <DropdownMenuItem onSelect={() => handleMarkAsPaid(invoice.id)}>Mark as Paid</DropdownMenuItem>
+                            {canManageInvoices && (
+                              invoice.status === 'Paid' ? (
+                                <DropdownMenuItem onSelect={() => handleMarkAsUnpaid(invoice.id)}>Mark as Unpaid</DropdownMenuItem>
+                              ) : (
+                                <DropdownMenuItem onSelect={() => handleMarkAsPaid(invoice.id)}>Mark as Paid</DropdownMenuItem>
+                              )
                             )}
                           </DropdownMenuContent>
                         </DropdownMenu>
@@ -330,5 +338,7 @@ export default function InvoicesPage() {
     </div>
   );
 }
+
+    
 
     
