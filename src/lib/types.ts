@@ -17,6 +17,7 @@ export type Product = {
   costPrice: number;
   sellingPrice: number;
   quantityAvailable: number;
+  quantityUnit: "pcs" | "kg" | "ltr" | "box";
   imageUrl?: string;
   tags: string[];
   description: string;

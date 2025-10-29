@@ -15,6 +15,13 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import type { Product } from "@/lib/types";
 
@@ -25,6 +32,7 @@ const formSchema = z.object({
   costPrice: z.coerce.number().positive("Cost price must be a positive number."),
   sellingPrice: z.coerce.number().positive("Selling price must be a positive number."),
   quantityAvailable: z.coerce.number().min(0, "Quantity cannot be negative.").default(0),
+  quantityUnit: z.enum(["pcs", "kg", "ltr", "box"]),
   imageUrl: z.string().optional(),
   tags: z.string().min(1, "Please add at least one tag."),
   description: z.string(),
@@ -57,6 +65,7 @@ export function ProductForm({
           costPrice: 0,
           sellingPrice: 0,
           quantityAvailable: 0,
+          quantityUnit: "pcs",
           imageUrl: "",
           tags: "",
           description: "",
@@ -116,21 +125,21 @@ export function ProductForm({
             )}
             />
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <FormField
+          control={form.control}
+          name="group"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Group</FormLabel>
+              <FormControl>
+                <Input placeholder="e.g., Grains" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <div className="grid grid-cols-2 gap-4">
             <FormField
-            control={form.control}
-            name="group"
-            render={({ field }) => (
-                <FormItem>
-                <FormLabel>Group</FormLabel>
-                <FormControl>
-                    <Input placeholder="e.g., Grains" {...field} />
-                </FormControl>
-                <FormMessage />
-                </FormItem>
-            )}
-            />
-             <FormField
             control={form.control}
             name="quantityAvailable"
             render={({ field }) => (
@@ -142,6 +151,29 @@ export function ProductForm({
                 <FormMessage />
                 </FormItem>
             )}
+            />
+            <FormField
+              control={form.control}
+              name="quantityUnit"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Unit</FormLabel>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a unit" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="pcs">pcs</SelectItem>
+                      <SelectItem value="kg">kg</SelectItem>
+                      <SelectItem value="ltr">ltr</SelectItem>
+                      <SelectItem value="box">box</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

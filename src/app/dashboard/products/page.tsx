@@ -178,7 +178,7 @@ export default function ProductsPage() {
                         </TableCell>
                         <TableCell className="font-medium">{product.name}</TableCell>
                         <TableCell>{product.group}</TableCell>
-                        <TableCell>{product.quantityAvailable}</TableCell>
+                        <TableCell>{product.quantityAvailable} {product.quantityUnit}</TableCell>
                         <TableCell className="text-right">${product.sellingPrice.toFixed(2)}</TableCell>
                         {canManageProducts && (
                             <TableCell>
