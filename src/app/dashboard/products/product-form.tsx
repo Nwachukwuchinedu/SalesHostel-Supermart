@@ -25,7 +25,7 @@ const formSchema = z.object({
   costPrice: z.coerce.number().positive("Cost price must be a positive number."),
   sellingPrice: z.coerce.number().positive("Selling price must be a positive number."),
   quantityAvailable: z.coerce.number().min(0, "Quantity cannot be negative.").default(0),
-  imageUrl: z.string().url("Please enter a valid URL.").optional().or(z.literal('')),
+  imageUrl: z.string().optional(),
   tags: z.string().min(1, "Please add at least one tag."),
   description: z.string(),
 });
@@ -67,10 +67,23 @@ export function ProductForm({
     const productData: Product = {
       id: initialData?.id || `PROD${Date.now()}`,
       ...values,
+      imageUrl: values.imageUrl || "",
       tags: values.tags.split(",").map((tag) => tag.trim()),
     };
     onSubmit(productData);
   };
+  
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        form.setValue("imageUrl", reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
 
   return (
     <Form {...form}>
@@ -164,14 +177,19 @@ export function ProductForm({
           name="imageUrl"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Product Image URL</FormLabel>
+              <FormLabel>Product Image</FormLabel>
               <FormControl>
-                <Input placeholder="https://example.com/image.png" {...field} />
+                <Input type="file" accept="image/*" onChange={handleImageChange} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
+        {form.watch("imageUrl") && (
+          <div className="flex justify-center">
+            <img src={form.watch("imageUrl")} alt="Product preview" className="h-24 w-24 object-cover rounded-md" />
+          </div>
+        )}
         <FormField
             control={form.control}
             name="tags"
