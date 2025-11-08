@@ -102,7 +102,7 @@ export function InvoiceForm({
                 <SelectContent>
                   {unpaidPurchases.map((purchase) => (
                     <SelectItem key={purchase.id} value={purchase.id}>
-                      {purchase.id} - {purchase.customerName} (${purchase.total.toFixed(2)})
+                      {purchase.id} - {purchase.customerName} (₦{purchase.total.toFixed(2)})
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -114,7 +114,7 @@ export function InvoiceForm({
         {selectedPurchase && (
             <div className="space-y-2 rounded-md border p-2 text-sm">
                 <p><strong>Customer:</strong> {selectedPurchase.customerName}</p>
-                <p><strong>Amount:</strong> ${selectedPurchase.total.toFixed(2)}</p>
+                <p><strong>Amount:</strong> ₦{selectedPurchase.total.toFixed(2)}</p>
                 <p><strong>Date:</strong> {new Date(selectedPurchase.date).toLocaleDateString()}</p>
             </div>
         )}

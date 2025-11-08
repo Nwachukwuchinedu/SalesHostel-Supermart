@@ -235,7 +235,7 @@ export function PurchaseForm({ initialData, onSubmit, onCancel }: PurchaseFormPr
         
         <div className="flex justify-between items-center pt-4 border-t">
             <div className="text-lg font-semibold">
-                Total: ${calculateTotal().toFixed(2)}
+                Total: ₦{calculateTotal().toFixed(2)}
             </div>
             <div className="flex justify-end gap-4">
             <Button type="button" variant="outline" onClick={onCancel}>

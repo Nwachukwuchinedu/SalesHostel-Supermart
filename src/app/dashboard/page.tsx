@@ -1,3 +1,4 @@
+
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -45,7 +46,7 @@ export default function DashboardPage() {
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">$45,231.89</div>
+            <div className="text-2xl font-bold">₦45,231.89</div>
             <p className="text-xs text-muted-foreground">+20.1% from last month</p>
           </CardContent>
         </Card>
@@ -119,7 +120,7 @@ export default function DashboardPage() {
                         {invoice.status}
                       </Badge>
                     </TableCell>
-                    <TableCell className="text-right">${invoice.amount.toFixed(2)}</TableCell>
+                    <TableCell className="text-right">₦{invoice.amount.toFixed(2)}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>

@@ -160,7 +160,7 @@ export default function PurchasesPage() {
                       {new Date(purchase.date).toLocaleDateString()}
                     </TableCell>
                     <TableCell className="text-right">
-                      ${purchase.total.toFixed(2)}
+                      ₦{purchase.total.toFixed(2)}
                     </TableCell>
                     <TableCell>
                       <div className="flex justify-end">
@@ -237,14 +237,14 @@ export default function PurchasesPage() {
                         <TableRow key={i}>
                             <TableCell>{p.name}</TableCell>
                             <TableCell>{p.quantity}</TableCell>
-                            <TableCell className="text-right">${p.price.toFixed(2)}</TableCell>
+                            <TableCell className="text-right">₦{p.price.toFixed(2)}</TableCell>
                         </TableRow>
                     ))}
                 </TableBody>
               </Table>
               <Separator />
               <div className="text-right font-bold text-lg">
-                Total: ${selectedPurchase.total.toFixed(2)}
+                Total: ₦{selectedPurchase.total.toFixed(2)}
               </div>
             </div>
           )}
@@ -277,14 +277,14 @@ export default function PurchasesPage() {
                     {selectedPurchase.products.map((item, index) => (
                         <div key={index} className="flex justify-between">
                             <span>{item.quantity}x {item.name}</span>
-                            <span>${(item.quantity * item.price).toFixed(2)}</span>
+                            <span>₦{(item.quantity * item.price).toFixed(2)}</span>
                         </div>
                     ))}
                 </div>
                 <Separator />
                 <div className="flex justify-between font-bold text-base">
                     <span>Total</span>
-                    <span>${selectedPurchase.total.toFixed(2)}</span>
+                    <span>₦{selectedPurchase.total.toFixed(2)}</span>
                 </div>
                  <Separator />
                  <div className="text-center text-muted-foreground">

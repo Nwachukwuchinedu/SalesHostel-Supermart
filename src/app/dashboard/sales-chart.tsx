@@ -1,3 +1,4 @@
+
 "use client";
 
 import {
@@ -29,7 +30,7 @@ export function SalesChart({ data }: SalesChartProps) {
           fontSize={12}
           tickLine={false}
           axisLine={false}
-          tickFormatter={(value) => `$${value}`}
+          tickFormatter={(value) => `₦${value}`}
         />
         <Tooltip
           cursor={{ fill: "hsl(var(--accent))", opacity: 0.3 }}

@@ -180,7 +180,7 @@ export default function InvoicesPage() {
                       {new Date(invoice.dueDate).toLocaleDateString()}
                     </TableCell>
                     <TableCell className="text-right">
-                      ${invoice.amount.toFixed(2)}
+                      ₦{invoice.amount.toFixed(2)}
                     </TableCell>
                     <TableCell>
                       <div className="flex justify-end">
@@ -268,14 +268,14 @@ export default function InvoicesPage() {
                                     <TableRow key={i}>
                                         <TableCell>{p.name}</TableCell>
                                         <TableCell>{p.quantity}</TableCell>
-                                        <TableCell className="text-right">${p.price.toFixed(2)}</TableCell>
+                                        <TableCell className="text-right">₦{p.price.toFixed(2)}</TableCell>
                                     </TableRow>
                                 ))}
                             </TableBody>
                         </Table>
                         <Separator />
                         <div className="text-right font-bold text-lg">
-                            Total: ${selectedInvoice.amount.toFixed(2)}
+                            Total: ₦{selectedInvoice.amount.toFixed(2)}
                         </div>
                         </>
                     ) : (
@@ -314,14 +314,14 @@ export default function InvoicesPage() {
                     {selectedInvoice.purchase.products.map((item, index) => (
                         <div key={index} className="flex justify-between">
                             <span>{item.quantity}x {item.name}</span>
-                            <span>${(item.quantity * item.price).toFixed(2)}</span>
+                            <span>₦{(item.quantity * item.price).toFixed(2)}</span>
                         </div>
                     ))}
                 </div>
                 <Separator />
                 <div className="flex justify-between font-bold text-base">
                     <span>Total</span>
-                    <span>${selectedInvoice.purchase.total.toFixed(2)}</span>
+                    <span>₦{selectedInvoice.purchase.total.toFixed(2)}</span>
                 </div>
                  <Separator />
                  <div className="text-center text-muted-foreground">
