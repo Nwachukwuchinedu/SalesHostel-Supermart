@@ -13,7 +13,7 @@ export type Product = {
   id: string;
   name: string;
   group: string;
-  generalName: string;
+  uniqueName: string;
   costPrice: number;
   sellingPrice: number;
   quantityAvailable: number;
@@ -26,7 +26,7 @@ export type Product = {
 export type Supply = {
   id: string;
   productName: string;
-  generalName: string;
+  uniqueName: string;
   quantityType: "pcs" | "kg" | "ltr" | "box";
   quantity: number;
   supplier: string;
