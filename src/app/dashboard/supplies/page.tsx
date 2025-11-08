@@ -76,7 +76,7 @@ export default function SuppliesPage() {
     setSupplyToDelete(null);
   }
 
-  const handleFormSubmit = (values: Omit<Supply, 'id' | 'uniqueName'>) => {
+  const handleFormSubmit = (values: Omit<Supply, 'id' | 'generalName'>) => {
     if(selectedSupply) {
         // Update existing supply
         setSupplies(supplies.map(s => s.id === selectedSupply.id ? { ...selectedSupply, ...values } : s))
@@ -84,7 +84,7 @@ export default function SuppliesPage() {
         // Add new supply
         const newSupply: Supply = {
             id: `SUP${Date.now()}`,
-            uniqueName: values.productName.toLowerCase().replace(/\s+/g, "-"),
+            generalName: values.productName.toLowerCase().replace(/\s+/g, "-"),
             ...values
         }
         setSupplies([...supplies, newSupply]);

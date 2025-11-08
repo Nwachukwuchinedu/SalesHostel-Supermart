@@ -105,7 +105,7 @@ export default function ProductsPage() {
     return products.filter(
       (product) =>
         product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        product.uniqueName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        product.generalName.toLowerCase().includes(searchTerm.toLowerCase()) ||
         product.group.toLowerCase().includes(searchTerm.toLowerCase()) ||
         product.tags.some((tag) =>
           tag.toLowerCase().includes(searchTerm.toLowerCase())

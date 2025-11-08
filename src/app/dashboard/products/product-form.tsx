@@ -27,7 +27,7 @@ import type { Product } from "@/lib/types";
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters."),
-  uniqueName: z.string().min(1, "Unique name is required."),
+  generalName: z.string().min(1, "General name is required."),
   group: z.string().min(2, "Group must be at least 2 characters."),
   costPrice: z.coerce.number().positive("Cost price must be a positive number."),
   sellingPrice: z.coerce.number().positive("Selling price must be a positive number."),
@@ -60,7 +60,7 @@ export function ProductForm({
         }
       : {
           name: "",
-          uniqueName: "",
+          generalName: "",
           group: "",
           costPrice: 0,
           sellingPrice: 0,
@@ -113,10 +113,10 @@ export function ProductForm({
             />
             <FormField
             control={form.control}
-            name="uniqueName"
+            name="generalName"
             render={({ field }) => (
                 <FormItem>
-                <FormLabel>Unique Name</FormLabel>
+                <FormLabel>General Name</FormLabel>
                 <FormControl>
                     <Input placeholder="e.g., Rice" {...field} />
                 </FormControl>
