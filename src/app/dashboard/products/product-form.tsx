@@ -27,7 +27,7 @@ import type { Product } from "@/lib/types";
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters."),
-  generalName: z.string().min(1, "General name is required."),
+  uniqueName: z.string().min(1, "Unique name is required."),
   group: z.string().min(1, "Group is required."),
   costPrice: z.coerce.number().positive("Cost price must be a positive number."),
   sellingPrice: z.coerce.number().positive("Selling price must be a positive number."),
@@ -45,7 +45,7 @@ interface ProductFormProps {
   onSubmit: (values: Product) => void;
   onCancel: () => void;
   groups: string[];
-  generalNames: string[];
+  uniqueNames: string[];
 }
 
 export function ProductForm({
@@ -53,7 +53,7 @@ export function ProductForm({
   onSubmit,
   onCancel,
   groups,
-  generalNames,
+  uniqueNames,
 }: ProductFormProps) {
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(formSchema),
@@ -64,7 +64,7 @@ export function ProductForm({
         }
       : {
           name: "",
-          generalName: "",
+          uniqueName: "",
           group: "",
           costPrice: 0,
           sellingPrice: 0,
@@ -117,18 +117,18 @@ export function ProductForm({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormField
               control={form.control}
-              name="generalName"
+              name="uniqueName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>General Name</FormLabel>
+                  <FormLabel>Unique Name</FormLabel>
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select a general name" />
+                        <SelectValue placeholder="Select a unique name" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {generalNames.map(name => <SelectItem key={name} value={name}>{name}</SelectItem>)}
+                      {uniqueNames.map(name => <SelectItem key={name} value={name}>{name}</SelectItem>)}
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -282,3 +282,5 @@ export function ProductForm({
     </Form>
   );
 }
+
+    

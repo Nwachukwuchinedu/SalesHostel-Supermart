@@ -8,23 +8,23 @@ export const users: User[] = [
   { id: "4", name: "Customer User", email: "customer@example.com", avatar: "4", role: "Customer" },
 ];
 
-export const initialGeneralNames: string[] = ["Apples", "Bread", "Almond Milk", "Chicken", "Cheddar"];
+export const initialUniqueNames: string[] = ["Apples", "Bread", "Almond Milk", "Chicken", "Cheddar"];
 export const initialGroups: string[] = ["Fruits", "Bakery", "Beverages", "Meat", "Dairy"];
 
 
 export const products: Product[] = [
-  { id: "PROD001", name: "Organic Fuji Apples", generalName: "Apples", group: "Fruits", costPrice: 1.50, sellingPrice: 2.99, quantityAvailable: 100, quantityUnit: "kg", tags: ["organic", "fruit", "fresh"], description: "Fresh and crispy Fuji apples, certified organic." },
-  { id: "PROD002", name: "Artisanal Whole Wheat Bread", generalName: "Bread", group: "Bakery", costPrice: 2.00, sellingPrice: 4.50, quantityAvailable: 50, quantityUnit: "pcs", tags: ["bakery", "bread", "healthy"], description: "A loaf of freshly baked whole wheat bread." },
-  { id: "PROD003", name: "Unsweetened Almond Milk", generalName: "Almond Milk", group: "Beverages", costPrice: 2.50, sellingPrice: 3.75, quantityAvailable: 75, quantityUnit: "ltr", tags: ["vegan", "dairy-free", "milk"], description: "Unsweetened almond milk, a great dairy alternative." },
-  { id: "PROD004", name: "Boneless Chicken Breast", generalName: "Chicken", group: "Meat", costPrice: 6.00, sellingPrice: 9.99, quantityAvailable: 30, quantityUnit: "kg", tags: ["meat", "poultry", "protein"], description: "Boneless, skinless chicken breast, sold by the pound." },
-  { id: "PROD005", name: "Sharp Cheddar Cheese Block", generalName: "Cheddar", group: "Dairy", costPrice: 3.00, sellingPrice: 5.25, quantityAvailable: 40, quantityUnit: "pcs", tags: ["dairy", "cheese"], description: "A block of sharp cheddar cheese." },
+  { id: "PROD001", name: "Organic Fuji Apples", uniqueName: "Apples", group: "Fruits", costPrice: 1.50, sellingPrice: 2.99, quantityAvailable: 100, quantityUnit: "kg", tags: ["organic", "fruit", "fresh"], description: "Fresh and crispy Fuji apples, certified organic." },
+  { id: "PROD002", name: "Artisanal Whole Wheat Bread", uniqueName: "Bread", group: "Bakery", costPrice: 2.00, sellingPrice: 4.50, quantityAvailable: 50, quantityUnit: "pcs", tags: ["bakery", "bread", "healthy"], description: "A loaf of freshly baked whole wheat bread." },
+  { id: "PROD003", name: "Unsweetened Almond Milk", uniqueName: "Almond Milk", group: "Beverages", costPrice: 2.50, sellingPrice: 3.75, quantityAvailable: 75, quantityUnit: "ltr", tags: ["vegan", "dairy-free", "milk"], description: "Unsweetened almond milk, a great dairy alternative." },
+  { id: "PROD004", name: "Boneless Chicken Breast", uniqueName: "Chicken", group: "Meat", costPrice: 6.00, sellingPrice: 9.99, quantityAvailable: 30, quantityUnit: "kg", tags: ["meat", "poultry", "protein"], description: "Boneless, skinless chicken breast, sold by the pound." },
+  { id: "PROD005", name: "Sharp Cheddar Cheese Block", uniqueName: "Cheddar", group: "Dairy", costPrice: 3.00, sellingPrice: 5.25, quantityAvailable: 40, quantityUnit: "pcs", tags: ["dairy", "cheese"], description: "A block of sharp cheddar cheese." },
 ];
 
 export const supplies: Supply[] = [
-  { id: "SUP001", productName: "Organic Fuji Apples", generalName: "Apples", quantityType: "box", quantity: 50, supplier: "Fresh Farms", date: "2023-10-01" },
-  { id: "SUP002", productName: "Artisanal Whole Wheat Bread", generalName: "Bread", quantityType: "pcs", quantity: 100, supplier: "Bakery Co.", date: "2023-10-02" },
-  { id: "SUP003", productName: "Unsweetened Almond Milk", generalName: "Almond Milk", quantityType: "ltr", quantity: 200, supplier: "Healthy Drinks Inc.", date: "2023-10-02" },
-  { id: "SUP004", productName: "Boneless Chicken Breast", generalName: "Chicken", quantityType: "kg", quantity: 75, supplier: "Poultry Direct", date: "2023-10-03" },
+  { id: "SUP001", productName: "Organic Fuji Apples", uniqueName: "Apples", quantityType: "box", quantity: 50, supplier: "Fresh Farms", date: "2023-10-01" },
+  { id: "SUP002", productName: "Artisanal Whole Wheat Bread", uniqueName: "Bread", quantityType: "pcs", quantity: 100, supplier: "Bakery Co.", date: "2023-10-02" },
+  { id: "SUP003", productName: "Unsweetened Almond Milk", uniqueName: "Almond Milk", quantityType: "ltr", quantity: 200, supplier: "Healthy Drinks Inc.", date: "2023-10-02" },
+  { id: "SUP004", productName: "Boneless Chicken Breast", uniqueName: "Chicken", quantityType: "kg", quantity: 75, supplier: "Poultry Direct", date: "2023-10-03" },
 ];
 
 export const purchases: Purchase[] = [
@@ -34,3 +34,5 @@ export const purchases: Purchase[] = [
   { id: "PUR004", customerName: "Alice Williams", products: [{ name: "Organic Fuji Apples", quantity: 5, price: 2.99 }], total: 14.95, paymentStatus: "Pending", date: "2023-10-08" },
   { id: "PUR005", customerName: "Customer User", products: [{ name: "Artisanal Whole Wheat Bread", quantity: 2, price: 4.50 }], total: 9.00, paymentStatus: "Pending", date: "2023-10-09" },
 ];
+
+    

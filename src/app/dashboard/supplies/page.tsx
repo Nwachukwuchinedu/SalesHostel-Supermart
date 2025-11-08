@@ -76,18 +76,18 @@ export default function SuppliesPage() {
     setSupplyToDelete(null);
   }
 
-  const handleFormSubmit = (values: Omit<Supply, 'id' | 'generalName'>) => {
+  const handleFormSubmit = (values: Omit<Supply, 'id' | 'uniqueName'>) => {
     const product = products.find(p => p.name === values.productName);
-    const generalName = product ? product.generalName : "";
+    const uniqueName = product ? product.uniqueName : "";
 
     if(selectedSupply) {
         // Update existing supply
-        setSupplies(supplies.map(s => s.id === selectedSupply.id ? { ...selectedSupply, ...values, generalName } : s))
+        setSupplies(supplies.map(s => s.id === selectedSupply.id ? { ...selectedSupply, ...values, uniqueName } : s))
     } else {
         // Add new supply
         const newSupply: Supply = {
             id: `SUP${Date.now()}`,
-            generalName,
+            uniqueName,
             ...values
         }
         setSupplies([...supplies, newSupply]);
@@ -195,3 +195,5 @@ export default function SuppliesPage() {
     </div>
   );
 }
+
+    

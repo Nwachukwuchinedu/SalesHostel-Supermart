@@ -1,3 +1,4 @@
+
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -36,7 +37,7 @@ type SupplyFormValues = z.infer<typeof formSchema>;
 
 interface SupplyFormProps {
   initialData?: Supply | null;
-  onSubmit: (values: Omit<Supply, 'id' | 'generalName'>) => void;
+  onSubmit: (values: Omit<Supply, 'id' | 'uniqueName'>) => void;
   onCancel: () => void;
 }
 
@@ -187,3 +188,5 @@ export function SupplyForm({
     </Form>
   );
 }
+
+    

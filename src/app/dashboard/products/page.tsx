@@ -30,6 +30,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogFooter,
 } from "@/components/ui/dialog";
 import {
     AlertDialog,
@@ -42,27 +43,33 @@ import {
     AlertDialogTitle,
   } from "@/components/ui/alert-dialog"
 import { Input } from "@/components/ui/input";
-import { MoreHorizontal, PlusCircle, Search, Tags, Text, Trash2 } from "lucide-react";
-import { products as initialProducts, initialGroups, initialGeneralNames } from "@/lib/data";
+import { MoreHorizontal, PlusCircle, Search, Tags, Text, Trash2, Edit } from "lucide-react";
+import { products as initialProducts, initialGroups, initialUniqueNames } from "@/lib/data";
 import { ProductForm } from "./product-form";
 import type { Product, UserRole } from "@/lib/types";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Badge } from "@/components/ui/badge";
+import { Label } from "@/components/ui/label";
+
 
 export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>(initialProducts);
   const [userRole, setUserRole] = useState<UserRole | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [isAlertOpen, setIsAlertOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-  const [productToDelete, setProductToDelete] = useState<string | null>(null);
-
+  
   const [groups, setGroups] = useState<string[]>(initialGroups);
-  const [generalNames, setGeneralNames] = useState<string[]>(initialGeneralNames);
+  const [uniqueNames, setUniqueNames] = useState<string[]>(initialUniqueNames);
   const [newGroup, setNewGroup] = useState("");
-  const [newGeneralName, setNewGeneralName] = useState("");
+  const [newUniqueName, setNewUniqueName] = useState("");
+
+  const [isDeleteAlertOpen, setIsDeleteAlertOpen] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState<{ type: 'group' | 'uniqueName'; value: string } | null>(null);
+
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [itemToEdit, setItemToEdit] = useState<{ type: 'group' | 'uniqueName'; value: string } | null>(null);
+  const [editValue, setEditValue] = useState("");
 
 
   useEffect(() => {
@@ -82,17 +89,9 @@ export default function ProductsPage() {
     setIsFormOpen(true);
   };
 
-  const handleDeleteClick = (productId: string) => {
-    setProductToDelete(productId);
-    setIsAlertOpen(true);
-  }
-
-  const handleDeleteConfirm = () => {
-    if (productToDelete) {
-        setProducts(products.filter((p) => p.id !== productToDelete));
-    }
-    setIsAlertOpen(false);
-    setProductToDelete(null);
+  const handleDeleteProductClick = (productId: string) => {
+    setItemToDelete({ type: 'product', value: productId });
+    setIsDeleteAlertOpen(true);
   }
 
   const handleFormSubmit = (values: Product) => {
@@ -112,7 +111,7 @@ export default function ProductsPage() {
     return products.filter(
       (product) =>
         product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        product.generalName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        product.uniqueName.toLowerCase().includes(searchTerm.toLowerCase()) ||
         product.group.toLowerCase().includes(searchTerm.toLowerCase()) ||
         product.tags.some((tag) =>
           tag.toLowerCase().includes(searchTerm.toLowerCase())
@@ -128,14 +127,61 @@ export default function ProductsPage() {
     }
   }
 
-  const handleAddNewGeneralName = (e: React.FormEvent) => {
+  const handleAddNewUniqueName = (e: React.FormEvent) => {
     e.preventDefault();
-    if (newGeneralName && !generalNames.includes(newGeneralName)) {
-      setGeneralNames([...generalNames, newGeneralName]);
-      setNewGeneralName("");
+    if (newUniqueName && !uniqueNames.includes(newUniqueName)) {
+      setUniqueNames([...uniqueNames, newUniqueName]);
+      setNewUniqueName("");
     }
   }
 
+  const handleDeleteItemClick = (type: 'group' | 'uniqueName', value: string) => {
+    setItemToDelete({ type, value });
+    setIsDeleteAlertOpen(true);
+  };
+  
+  const handleDeleteConfirm = () => {
+    if (!itemToDelete) return;
+  
+    const { type, value } = itemToDelete;
+  
+    if (type === 'group') {
+      setGroups(groups.filter(g => g !== value));
+      setProducts(products.filter(p => p.group !== value));
+    } else if (type === 'uniqueName') {
+      setUniqueNames(uniqueNames.filter(u => u !== value));
+      setProducts(products.filter(p => p.uniqueName !== value));
+    } else if (type === 'product') {
+        setProducts(products.filter(p => p.id !== value));
+    }
+  
+    setIsDeleteAlertOpen(false);
+    setItemToDelete(null);
+  };
+  
+  const handleEditItemClick = (type: 'group' | 'uniqueName', value: string) => {
+    setItemToEdit({ type, value });
+    setEditValue(value);
+    setIsEditModalOpen(true);
+  };
+
+  const handleEditConfirm = () => {
+    if (!itemToEdit || !editValue) return;
+
+    const { type, value: oldValue } = itemToEdit;
+
+    if (type === 'group') {
+        setGroups(groups.map(g => g === oldValue ? editValue : g));
+        setProducts(products.map(p => p.group === oldValue ? { ...p, group: editValue } : p));
+    } else if (type === 'uniqueName') {
+        setUniqueNames(uniqueNames.map(u => u === oldValue ? editValue : u));
+        setProducts(products.map(p => p.uniqueName === oldValue ? { ...p, uniqueName: editValue } : p));
+    }
+    
+    setIsEditModalOpen(false);
+    setItemToEdit(null);
+    setEditValue("");
+  };
 
   if (userRole === null) {
       return <div>Loading...</div>
@@ -225,7 +271,7 @@ export default function ProductsPage() {
                                     >
                                     Edit
                                     </DropdownMenuItem>
-                                    <DropdownMenuItem onSelect={() => handleDeleteClick(product.id)}>
+                                    <DropdownMenuItem onSelect={() => handleDeleteProductClick(product.id)}>
                                     Delete
                                     </DropdownMenuItem>
                                 </DropdownMenuContent>
@@ -245,23 +291,38 @@ export default function ProductsPage() {
         <div className="grid md:grid-cols-2 gap-8">
             <Card>
                 <CardHeader>
-                    <CardTitle className="flex items-center gap-2"><Text className="h-5 w-5" /> General Names</CardTitle>
-                    <CardDescription>Manage the general names for product selection.</CardDescription>
+                    <CardTitle className="flex items-center gap-2"><Text className="h-5 w-5" /> Unique Names</CardTitle>
+                    <CardDescription>Manage the unique names for product selection.</CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <form onSubmit={handleAddNewGeneralName} className="flex gap-2 mb-4">
+                    <form onSubmit={handleAddNewUniqueName} className="flex gap-2 mb-4">
                         <Input 
-                            value={newGeneralName}
-                            onChange={(e) => setNewGeneralName(e.target.value)}
-                            placeholder="Add new general name"
+                            value={newUniqueName}
+                            onChange={(e) => setNewUniqueName(e.target.value)}
+                            placeholder="Add new unique name"
                         />
                         <Button type="submit">Add</Button>
                     </form>
                     <ScrollArea className="h-40">
                         <div className="flex flex-col gap-2">
-                            {generalNames.map(name => (
-                                <div key={name} className="flex items-center justify-between p-2 rounded-md border">
+                            {uniqueNames.map(name => (
+                                <div key={name} className="flex items-center justify-between p-2 rounded-md border group">
                                     <span>{name}</span>
+                                    <DropdownMenu>
+                                        <DropdownMenuTrigger asChild>
+                                            <Button variant="ghost" size="icon" className="h-6 w-6 opacity-0 group-hover:opacity-100">
+                                                <MoreHorizontal className="h-4 w-4" />
+                                            </Button>
+                                        </DropdownMenuTrigger>
+                                        <DropdownMenuContent>
+                                            <DropdownMenuItem onSelect={() => handleEditItemClick('uniqueName', name)}>
+                                                <Edit className="mr-2 h-4 w-4" /> Edit
+                                            </DropdownMenuItem>
+                                            <DropdownMenuItem onSelect={() => handleDeleteItemClick('uniqueName', name)} className="text-red-600">
+                                                <Trash2 className="mr-2 h-4 w-4" /> Delete
+                                            </DropdownMenuItem>
+                                        </DropdownMenuContent>
+                                    </DropdownMenu>
                                 </div>
                             ))}
                         </div>
@@ -285,8 +346,23 @@ export default function ProductsPage() {
                     <ScrollArea className="h-40">
                         <div className="flex flex-col gap-2">
                             {groups.map(group => (
-                                <div key={group} className="flex items-center justify-between p-2 rounded-md border">
+                                 <div key={group} className="flex items-center justify-between p-2 rounded-md border group">
                                     <span>{group}</span>
+                                    <DropdownMenu>
+                                        <DropdownMenuTrigger asChild>
+                                            <Button variant="ghost" size="icon" className="h-6 w-6 opacity-0 group-hover:opacity-100">
+                                                <MoreHorizontal className="h-4 w-4" />
+                                            </Button>
+                                        </DropdownMenuTrigger>
+                                        <DropdownMenuContent>
+                                            <DropdownMenuItem onSelect={() => handleEditItemClick('group', group)}>
+                                                <Edit className="mr-2 h-4 w-4" /> Edit
+                                            </DropdownMenuItem>
+                                            <DropdownMenuItem onSelect={() => handleDeleteItemClick('group', group)} className="text-red-600">
+                                                <Trash2 className="mr-2 h-4 w-4" /> Delete
+                                            </DropdownMenuItem>
+                                        </DropdownMenuContent>
+                                    </DropdownMenu>
                                 </div>
                             ))}
                         </div>
@@ -311,19 +387,40 @@ export default function ProductsPage() {
                 onSubmit={handleFormSubmit}
                 onCancel={() => setIsFormOpen(false)}
                 groups={groups}
-                generalNames={generalNames}
+                uniqueNames={uniqueNames}
               />
             </div>
           </ScrollArea>
         </DialogContent>
       </Dialog>
+      
+      <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
+        <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+                <DialogTitle>Edit {itemToEdit?.type === 'group' ? 'Group' : 'Unique Name'}</DialogTitle>
+            </DialogHeader>
+            <div className="grid gap-4 py-4">
+                <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="edit-value" className="text-right">Name</Label>
+                    <Input id="edit-value" value={editValue} onChange={(e) => setEditValue(e.target.value)} className="col-span-3" />
+                </div>
+            </div>
+            <DialogFooter>
+                <Button variant="outline" onClick={() => setIsEditModalOpen(false)}>Cancel</Button>
+                <Button onClick={handleEditConfirm}>Save Changes</Button>
+            </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
-      <AlertDialog open={isAlertOpen} onOpenChange={setIsAlertOpen}>
+      <AlertDialog open={isDeleteAlertOpen} onOpenChange={setIsDeleteAlertOpen}>
         <AlertDialogContent>
             <AlertDialogHeader>
                 <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                 <AlertDialogDescription>
-                    This action cannot be undone. This will permanently delete this product.
+                  {itemToDelete?.type === 'product'
+                    ? 'This action cannot be undone. This will permanently delete this product.'
+                    : `This action cannot be undone. This will permanently delete the ${itemToDelete?.type} "${itemToDelete?.value}" and all products associated with it.`
+                  }
                 </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
@@ -335,3 +432,5 @@ export default function ProductsPage() {
     </div>
   );
 }
+
+    
