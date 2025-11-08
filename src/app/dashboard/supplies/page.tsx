@@ -42,7 +42,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { MoreHorizontal, PlusCircle } from "lucide-react";
-import { supplies as initialSupplies } from "@/lib/data";
+import { supplies as initialSupplies, products } from "@/lib/data";
 import type { Supply } from "@/lib/types";
 import { SupplyForm } from "./supply-form";
 
@@ -76,15 +76,18 @@ export default function SuppliesPage() {
     setSupplyToDelete(null);
   }
 
-  const handleFormSubmit = (values: Omit<Supply, 'id' | 'uniqueName'>) => {
+  const handleFormSubmit = (values: Omit<Supply, 'id' | 'generalName'>) => {
+    const product = products.find(p => p.name === values.productName);
+    const generalName = product ? product.generalName : "";
+
     if(selectedSupply) {
         // Update existing supply
-        setSupplies(supplies.map(s => s.id === selectedSupply.id ? { ...selectedSupply, ...values } : s))
+        setSupplies(supplies.map(s => s.id === selectedSupply.id ? { ...selectedSupply, ...values, generalName } : s))
     } else {
         // Add new supply
         const newSupply: Supply = {
             id: `SUP${Date.now()}`,
-            uniqueName: values.productName.toLowerCase().replace(/\s+/g, "-"),
+            generalName,
             ...values
         }
         setSupplies([...supplies, newSupply]);

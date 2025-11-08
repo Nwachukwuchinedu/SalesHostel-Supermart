@@ -36,7 +36,7 @@ type SupplyFormValues = z.infer<typeof formSchema>;
 
 interface SupplyFormProps {
   initialData?: Supply | null;
-  onSubmit: (values: SupplyFormValues) => void;
+  onSubmit: (values: Omit<Supply, 'id' | 'generalName'>) => void;
   onCancel: () => void;
 }
 

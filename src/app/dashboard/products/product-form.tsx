@@ -27,8 +27,8 @@ import type { Product } from "@/lib/types";
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters."),
-  uniqueName: z.string().min(1, "Unique name is required."),
-  group: z.string().min(2, "Group must be at least 2 characters."),
+  generalName: z.string().min(1, "General name is required."),
+  group: z.string().min(1, "Group is required."),
   costPrice: z.coerce.number().positive("Cost price must be a positive number."),
   sellingPrice: z.coerce.number().positive("Selling price must be a positive number."),
   quantityAvailable: z.coerce.number().min(0, "Quantity cannot be negative.").default(0),
@@ -44,12 +44,16 @@ interface ProductFormProps {
   initialData?: Product | null;
   onSubmit: (values: Product) => void;
   onCancel: () => void;
+  groups: string[];
+  generalNames: string[];
 }
 
 export function ProductForm({
   initialData,
   onSubmit,
   onCancel,
+  groups,
+  generalNames,
 }: ProductFormProps) {
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(formSchema),
@@ -60,7 +64,7 @@ export function ProductForm({
         }
       : {
           name: "",
-          uniqueName: "",
+          generalName: "",
           group: "",
           costPrice: 0,
           sellingPrice: 0,
@@ -97,8 +101,7 @@ export function ProductForm({
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <FormField
+        <FormField
             control={form.control}
             name="name"
             render={({ field }) => (
@@ -111,33 +114,48 @@ export function ProductForm({
                 </FormItem>
             )}
             />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormField
-            control={form.control}
-            name="uniqueName"
-            render={({ field }) => (
+              control={form.control}
+              name="generalName"
+              render={({ field }) => (
                 <FormItem>
-                <FormLabel>Unique Name</FormLabel>
-                <FormControl>
-                    <Input placeholder="e.g., Rice" {...field} />
-                </FormControl>
-                <FormMessage />
+                  <FormLabel>General Name</FormLabel>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a general name" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {generalNames.map(name => <SelectItem key={name} value={name}>{name}</SelectItem>)}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
                 </FormItem>
-            )}
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="group"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Group</FormLabel>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a group" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {groups.map(group => <SelectItem key={group} value={group}>{group}</SelectItem>)}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
         </div>
-        <FormField
-          control={form.control}
-          name="group"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Group</FormLabel>
-              <FormControl>
-                <Input placeholder="e.g., Grains" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
         <div className="grid grid-cols-2 gap-4">
             <FormField
             control={form.control}

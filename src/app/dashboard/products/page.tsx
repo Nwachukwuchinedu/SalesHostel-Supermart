@@ -42,12 +42,13 @@ import {
     AlertDialogTitle,
   } from "@/components/ui/alert-dialog"
 import { Input } from "@/components/ui/input";
-import { MoreHorizontal, PlusCircle, Search } from "lucide-react";
-import { products as initialProducts } from "@/lib/data";
+import { MoreHorizontal, PlusCircle, Search, Tags, Text, Trash2 } from "lucide-react";
+import { products as initialProducts, initialGroups, initialGeneralNames } from "@/lib/data";
 import { ProductForm } from "./product-form";
 import type { Product, UserRole } from "@/lib/types";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Badge } from "@/components/ui/badge";
 
 export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>(initialProducts);
@@ -57,6 +58,12 @@ export default function ProductsPage() {
   const [isAlertOpen, setIsAlertOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [productToDelete, setProductToDelete] = useState<string | null>(null);
+
+  const [groups, setGroups] = useState<string[]>(initialGroups);
+  const [generalNames, setGeneralNames] = useState<string[]>(initialGeneralNames);
+  const [newGroup, setNewGroup] = useState("");
+  const [newGeneralName, setNewGeneralName] = useState("");
+
 
   useEffect(() => {
     const role = localStorage.getItem("userRole") as UserRole;
@@ -105,13 +112,30 @@ export default function ProductsPage() {
     return products.filter(
       (product) =>
         product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        product.uniqueName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        product.generalName.toLowerCase().includes(searchTerm.toLowerCase()) ||
         product.group.toLowerCase().includes(searchTerm.toLowerCase()) ||
         product.tags.some((tag) =>
           tag.toLowerCase().includes(searchTerm.toLowerCase())
         )
     );
   }, [products, searchTerm]);
+
+  const handleAddNewGroup = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (newGroup && !groups.includes(newGroup)) {
+      setGroups([...groups, newGroup]);
+      setNewGroup("");
+    }
+  }
+
+  const handleAddNewGeneralName = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (newGeneralName && !generalNames.includes(newGeneralName)) {
+      setGeneralNames([...generalNames, newGeneralName]);
+      setNewGeneralName("");
+    }
+  }
+
 
   if (userRole === null) {
       return <div>Loading...</div>
@@ -216,6 +240,62 @@ export default function ProductsPage() {
             </div>
         </CardContent>
       </Card>
+      
+      {canManageProducts && (
+        <div className="grid md:grid-cols-2 gap-8">
+            <Card>
+                <CardHeader>
+                    <CardTitle className="flex items-center gap-2"><Text className="h-5 w-5" /> General Names</CardTitle>
+                    <CardDescription>Manage the general names for product selection.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <form onSubmit={handleAddNewGeneralName} className="flex gap-2 mb-4">
+                        <Input 
+                            value={newGeneralName}
+                            onChange={(e) => setNewGeneralName(e.target.value)}
+                            placeholder="Add new general name"
+                        />
+                        <Button type="submit">Add</Button>
+                    </form>
+                    <ScrollArea className="h-40">
+                        <div className="flex flex-col gap-2">
+                            {generalNames.map(name => (
+                                <div key={name} className="flex items-center justify-between p-2 rounded-md border">
+                                    <span>{name}</span>
+                                </div>
+                            ))}
+                        </div>
+                    </ScrollArea>
+                </CardContent>
+            </Card>
+            <Card>
+                <CardHeader>
+                    <CardTitle className="flex items-center gap-2"><Tags className="h-5 w-5" /> Groups</CardTitle>
+                    <CardDescription>Manage the groups for product categorization.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <form onSubmit={handleAddNewGroup} className="flex gap-2 mb-4">
+                        <Input 
+                            value={newGroup}
+                            onChange={(e) => setNewGroup(e.target.value)}
+                            placeholder="Add new group"
+                        />
+                        <Button type="submit">Add</Button>
+                    </form>
+                    <ScrollArea className="h-40">
+                        <div className="flex flex-col gap-2">
+                            {groups.map(group => (
+                                <div key={group} className="flex items-center justify-between p-2 rounded-md border">
+                                    <span>{group}</span>
+                                </div>
+                            ))}
+                        </div>
+                    </ScrollArea>
+                </CardContent>
+            </Card>
+        </div>
+      )}
+
 
       <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
         <DialogContent className="sm:max-w-lg max-w-[calc(100vw-2rem)]">
@@ -230,6 +310,8 @@ export default function ProductsPage() {
                 initialData={selectedProduct}
                 onSubmit={handleFormSubmit}
                 onCancel={() => setIsFormOpen(false)}
+                groups={groups}
+                generalNames={generalNames}
               />
             </div>
           </ScrollArea>
