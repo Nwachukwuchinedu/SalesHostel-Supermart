@@ -12,7 +12,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { invoices } from "@/lib/data";
+import { purchases } from "@/lib/data";
 import { SalesChart } from "./sales-chart";
 
 const salesData = [
@@ -31,7 +31,7 @@ const salesData = [
 ];
 
 export default function DashboardPage() {
-  const recentInvoices = invoices.slice(0, 5);
+  const recentPurchases = purchases.slice(0, 5);
 
   return (
     <div className="flex flex-col gap-8">
@@ -93,7 +93,7 @@ export default function DashboardPage() {
         </Card>
         <Card className="lg:col-span-3">
           <CardHeader>
-            <CardTitle>Recent Invoices</CardTitle>
+            <CardTitle>Recent Purchases</CardTitle>
           </CardHeader>
           <CardContent>
             <Table>
@@ -105,22 +105,21 @@ export default function DashboardPage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {recentInvoices.map((invoice) => (
-                  <TableRow key={invoice.id}>
+                {recentPurchases.map((purchase) => (
+                  <TableRow key={purchase.id}>
                     <TableCell>
-                      <div className="font-medium">{invoice.customerName}</div>
+                      <div className="font-medium">{purchase.customerName}</div>
                     </TableCell>
                      <TableCell>
-                      <Badge variant={invoice.status === 'Paid' ? 'default' : invoice.status === 'Unpaid' ? 'secondary' : 'destructive'} 
+                      <Badge variant={purchase.paymentStatus === 'Paid' ? 'default' : 'secondary'} 
                              className={
-                               invoice.status === 'Paid' ? 'bg-green-500/20 text-green-700 hover:bg-green-500/30' : 
-                               invoice.status === 'Unpaid' ? 'bg-yellow-500/20 text-yellow-700 hover:bg-yellow-500/30' : 
-                               'bg-red-500/20 text-red-700 hover:bg-red-500/30'
+                               purchase.paymentStatus === 'Paid' ? 'bg-green-500/20 text-green-700 hover:bg-green-500/30' : 
+                               'bg-yellow-500/20 text-yellow-700 hover:bg-yellow-500/30'
                              }>
-                        {invoice.status}
+                        {purchase.paymentStatus}
                       </Badge>
                     </TableCell>
-                    <TableCell className="text-right">₦{invoice.amount.toFixed(2)}</TableCell>
+                    <TableCell className="text-right">₦{purchase.total.toFixed(2)}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>

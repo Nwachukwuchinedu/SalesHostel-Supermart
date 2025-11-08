@@ -29,7 +29,6 @@ const allLinks = [
   { href: "/dashboard/products", label: "Products", icon: Box, roles: ["Admin", "Staff", "Supplier"] },
   { href: "/dashboard/supplies", label: "Supplies", icon: Truck, roles: ["Admin", "Supplier"] },
   { href: "/dashboard/purchases", label: "Purchases", icon: ShoppingCart, roles: ["Admin", "Staff"] },
-  { href: "/dashboard/invoices", label: "Invoices", icon: FileText, roles: ["Admin", "Staff", "Customer"] },
   { href: "/dashboard/reports", label: "Reports", icon: BarChart, roles: ["Admin"] },
 ];
 

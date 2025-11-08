@@ -41,14 +41,3 @@ export type Purchase = {
   paymentStatus: "Paid" | "Pending";
   date: string;
 };
-
-export type Invoice = {
-  id: string;
-  purchaseId: string;
-  customerName: string;
-  amount: number;
-  status: "Paid" | "Unpaid" | "Overdue";
-  dueDate: string;
-  issueDate: string;
-  purchase?: Purchase;
-};
