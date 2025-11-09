@@ -56,7 +56,14 @@ export function SupplyForm({ initialData, onSubmit, onCancel }: SupplyFormProps)
       return {
         ...initialData,
         date: new Date(initialData.date).toISOString().split("T")[0],
-        products: initialData.products.length > 0 ? initialData.products : [{ productId: "", quantity: 1, quantityType: "pcs" }],
+        products: initialData.products.length > 0 ? initialData.products.map(p => {
+          const product = products.find(prod => prod.id === p.productId);
+          return {
+            productId: p.productId,
+            quantity: p.quantity,
+            quantityType: p.quantityType || product?.quantityUnit || 'pcs'
+          }
+        }) : [{ productId: "", quantity: 1, quantityType: "pcs" }],
       };
     }
     return {
@@ -117,7 +124,7 @@ export function SupplyForm({ initialData, onSubmit, onCancel }: SupplyFormProps)
             render={({ field }) => (
                 <FormItem>
                 <FormLabel>Supplier</FormLabel>
-                 <Select onValueChange={field.onChange} defaultValue={field.value} value={field.value} disabled={!!selectedSupplier}>
+                 <Select onValueChange={field.onChange} defaultValue={field.value} value={field.value}>
                     <FormControl>
                     <SelectTrigger>
                         <SelectValue placeholder="Select a supplier" />
@@ -165,7 +172,7 @@ export function SupplyForm({ initialData, onSubmit, onCancel }: SupplyFormProps)
                             </FormControl>
                             <SelectContent>
                             {products.map((product) => (
-                                <SelectItem key={product.id} value={product.id} disabled={product.quantityAvailable === 0}>
+                                <SelectItem key={product.id} value={product.id}>
                                 {product.name}
                                 </SelectItem>
                             ))}
@@ -214,7 +221,7 @@ export function SupplyForm({ initialData, onSubmit, onCancel }: SupplyFormProps)
                     </Button>
                 </div>
                 ))}
-                {form.formState.errors.products && !form.formState.errors.products.root && (
+                {form.formState.errors.products && !form.formState.errors.root && (
                     <p className="text-sm font-medium text-destructive">
                         {form.formState.errors.products.message}
                     </p>
@@ -249,3 +256,5 @@ export function SupplyForm({ initialData, onSubmit, onCancel }: SupplyFormProps)
     </Form>
   );
 }
+
+    
