@@ -1,4 +1,5 @@
 
+
 import type { User, Product, Supply, Purchase } from "./types";
 
 export const users: User[] = [
@@ -6,6 +7,10 @@ export const users: User[] = [
   { id: "2", name: "Staff User", email: "staff@example.com", avatar: "2", role: "Staff" },
   { id: "3", name: "Supplier User", email: "supplier@example.com", avatar: "3", role: "Supplier" },
   { id: "4", name: "Customer User", email: "customer@example.com", avatar: "4", role: "Customer" },
+  { id: "5", name: "Fresh Farms", email: "contact@freshfarms.com", avatar: "3", role: "Supplier" },
+  { id: "6", name: "Bakery Co.", email: "contact@bakeryco.com", avatar: "3", role: "Supplier" },
+  { id: "7", name: "Healthy Drinks Inc.", email: "contact@healthydrinks.com", avatar: "3", role: "Supplier" },
+  { id: "8", name: "Poultry Direct", email: "contact@poultrydirect.com", avatar: "3", role: "Supplier" },
 ];
 
 export const initialUniqueNames: string[] = ["Apples", "Bread", "Almond Milk", "Chicken", "Cheddar"];
@@ -21,10 +26,43 @@ export const products: Product[] = [
 ];
 
 export const supplies: Supply[] = [
-  { id: "SUP001", productName: "Organic Fuji Apples", uniqueName: "Apples", quantityType: "box", quantity: 50, supplier: "Fresh Farms", date: "2023-10-01" },
-  { id: "SUP002", productName: "Artisanal Whole Wheat Bread", uniqueName: "Bread", quantityType: "pcs", quantity: 100, supplier: "Bakery Co.", date: "2023-10-02" },
-  { id: "SUP003", productName: "Unsweetened Almond Milk", uniqueName: "Almond Milk", quantityType: "ltr", quantity: 200, supplier: "Healthy Drinks Inc.", date: "2023-10-02" },
-  { id: "SUP004", productName: "Boneless Chicken Breast", uniqueName: "Chicken", quantityType: "kg", quantity: 75, supplier: "Poultry Direct", date: "2023-10-03" },
+    { 
+        id: "SUP001", 
+        supplier: "Fresh Farms", 
+        date: "2023-10-01", 
+        products: [
+            { productId: "PROD001", productName: "Organic Fuji Apples", quantity: 50, quantityType: "box" }
+        ],
+        totalItems: 50
+    },
+    { 
+        id: "SUP002", 
+        supplier: "Bakery Co.", 
+        date: "2023-10-02", 
+        products: [
+            { productId: "PROD002", productName: "Artisanal Whole Wheat Bread", quantity: 100, quantityType: "pcs" }
+        ],
+        totalItems: 100
+    },
+    { 
+        id: "SUP003", 
+        supplier: "Healthy Drinks Inc.", 
+        date: "2023-10-02", 
+        products: [
+            { productId: "PROD003", productName: "Unsweetened Almond Milk", quantity: 200, quantityType: "ltr" }
+        ],
+        totalItems: 200
+    },
+    { 
+        id: "SUP004", 
+        supplier: "Poultry Direct", 
+        date: "2023-10-03",
+        products: [
+            { productId: "PROD004", productName: "Boneless Chicken Breast", quantity: 75, quantityType: "kg" },
+            { productId: "PROD005", productName: "Sharp Cheddar Cheese Block", quantity: 50, quantityType: "pcs" }
+        ],
+        totalItems: 125
+    },
 ];
 
 export const purchases: Purchase[] = [

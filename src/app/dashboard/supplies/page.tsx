@@ -1,7 +1,8 @@
 
+
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -26,25 +27,28 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-  } from "@/components/ui/alert-dialog"
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription
 } from "@/components/ui/dialog";
-import { MoreHorizontal, PlusCircle } from "lucide-react";
-import { supplies as initialSupplies, products } from "@/lib/data";
+import { Input } from "@/components/ui/input";
+import { MoreHorizontal, PlusCircle, Search } from "lucide-react";
+import { supplies as initialSupplies } from "@/lib/data";
 import type { Supply } from "@/lib/types";
 import { SupplyForm } from "./supply-form";
+import { Separator } from "@/components/ui/separator";
 
 export default function SuppliesPage() {
   const [supplies, setSupplies] = useState<Supply[]>(initialSupplies);
@@ -52,6 +56,9 @@ export default function SuppliesPage() {
   const [selectedSupply, setSelectedSupply] = useState<Supply | null>(null);
   const [isAlertOpen, setIsAlertOpen] = useState(false);
   const [supplyToDelete, setSupplyToDelete] = useState<string | null>(null);
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [dateFilter, setDateFilter] = useState({ from: "", to: "" });
 
   const handleAddSupply = () => {
     setSelectedSupply(null);
@@ -60,7 +67,13 @@ export default function SuppliesPage() {
   
   const handleEditSupply = (supply: Supply) => {
     setSelectedSupply(supply);
+    setIsDetailsOpen(false);
     setIsFormOpen(true);
+  };
+
+  const handleViewDetails = (supply: Supply) => {
+    setSelectedSupply(supply);
+    setIsDetailsOpen(true);
   };
 
   const handleDeleteClick = (supplyId: string) => {
@@ -76,25 +89,41 @@ export default function SuppliesPage() {
     setSupplyToDelete(null);
   }
 
-  const handleFormSubmit = (values: Omit<Supply, 'id' | 'uniqueName'>) => {
-    const product = products.find(p => p.name === values.productName);
-    const uniqueName = product ? product.uniqueName : "";
-
-    if(selectedSupply) {
+  const handleFormSubmit = (values: Supply) => {
+    if(selectedSupply && supplies.find(s => s.id === values.id)) {
         // Update existing supply
-        setSupplies(supplies.map(s => s.id === selectedSupply.id ? { ...selectedSupply, ...values, uniqueName } : s))
+        setSupplies(supplies.map(s => s.id === values.id ? values : s))
     } else {
         // Add new supply
-        const newSupply: Supply = {
-            id: `SUP${Date.now()}`,
-            uniqueName,
-            ...values
-        }
-        setSupplies([...supplies, newSupply]);
+        setSupplies([values, ...supplies]);
     }
     setIsFormOpen(false);
     setSelectedSupply(null);
   };
+
+  const filteredSupplies = useMemo(() => {
+    return supplies.filter(supply => {
+        const searchTermLower = searchTerm.toLowerCase();
+        const matchesSearch = searchTerm ? 
+            supply.id.toLowerCase().includes(searchTermLower) || 
+            supply.supplier.toLowerCase().includes(searchTermLower) ||
+            supply.products.some(p => p.productName.toLowerCase().includes(searchTermLower))
+            : true;
+
+        const fromDate = dateFilter.from ? new Date(dateFilter.from) : null;
+        const toDate = dateFilter.to ? new Date(dateFilter.to) : null;
+        const supplyDate = new Date(supply.date);
+        
+        if(fromDate) fromDate.setHours(0,0,0,0);
+        if(toDate) toDate.setHours(23,59,59,999);
+
+        const matchesDate = 
+            (!fromDate || supplyDate >= fromDate) &&
+            (!toDate || supplyDate <= toDate);
+
+        return matchesSearch && matchesDate;
+    })
+  }, [supplies, searchTerm, dateFilter]);
 
   return (
     <div className="flex flex-col gap-8 min-w-0">
@@ -115,30 +144,54 @@ export default function SuppliesPage() {
           <CardDescription>
             A log of all supplies received from suppliers.
           </CardDescription>
+          <div className="grid md:grid-cols-3 gap-4 mt-4">
+            <div className="relative">
+                <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                <Input
+                type="search"
+                placeholder="Search by ID, supplier, product..."
+                className="w-full rounded-lg bg-background pl-8"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                />
+            </div>
+            <Input 
+                type="date"
+                value={dateFilter.from}
+                onChange={e => setDateFilter(prev => ({ ...prev, from: e.target.value }))}
+                placeholder="From Date"
+            />
+            <Input 
+                type="date"
+                value={dateFilter.to}
+                onChange={e => setDateFilter(prev => ({ ...prev, to: e.target.value }))}
+                placeholder="To Date"
+            />
+          </div>
         </CardHeader>
         <CardContent className="pt-0">
             <Table>
                 <TableHeader>
                 <TableRow>
-                    <TableHead>Product Name</TableHead>
+                    <TableHead>Supply ID</TableHead>
                     <TableHead>Supplier</TableHead>
                     <TableHead>Date</TableHead>
-                    <TableHead className="text-right">Quantity</TableHead>
+                    <TableHead className="text-right">Total Items</TableHead>
                     <TableHead>
                     <span className="sr-only">Actions</span>
                     </TableHead>
                 </TableRow>
                 </TableHeader>
                 <TableBody>
-                {supplies.map((supply) => (
+                {filteredSupplies.map((supply) => (
                     <TableRow key={supply.id}>
                     <TableCell className="font-medium">
-                        {supply.productName}
+                        {supply.id}
                     </TableCell>
                     <TableCell>{supply.supplier}</TableCell>
                     <TableCell>{new Date(supply.date).toLocaleDateString()}</TableCell>
                     <TableCell className="text-right">
-                        {supply.quantity} {supply.quantityType}
+                        {supply.totalItems}
                     </TableCell>
                     <TableCell>
                         <div className="flex justify-end">
@@ -151,8 +204,9 @@ export default function SuppliesPage() {
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
                             <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                            <DropdownMenuItem onSelect={() => handleViewDetails(supply)}>View Details</DropdownMenuItem>
                             <DropdownMenuItem onSelect={() => handleEditSupply(supply)}>Edit</DropdownMenuItem>
-                            <DropdownMenuItem onSelect={() => handleDeleteClick(supply.id)}>Delete</DropdownMenuItem>
+                            <DropdownMenuItem onSelect={() => handleDeleteClick(supply.id)} className="text-red-600">Delete</DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
                         </div>
@@ -165,7 +219,7 @@ export default function SuppliesPage() {
       </Card>
 
       <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
-        <DialogContent className="sm:max-w-md max-w-[calc(100vw-2rem)]">
+        <DialogContent className="sm:max-w-3xl max-w-[calc(100vw-2rem)]">
           <DialogHeader>
             <DialogTitle>
               {selectedSupply ? "Edit Supply" : "Add New Supply"}
@@ -178,6 +232,50 @@ export default function SuppliesPage() {
           />
         </DialogContent>
       </Dialog>
+      
+      <Dialog open={isDetailsOpen} onOpenChange={setIsDetailsOpen}>
+        <DialogContent className="max-w-[calc(100vw-2rem)]">
+          <DialogHeader>
+            <DialogTitle>Supply Details</DialogTitle>
+            <DialogDescription>
+              Details for supply ID: {selectedSupply?.id}
+            </DialogDescription>
+          </DialogHeader>
+          {selectedSupply && (
+            <div className="space-y-4">
+              <div><strong>Supplier:</strong> {selectedSupply.supplier}</div>
+              <div><strong>Date:</strong> {new Date(selectedSupply.date).toLocaleDateString()}</div>
+              <Separator />
+              <h4 className="font-semibold">Products Supplied</h4>
+              <Table>
+                <TableHeader>
+                    <TableRow>
+                        <TableHead>Product</TableHead>
+                        <TableHead className="text-right">Quantity</TableHead>
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
+                    {selectedSupply.products.map((p, i) => (
+                        <TableRow key={i}>
+                            <TableCell>{p.productName}</TableCell>
+                            <TableCell className="text-right">{p.quantity} {p.quantityType}</TableCell>
+                        </TableRow>
+                    ))}
+                </TableBody>
+              </Table>
+              <Separator />
+              <div className="text-right font-bold text-lg">
+                Total Items: {selectedSupply.totalItems}
+              </div>
+            </div>
+          )}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsDetailsOpen(false)}>Close</Button>
+            <Button onClick={() => handleEditSupply(selectedSupply!)}>Edit</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
       <AlertDialog open={isAlertOpen} onOpenChange={setIsAlertOpen}>
         <AlertDialogContent>
             <AlertDialogHeader>

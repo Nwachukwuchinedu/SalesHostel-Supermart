@@ -1,4 +1,5 @@
 
+
 export type UserRole = "Admin" | "Staff" | "Supplier" | "Customer";
 
 export type User = {
@@ -23,14 +24,19 @@ export type Product = {
   description: string;
 };
 
+export type SupplyProduct = {
+  productId: string;
+  productName: string;
+  quantity: number;
+  quantityType: "pcs" | "kg" | "ltr" | "box";
+};
+
 export type Supply = {
   id: string;
-  productName: string;
-  uniqueName: string;
-  quantityType: "pcs" | "kg" | "ltr" | "box";
-  quantity: number;
   supplier: string;
   date: string;
+  products: SupplyProduct[];
+  totalItems: number;
 };
 
 export type Purchase = {
