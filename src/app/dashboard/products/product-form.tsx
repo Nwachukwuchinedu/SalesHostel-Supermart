@@ -42,7 +42,7 @@ type ProductFormValues = z.infer<typeof formSchema>;
 
 interface ProductFormProps {
   initialData?: Product | null;
-  onSubmit: (values: Product) => void;
+  onSubmit: (values: Omit<Product, 'id' | '_id'>) => void;
   onCancel: () => void;
   groups: string[];
   uniqueNames: string[];
@@ -77,10 +77,9 @@ export function ProductForm({
   });
 
   const handleSubmit = (values: ProductFormValues) => {
-    const productData: Product = {
-      id: initialData?.id || `PROD${Date.now()}`,
+    const productData = {
       ...values,
-      imageUrl: values.imageUrl || "",
+      images: values.imageUrl ? [values.imageUrl] : [],
       tags: values.tags.split(",").map((tag) => tag.trim()),
     };
     onSubmit(productData);
@@ -282,5 +281,3 @@ export function ProductForm({
     </Form>
   );
 }
-
-    

@@ -43,34 +43,63 @@ import {
   } from "@/components/ui/alert-dialog"
 import { Input } from "@/components/ui/input";
 import { MoreHorizontal, PlusCircle, Search, Tags, Text, Trash2, Edit } from "lucide-react";
-import { products as initialProducts, initialGroups, initialUniqueNames } from "@/lib/data";
 import { ProductForm } from "./product-form";
-import type { Product, UserRole } from "@/lib/types";
+import type { Product, UserRole, Group, UniqueName } from "@/lib/types";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/contexts/auth-context";
+import { ProductService } from "@/services/product-service";
+import { GroupService } from "@/services/group-service";
+import { UniqueNameService } from "@/services/unique-name-service";
+import { useToast } from "@/hooks/use-toast";
 
 
 export default function ProductsPage() {
-  const [products, setProducts] = useState<Product[]>(initialProducts);
+  const [products, setProducts] = useState<Product[]>([]);
   const { user } = useAuth();
+  const { toast } = useToast();
   const [searchTerm, setSearchTerm] = useState("");
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   
-  const [groups, setGroups] = useState<string[]>(initialGroups);
-  const [uniqueNames, setUniqueNames] = useState<string[]>(initialUniqueNames);
+  const [groups, setGroups] = useState<Group[]>([]);
+  const [uniqueNames, setUniqueNames] = useState<UniqueName[]>([]);
   const [newGroup, setNewGroup] = useState("");
   const [newUniqueName, setNewUniqueName] = useState("");
 
   const [isDeleteAlertOpen, setIsDeleteAlertOpen] = useState(false);
-  const [itemToDelete, setItemToDelete] = useState<{ type: 'group' | 'uniqueName' | 'product'; value: string } | null>(null);
+  const [itemToDelete, setItemToDelete] = useState<{ type: 'group' | 'uniqueName' | 'product'; id: string, value: string } | null>(null);
 
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [itemToEdit, setItemToEdit] = useState<{ type: 'group' | 'uniqueName'; value: string } | null>(null);
+  const [itemToEdit, setItemToEdit] = useState<{ type: 'group' | 'uniqueName'; id: string, value: string } | null>(null);
   const [editValue, setEditValue] = useState("");
+  const [loading, setLoading] = useState(true);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const [productsData, groupsData, uniqueNamesData] = await Promise.all([
+          ProductService.getAllProducts(),
+          GroupService.getAllGroups(),
+          UniqueNameService.getAllUniqueNames(),
+        ]);
+        setProducts(productsData.data.map((p: any) => ({...p, id: p._id})));
+        setGroups(groupsData.data.map((g: any) => ({...g, id: g._id})));
+        setUniqueNames(uniqueNamesData.data.map((u: any) => ({...u, id: u._id})));
+      } catch (error) {
+        toast({
+            title: "Error",
+            description: "Failed to fetch data. Please try again.",
+            variant: "destructive",
+        })
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, [toast]);
 
   const canManageProducts = user?.role === "Admin";
 
@@ -85,20 +114,31 @@ export default function ProductsPage() {
   };
 
   const handleDeleteProductClick = (productId: string) => {
-    setItemToDelete({ type: 'product', value: productId });
-    setIsDeleteAlertOpen(true);
+    const product = products.find(p => p.id === productId);
+    if(product) {
+      setItemToDelete({ type: 'product', id: productId, value: product.name });
+      setIsDeleteAlertOpen(true);
+    }
   }
 
-  const handleFormSubmit = (values: Product) => {
-    if (selectedProduct) {
-      setProducts(
-        products.map((p) => (p.id === selectedProduct.id ? values : p))
-      );
-    } else {
-      setProducts([values, ...products]);
+  const handleFormSubmit = async (values: Omit<Product, 'id' | '_id'>) => {
+    try {
+      if (selectedProduct) {
+        const updatedProduct = await ProductService.updateProduct(selectedProduct.id, values);
+        setProducts(
+          products.map((p) => (p.id === selectedProduct.id ? {...updatedProduct.data, id: updatedProduct.data._id} : p))
+        );
+        toast({ title: "Success", description: "Product updated successfully." });
+      } else {
+        const newProduct = await ProductService.createProduct(values);
+        setProducts([{...newProduct.data, id: newProduct.data._id}, ...products]);
+        toast({ title: "Success", description: "Product created successfully." });
+      }
+      setIsFormOpen(false);
+      setSelectedProduct(null);
+    } catch(error) {
+      toast({ title: "Error", description: `Failed to ${selectedProduct ? 'update' : 'create'} product.`, variant: "destructive" });
     }
-    setIsFormOpen(false);
-    setSelectedProduct(null);
   };
 
   const filteredProducts = useMemo(() => {
@@ -114,63 +154,93 @@ export default function ProductsPage() {
     );
   }, [products, searchTerm]);
 
-  const handleAddNewGroup = (e: React.FormEvent) => {
+  const handleAddNewGroup = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (newGroup && !groups.includes(newGroup)) {
-      setGroups([...groups, newGroup]);
-      setNewGroup("");
+    if (newGroup && !groups.find(g => g.name === newGroup)) {
+      try {
+        const newGroupData = await GroupService.createGroup({ name: newGroup });
+        setGroups([...groups, {...newGroupData.data, id: newGroupData.data._id}]);
+        setNewGroup("");
+        toast({ title: "Success", description: "Group added successfully." });
+      } catch (error) {
+        toast({ title: "Error", description: "Failed to add group.", variant: "destructive" });
+      }
     }
   }
 
-  const handleAddNewUniqueName = (e: React.FormEvent) => {
+  const handleAddNewUniqueName = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (newUniqueName && !uniqueNames.includes(newUniqueName)) {
-      setUniqueNames([...uniqueNames, newUniqueName]);
-      setNewUniqueName("");
+    if (newUniqueName && !uniqueNames.find(u => u.name === newUniqueName)) {
+      try {
+        const newUniqueNameData = await UniqueNameService.createUniqueName({ name: newUniqueName });
+        setUniqueNames([...uniqueNames, {...newUniqueNameData.data, id: newUniqueNameData.data._id}]);
+        setNewUniqueName("");
+        toast({ title: "Success", description: "Unique name added successfully." });
+      } catch (error) {
+         toast({ title: "Error", description: "Failed to add unique name.", variant: "destructive" });
+      }
     }
   }
 
-  const handleDeleteItemClick = (type: 'group' | 'uniqueName', value: string) => {
-    setItemToDelete({ type, value });
+  const handleDeleteItemClick = (type: 'group' | 'uniqueName', id: string, value: string) => {
+    setItemToDelete({ type, id, value });
     setIsDeleteAlertOpen(true);
   };
   
-  const handleDeleteConfirm = () => {
+  const handleDeleteConfirm = async () => {
     if (!itemToDelete) return;
   
-    const { type, value } = itemToDelete;
-  
-    if (type === 'group') {
-      setGroups(groups.filter(g => g !== value));
-      setProducts(products.filter(p => p.group !== value));
-    } else if (type === 'uniqueName') {
-      setUniqueNames(uniqueNames.filter(u => u !== value));
-      setProducts(products.filter(p => p.uniqueName !== value));
-    } else if (type === 'product') {
-        setProducts(products.filter(p => p.id !== value));
+    const { type, id } = itemToDelete;
+    
+    try {
+        if (type === 'group') {
+            await GroupService.deleteGroup(id);
+            setGroups(groups.filter(g => g.id !== id));
+            setProducts(products.filter(p => p.group !== itemToDelete.value));
+            toast({ title: "Success", description: "Group deleted successfully." });
+        } else if (type === 'uniqueName') {
+            await UniqueNameService.deleteUniqueName(id);
+            setUniqueNames(uniqueNames.filter(u => u.id !== id));
+            setProducts(products.filter(p => p.uniqueName !== itemToDelete.value));
+            toast({ title: "Success", description: "Unique name deleted successfully." });
+        } else if (type === 'product') {
+            await ProductService.deleteProduct(id);
+            setProducts(products.filter(p => p.id !== id));
+            toast({ title: "Success", description: "Product deleted successfully." });
+        }
+    } catch(error) {
+        toast({ title: "Error", description: `Failed to delete ${type}.`, variant: "destructive" });
     }
   
     setIsDeleteAlertOpen(false);
     setItemToDelete(null);
   };
   
-  const handleEditItemClick = (type: 'group' | 'uniqueName', value: string) => {
-    setItemToEdit({ type, value });
+  const handleEditItemClick = (type: 'group' | 'uniqueName', id: string, value: string) => {
+    setItemToEdit({ type, id, value });
     setEditValue(value);
     setIsEditModalOpen(true);
   };
 
-  const handleEditConfirm = () => {
+  const handleEditConfirm = async () => {
     if (!itemToEdit || !editValue) return;
 
-    const { type, value: oldValue } = itemToEdit;
+    const { type, id, value: oldValue } = itemToEdit;
 
-    if (type === 'group') {
-        setGroups(groups.map(g => g === oldValue ? editValue : g));
-        setProducts(products.map(p => p.group === oldValue ? { ...p, group: editValue } : p));
-    } else if (type === 'uniqueName') {
-        setUniqueNames(uniqueNames.map(u => u === oldValue ? editValue : u));
-        setProducts(products.map(p => p.uniqueName === oldValue ? { ...p, uniqueName: editValue } : p));
+    try {
+        if (type === 'group') {
+            const updatedGroup = await GroupService.updateGroup(id, { name: editValue });
+            setGroups(groups.map(g => g.id === id ? {...updatedGroup.data, id: updatedGroup.data._id } : g));
+            setProducts(products.map(p => p.group === oldValue ? { ...p, group: editValue } : p));
+            toast({ title: "Success", description: "Group updated successfully." });
+        } else if (type === 'uniqueName') {
+            const updatedUniqueName = await UniqueNameService.updateUniqueName(id, { name: editValue });
+            setUniqueNames(uniqueNames.map(u => u.id === id ? {...updatedUniqueName.data, id: updatedUniqueName.data._id} : u));
+            setProducts(products.map(p => p.uniqueName === oldValue ? { ...p, uniqueName: editValue } : p));
+            toast({ title: "Success", description: "Unique name updated successfully." });
+        }
+    } catch(error) {
+         toast({ title: "Error", description: `Failed to update ${type}.`, variant: "destructive" });
     }
     
     setIsEditModalOpen(false);
@@ -178,7 +248,7 @@ export default function ProductsPage() {
     setEditValue("");
   };
 
-  if (user === null) {
+  if (user === null || loading) {
       return <div>Loading...</div>
   }
 
@@ -237,7 +307,7 @@ export default function ProductsPage() {
                         <TableRow key={product.id}>
                         <TableCell>
                             <Avatar className="h-9 w-9">
-                                <AvatarImage src={product.imageUrl} alt={product.name}/>
+                                <AvatarImage src={product.imageUrl || product.images?.[0]} alt={product.name}/>
                                 <AvatarFallback>{product.name.charAt(0)}</AvatarFallback>
                             </Avatar>
                         </TableCell>
@@ -301,8 +371,8 @@ export default function ProductsPage() {
                     <ScrollArea className="h-40">
                         <div className="flex flex-col gap-2">
                             {uniqueNames.map(name => (
-                                <div key={name} className="flex items-center justify-between p-2 rounded-md border group">
-                                    <span>{name}</span>
+                                <div key={name.id} className="flex items-center justify-between p-2 rounded-md border group">
+                                    <span>{name.name}</span>
                                     <DropdownMenu>
                                         <DropdownMenuTrigger asChild>
                                             <Button variant="ghost" size="icon" className="h-6 w-6 opacity-0 group-hover:opacity-100">
@@ -310,10 +380,10 @@ export default function ProductsPage() {
                                             </Button>
                                         </DropdownMenuTrigger>
                                         <DropdownMenuContent>
-                                            <DropdownMenuItem onSelect={() => handleEditItemClick('uniqueName', name)}>
+                                            <DropdownMenuItem onSelect={() => handleEditItemClick('uniqueName', name.id, name.name)}>
                                                 <Edit className="mr-2 h-4 w-4" /> Edit
                                             </DropdownMenuItem>
-                                            <DropdownMenuItem onSelect={() => handleDeleteItemClick('uniqueName', name)} className="text-red-600">
+                                            <DropdownMenuItem onSelect={() => handleDeleteItemClick('uniqueName', name.id, name.name)} className="text-red-600">
                                                 <Trash2 className="mr-2 h-4 w-4" /> Delete
                                             </DropdownMenuItem>
                                         </DropdownMenuContent>
@@ -341,8 +411,8 @@ export default function ProductsPage() {
                     <ScrollArea className="h-40">
                         <div className="flex flex-col gap-2">
                             {groups.map(group => (
-                                 <div key={group} className="flex items-center justify-between p-2 rounded-md border group">
-                                    <span>{group}</span>
+                                 <div key={group.id} className="flex items-center justify-between p-2 rounded-md border group">
+                                    <span>{group.name}</span>
                                     <DropdownMenu>
                                         <DropdownMenuTrigger asChild>
                                             <Button variant="ghost" size="icon" className="h-6 w-6 opacity-0 group-hover:opacity-100">
@@ -350,10 +420,10 @@ export default function ProductsPage() {
                                             </Button>
                                         </DropdownMenuTrigger>
                                         <DropdownMenuContent>
-                                            <DropdownMenuItem onSelect={() => handleEditItemClick('group', group)}>
+                                            <DropdownMenuItem onSelect={() => handleEditItemClick('group', group.id, group.name)}>
                                                 <Edit className="mr-2 h-4 w-4" /> Edit
                                             </DropdownMenuItem>
-                                            <DropdownMenuItem onSelect={() => handleDeleteItemClick('group', group)} className="text-red-600">
+                                            <DropdownMenuItem onSelect={() => handleDeleteItemClick('group', group.id, group.name)} className="text-red-600">
                                                 <Trash2 className="mr-2 h-4 w-4" /> Delete
                                             </DropdownMenuItem>
                                         </DropdownMenuContent>
@@ -381,8 +451,8 @@ export default function ProductsPage() {
                 initialData={selectedProduct}
                 onSubmit={handleFormSubmit}
                 onCancel={() => setIsFormOpen(false)}
-                groups={groups}
-                uniqueNames={uniqueNames}
+                groups={groups.map(g => g.name)}
+                uniqueNames={uniqueNames.map(u => u.name)}
               />
             </div>
           </ScrollArea>

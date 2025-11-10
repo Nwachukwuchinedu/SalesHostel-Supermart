@@ -16,6 +16,7 @@ export type User = {
 
 export type Product = {
   id: string;
+  _id: string;
   name: string;
   group: string;
   uniqueName: string;
@@ -24,6 +25,7 @@ export type Product = {
   quantityAvailable: number;
   quantityUnit: "pcs" | "kg" | "ltr" | "box";
   imageUrl?: string;
+  images?: string[];
   tags: string[];
   description: string;
 };
@@ -51,3 +53,15 @@ export type Purchase = {
   paymentStatus: "Paid" | "Pending";
   date: string;
 };
+
+export type Group = {
+    _id: string;
+    id: string;
+    name: string;
+}
+
+export type UniqueName = {
+    _id: string;
+    id: string;
+    name: string;
+}

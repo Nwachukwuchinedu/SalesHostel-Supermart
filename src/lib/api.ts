@@ -1,3 +1,4 @@
+import Cookies from 'js-cookie';
 
 const getApiUrl = (endpoint: string) => {
     const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -5,28 +6,52 @@ const getApiUrl = (endpoint: string) => {
       throw new Error("API base URL is not configured. Please set NEXT_PUBLIC_API_BASE_URL in your environment variables.");
     }
     return `${baseUrl}${endpoint}`;
-  };
+};
+
+const getAuthHeaders = () => {
+    const accessToken = Cookies.get('accessToken');
+    const csrfToken = Cookies.get('csrfToken');
+    const headers: Record<string, string> = {
+        'Content-Type': 'application/json',
+    };
+    if (accessToken) {
+        headers['Authorization'] = `Bearer ${accessToken}`;
+    }
+    if (csrfToken) {
+        headers['X-CSRF-Token'] = csrfToken;
+    }
+    return headers;
+}
   
-  export const api = {
-    post: async (endpoint: string, body: any, headers: Record<string, string> = {}) => {
+export const api = {
+    post: async (endpoint: string, body: any) => {
       const response = await fetch(getApiUrl(endpoint), {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          ...headers,
-        },
+        headers: getAuthHeaders(),
         body: JSON.stringify(body),
       });
       return response;
     },
-    get: async (endpoint: string, headers: Record<string, string> = {}) => {
+    get: async (endpoint: string) => {
         const response = await fetch(getApiUrl(endpoint), {
             method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                ...headers,
-            },
+            headers: getAuthHeaders(),
+        });
+        return response;
+    },
+    put: async (endpoint: string, body: any) => {
+        const response = await fetch(getApiUrl(endpoint), {
+            method: 'PUT',
+            headers: getAuthHeaders(),
+            body: JSON.stringify(body),
+        });
+        return response;
+    },
+    delete: async (endpoint: string) => {
+        const response = await fetch(getApiUrl(endpoint), {
+            method: 'DELETE',
+            headers: getAuthHeaders(),
         });
         return response;
     }
-  };
+};
