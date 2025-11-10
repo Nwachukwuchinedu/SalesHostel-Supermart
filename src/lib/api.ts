@@ -8,17 +8,19 @@ const getApiUrl = (endpoint: string) => {
     return `${baseUrl}${endpoint}`;
 };
 
-const getAuthHeaders = () => {
-    const accessToken = Cookies.get('accessToken');
-    const csrfToken = Cookies.get('csrfToken'); // Read CSRF token from cookies
+const getAuthHeaders = (isMutable: boolean = false) => {
+    const accessToken = localStorage.getItem('accessToken');
     const headers: Record<string, string> = {
         'Content-Type': 'application/json',
     };
     if (accessToken) {
         headers['Authorization'] = `Bearer ${accessToken}`;
     }
-    if (csrfToken) {
-        headers['X-CSRF-Token'] = csrfToken; // Add CSRF token to headers
+    if (isMutable) {
+        const csrfToken = Cookies.get('csrfToken');
+        if (csrfToken) {
+            headers['X-CSRF-Token'] = csrfToken;
+        }
     }
     return headers;
 }
@@ -27,7 +29,8 @@ export const api = {
     post: async (endpoint: string, body: any) => {
       const response = await fetch(getApiUrl(endpoint), {
         method: 'POST',
-        headers: getAuthHeaders(),
+        credentials: 'include',
+        headers: getAuthHeaders(true),
         body: JSON.stringify(body),
       });
       return response;
@@ -35,6 +38,7 @@ export const api = {
     get: async (endpoint: string) => {
         const response = await fetch(getApiUrl(endpoint), {
             method: 'GET',
+            credentials: 'include',
             headers: getAuthHeaders(),
         });
         return response;
@@ -42,7 +46,8 @@ export const api = {
     put: async (endpoint: string, body: any) => {
         const response = await fetch(getApiUrl(endpoint), {
             method: 'PUT',
-            headers: getAuthHeaders(),
+            credentials: 'include',
+            headers: getAuthHeaders(true),
             body: JSON.stringify(body),
         });
         return response;
@@ -50,7 +55,8 @@ export const api = {
     delete: async (endpoint: string) => {
         const response = await fetch(getApiUrl(endpoint), {
             method: 'DELETE',
-            headers: getAuthHeaders(),
+            credentials: 'include',
+            headers: getAuthHeaders(true),
         });
         return response;
     }

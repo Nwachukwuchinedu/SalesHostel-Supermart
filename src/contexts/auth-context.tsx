@@ -2,8 +2,8 @@
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import type { User } from '@/lib/types';
-import Cookies from 'js-cookie';
 import { api } from '@/lib/api';
+import { useRouter } from 'next/navigation';
 
 interface AuthContextType {
   user: User | null;
@@ -18,18 +18,19 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
-    const accessToken = Cookies.get('accessToken');
-    const userData = Cookies.get('user');
-    if (accessToken && userData) {
-        try {
+    try {
+        const userData = localStorage.getItem('user');
+        const accessToken = localStorage.getItem('accessToken');
+        if (userData && accessToken) {
             setUser(JSON.parse(userData));
-        } catch (error) {
-            console.error("Failed to parse user data from cookies", error);
-            Cookies.remove('accessToken');
-            Cookies.remove('user');
         }
+    } catch (error) {
+        console.error("Failed to parse user data from localStorage", error);
+        localStorage.removeItem('user');
+        localStorage.removeItem('accessToken');
     }
     setLoading(false);
   }, []);
@@ -44,8 +45,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const { user: userData, accessToken } = data.data;
     setUser(userData);
-    Cookies.set('accessToken', accessToken, { expires: 1, secure: process.env.NODE_ENV === 'production' });
-    Cookies.set('user', JSON.stringify(userData), { expires: 1, secure: process.env.NODE_ENV === 'production' });
+    localStorage.setItem('user', JSON.stringify(userData));
+    localStorage.setItem('accessToken', accessToken);
   };
 
   const signup = async (userData: Omit<User, 'id' | '_id' | 'role' | 'avatar'> & {role?: undefined}) => {
@@ -57,17 +58,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const logout = () => {
-    const accessToken = Cookies.get('accessToken');
-    if (accessToken) {
-        api.post('/api/v1/auth/logout', {}).catch(err => console.error("Logout failed on server:", err));
+  const logout = async () => {
+    try {
+        await api.post('/api/v1/auth/logout', {});
+    } catch (err) {
+        console.error("Logout failed on server:", err)
+    } finally {
+        setUser(null);
+        localStorage.removeItem('user');
+        localStorage.removeItem('accessToken');
+        router.push('/login');
     }
-    
-    setUser(null);
-    Cookies.remove('accessToken');
-    Cookies.remove('user');
-    Cookies.remove('refreshToken');
-    Cookies.remove('csrfToken');
   };
 
   return (
