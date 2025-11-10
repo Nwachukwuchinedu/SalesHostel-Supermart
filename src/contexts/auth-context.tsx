@@ -60,9 +60,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const logout = () => {
     const accessToken = Cookies.get('accessToken');
     if (accessToken) {
-        api.post('/api/v1/auth/logout', {}, {
-            Authorization: `Bearer ${accessToken}`
-        }).catch(err => console.error("Logout failed on server:", err));
+        api.post('/api/v1/auth/logout', {}).catch(err => console.error("Logout failed on server:", err));
     }
     
     setUser(null);

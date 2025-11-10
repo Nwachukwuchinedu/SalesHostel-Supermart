@@ -10,7 +10,7 @@ const getApiUrl = (endpoint: string) => {
 
 const getAuthHeaders = () => {
     const accessToken = Cookies.get('accessToken');
-    const csrfToken = Cookies.get('csrfToken');
+    const csrfToken = Cookies.get('csrfToken'); // Read CSRF token from cookies
     const headers: Record<string, string> = {
         'Content-Type': 'application/json',
     };
@@ -18,7 +18,7 @@ const getAuthHeaders = () => {
         headers['Authorization'] = `Bearer ${accessToken}`;
     }
     if (csrfToken) {
-        headers['X-CSRF-Token'] = csrfToken;
+        headers['X-CSRF-Token'] = csrfToken; // Add CSRF token to headers
     }
     return headers;
 }
