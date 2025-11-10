@@ -1,13 +1,17 @@
-
-
 export type UserRole = "Admin" | "Staff" | "Supplier" | "Customer";
 
 export type User = {
+  _id: string;
   id: string;
   name: string;
   email: string;
-  avatar: string;
+  avatar: string | null;
   role: UserRole;
+  isActive?: boolean;
+  lastLogin?: string | null;
+  phone?: string | null;
+  createdAt?: string;
+  updatedAt?: string;
 };
 
 export type Product = {
@@ -47,5 +51,3 @@ export type Purchase = {
   paymentStatus: "Paid" | "Pending";
   date: string;
 };
-
-    

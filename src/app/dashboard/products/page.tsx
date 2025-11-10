@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
@@ -50,11 +49,12 @@ import type { Product, UserRole } from "@/lib/types";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Label } from "@/components/ui/label";
+import { useAuth } from "@/contexts/auth-context";
 
 
 export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>(initialProducts);
-  const [userRole, setUserRole] = useState<UserRole | null>(null);
+  const { user } = useAuth();
   const [searchTerm, setSearchTerm] = useState("");
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
@@ -65,19 +65,14 @@ export default function ProductsPage() {
   const [newUniqueName, setNewUniqueName] = useState("");
 
   const [isDeleteAlertOpen, setIsDeleteAlertOpen] = useState(false);
-  const [itemToDelete, setItemToDelete] = useState<{ type: 'group' | 'uniqueName'; value: string } | null>(null);
+  const [itemToDelete, setItemToDelete] = useState<{ type: 'group' | 'uniqueName' | 'product'; value: string } | null>(null);
 
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [itemToEdit, setItemToEdit] = useState<{ type: 'group' | 'uniqueName'; value: string } | null>(null);
   const [editValue, setEditValue] = useState("");
 
 
-  useEffect(() => {
-    const role = localStorage.getItem("userRole") as UserRole;
-    setUserRole(role || "Customer");
-  }, []);
-
-  const canManageProducts = userRole === "Admin";
+  const canManageProducts = user?.role === "Admin";
 
   const handleAddProduct = () => {
     setSelectedProduct(null);
@@ -183,7 +178,7 @@ export default function ProductsPage() {
     setEditValue("");
   };
 
-  if (userRole === null) {
+  if (user === null) {
       return <div>Loading...</div>
   }
 
@@ -432,5 +427,3 @@ export default function ProductsPage() {
     </div>
   );
 }
-
-    

@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,30 +11,31 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { PlaceHolderImages } from "@/lib/placeholder-images";
-import Link from "next/link";
-import type { UserRole } from "@/lib/types";
+import { useAuth } from "@/contexts/auth-context";
+import { useRouter } from "next/navigation";
+
 
 export function UserNav() {
-  const [userName, setUserName] = useState<string | null>(null);
-  const [userEmail, setUserEmail] = useState<string | null>(null);
-  const [userAvatarId, setUserAvatarId] = useState<string | null>(null);
+  const { user, logout } = useAuth();
+  const router = useRouter();
 
-  useEffect(() => {
-    setUserName(localStorage.getItem("userName"));
-    setUserEmail(localStorage.getItem("userEmail"));
-    setUserAvatarId(localStorage.getItem("userAvatar"));
-  }, []);
+  if (!user) {
+    return null;
+  }
+  
+  const handleLogout = () => {
+    logout();
+    router.push('/login');
+  };
 
-  const avatarData = PlaceHolderImages.find(p => p.id === userAvatarId);
-  const fallback = userName ? userName.charAt(0).toUpperCase() + (userName.split(' ')[1] ? userName.split(' ')[1].charAt(0).toUpperCase() : '') : "U";
+  const fallback = user.name ? user.name.charAt(0).toUpperCase() + (user.name.split(' ')[1] ? user.name.split(' ')[1].charAt(0).toUpperCase() : '') : "U";
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="relative h-8 w-8 rounded-full">
           <Avatar className="h-9 w-9">
-             <AvatarImage src={avatarData?.imageUrl} alt={userName || ""} data-ai-hint={avatarData?.imageHint}/>
+             <AvatarImage src={user.avatar || undefined} alt={user.name || ""} />
             <AvatarFallback>{fallback}</AvatarFallback>
           </Avatar>
         </Button>
@@ -43,9 +43,9 @@ export function UserNav() {
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none">{userName || "User"}</p>
+            <p className="text-sm font-medium leading-none">{user.name || "User"}</p>
             <p className="text-xs leading-none text-muted-foreground">
-              {userEmail || "user@example.com"}
+              {user.email || "user@example.com"}
             </p>
           </div>
         </DropdownMenuLabel>
@@ -56,8 +56,8 @@ export function UserNav() {
           <DropdownMenuItem>Settings</DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem asChild>
-          <Link href="/login">Log out</Link>
+        <DropdownMenuItem onClick={handleLogout}>
+          Log out
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

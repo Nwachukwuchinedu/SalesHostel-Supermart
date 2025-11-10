@@ -1,5 +1,3 @@
-
-
 import type { User, Product, Supply, Purchase } from "./types";
 
 export const users: User[] = [
@@ -26,36 +24,36 @@ export const products: Product[] = [
 ];
 
 export const supplies: Supply[] = [
-    { 
-        id: "SUP001", 
-        supplier: "Fresh Farms", 
-        date: "2023-10-01", 
+    {
+        id: "SUP001",
+        supplier: "Fresh Farms",
+        date: "2023-10-01",
         products: [
             { productId: "PROD001", productName: "Organic Fuji Apples", quantity: 50, quantityType: "box" }
         ],
         totalItems: 50
     },
-    { 
-        id: "SUP002", 
-        supplier: "Bakery Co.", 
-        date: "2023-10-02", 
+    {
+        id: "SUP002",
+        supplier: "Bakery Co.",
+        date: "2023-10-02",
         products: [
             { productId: "PROD002", productName: "Artisanal Whole Wheat Bread", quantity: 100, quantityType: "pcs" }
         ],
         totalItems: 100
     },
-    { 
-        id: "SUP003", 
-        supplier: "Healthy Drinks Inc.", 
-        date: "2023-10-02", 
+    {
+        id: "SUP003",
+        supplier: "Healthy Drinks Inc.",
+        date: "2023-10-02",
         products: [
             { productId: "PROD003", productName: "Unsweetened Almond Milk", quantity: 200, quantityType: "ltr" }
         ],
         totalItems: 200
     },
-    { 
-        id: "SUP004", 
-        supplier: "Poultry Direct", 
+    {
+        id: "SUP004",
+        supplier: "Poultry Direct",
         date: "2023-10-03",
         products: [
             { productId: "PROD004", productName: "Boneless Chicken Breast", quantity: 75, quantityType: "kg" },
@@ -72,5 +70,3 @@ export const purchases: Purchase[] = [
   { id: "PUR004", customerName: "Alice Williams", products: [{ name: "Organic Fuji Apples", quantity: 5, price: 2.99 }], total: 14.95, paymentStatus: "Pending", date: "2023-10-08" },
   { id: "PUR005", customerName: "Customer User", products: [{ name: "Artisanal Whole Wheat Bread", quantity: 2, price: 4.50 }], total: 9.00, paymentStatus: "Pending", date: "2023-10-09" },
 ];
-
-    

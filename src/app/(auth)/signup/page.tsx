@@ -9,24 +9,61 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Building } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { useAuth } from "@/contexts/auth-context";
+import { useState } from "react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { AlertCircle } from "lucide-react";
+
+const formSchema = z.object({
+  name: z.string().min(2, "Name is required."),
+  email: z.string().email({ message: "Invalid email address." }),
+  password: z.string().min(6, "Password must be at least 6 characters."),
+  phone: z.string().optional(),
+});
 
 export default function SignupPage() {
   const router = useRouter();
+  const { signup } = useAuth();
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
 
-  const handleSignup = (e: React.FormEvent) => {
-    e.preventDefault();
-    router.push("/dashboard");
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      password: "",
+      phone: "",
+    },
+  });
+
+  const handleSignup = async (values: z.infer<typeof formSchema>) => {
+    setLoading(true);
+    setError(null);
+    try {
+      await signup(values);
+      setSuccess(true);
+      setTimeout(() => router.push("/login"), 2000);
+    } catch (err: any) {
+      setError(err.message || "An unexpected error occurred. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -39,42 +76,79 @@ export default function SignupPage() {
         <CardDescription>Create an account to get started</CardDescription>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSignup} className="grid gap-4">
-          <div className="grid gap-2">
-            <Label htmlFor="full-name">Full Name</Label>
-            <Input id="full-name" placeholder="John Doe" required />
-          </div>
-          <div className="grid gap-2">
-            <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              type="email"
-              placeholder="m@example.com"
-              required
+        {error && (
+            <Alert variant="destructive" className="mb-4">
+                <AlertCircle className="h-4 w-4" />
+                <AlertTitle>Signup Failed</AlertTitle>
+                <AlertDescription>{error}</AlertDescription>
+            </Alert>
+        )}
+        {success && (
+            <Alert className="mb-4 border-green-500 text-green-700">
+                <AlertCircle className="h-4 w-4 text-green-500" />
+                <AlertTitle>Success!</AlertTitle>
+                <AlertDescription>User registered successfully. Redirecting to login...</AlertDescription>
+            </Alert>
+        )}
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(handleSignup)} className="grid gap-4">
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Full Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="John Doe" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </div>
-          <div className="grid gap-2">
-            <Label htmlFor="password">Password</Label>
-            <Input id="password" type="password" required />
-          </div>
-          <div className="grid gap-2">
-            <Label htmlFor="role">Role</Label>
-            <Select required>
-              <SelectTrigger id="role">
-                <SelectValue placeholder="Select your role" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="customer">Customer</SelectItem>
-                <SelectItem value="staff">Staff</SelectItem>
-                <SelectItem value="supplier">Supplier</SelectItem>
-                <SelectItem value="admin">Admin</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <Button type="submit" className="w-full">
-            Create an account
-          </Button>
-        </form>
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input placeholder="m@example.com" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <Input type="password" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+             <FormField
+              control={form.control}
+              name="phone"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Phone (Optional)</FormLabel>
+                  <FormControl>
+                    <Input placeholder="+234..." {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading ? 'Creating account...' : 'Create an account'}
+            </Button>
+          </form>
+        </Form>
         <div className="mt-4 text-center text-sm">
           Already have an account?{" "}
           <Link href="/login" className="underline">

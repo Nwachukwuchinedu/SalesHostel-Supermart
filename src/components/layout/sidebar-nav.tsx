@@ -20,9 +20,8 @@ import {
   Settings,
 } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
-import type { UserRole } from "@/lib/types";
+import { usePathname, useRouter } from "next/navigation";
+import { useAuth } from "@/contexts/auth-context";
 
 const allLinks = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard, roles: ["Admin", "Staff", "Supplier", "Customer"] },
@@ -34,18 +33,19 @@ const allLinks = [
 
 export function SidebarNav() {
   const pathname = usePathname();
-  const [userRole, setUserRole] = useState<UserRole | null>(null);
+  const { user, logout } = useAuth();
+  const router = useRouter();
 
-  useEffect(() => {
-    const role = localStorage.getItem("userRole") as UserRole;
-    setUserRole(role || "Customer");
-  }, []);
+  const handleLogout = () => {
+    logout();
+    router.push('/login');
+  };
 
-  const links = allLinks.filter(link => userRole && link.roles.includes(userRole));
-  
-  if (!userRole) {
+  if (!user) {
     return null; // or a loading state
   }
+  
+  const links = allLinks.filter(link => user && link.roles.includes(user.role));
 
   return (
     <>
@@ -85,12 +85,10 @@ export function SidebarNav() {
                 </Link>
             </SidebarMenuItem>
             <SidebarMenuItem>
-                <Link href="/login">
-                    <SidebarMenuButton tooltip="Logout">
-                        <LogOut/>
-                        <span>Logout</span>
-                    </SidebarMenuButton>
-                </Link>
+                <SidebarMenuButton tooltip="Logout" onClick={handleLogout}>
+                    <LogOut/>
+                    <span>Logout</span>
+                </SidebarMenuButton>
             </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>

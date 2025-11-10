@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useActionState } from "react";
@@ -25,6 +24,7 @@ import {
 } from "@/components/ui/select";
 import { users } from "@/lib/data";
 import { useState } from "react";
+import { useAuth } from "@/contexts/auth-context";
 
 export const maxDuration = 120;
 
@@ -41,12 +41,16 @@ export default function ReportsPage() {
   const initialState: ReportState = {};
   const [state, formAction] = useActionState(generateReportAction, initialState);
   const [reportType, setReportType] = useState<string>("general");
+  const { user } = useAuth();
+
 
   const today = new Date().toISOString().split("T")[0];
 
   const customers = users.filter((u) => u.role === "Customer");
   const suppliers = users.filter((u) => u.role === "Supplier");
-  const staff = users.filter((u) => u.role === "Staff");
+  const staff = users.filter((u) => u.role === "Staff" || u.role === "Admin");
+
+  if (!user) return <div>Loading...</div>
 
   return (
     <div className="flex flex-col gap-8">

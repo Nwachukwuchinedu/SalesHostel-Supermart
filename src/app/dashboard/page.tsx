@@ -1,4 +1,3 @@
-
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -14,6 +13,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { purchases } from "@/lib/data";
 import { SalesChart } from "./sales-chart";
+import { useAuth } from "@/contexts/auth-context";
 
 const salesData = [
   { name: "Jan", total: Math.floor(Math.random() * 5000) + 1000 },
@@ -32,11 +32,16 @@ const salesData = [
 
 export default function DashboardPage() {
   const recentPurchases = purchases.slice(0, 5);
+  const { user } = useAuth();
+
+  if (!user) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="flex flex-col gap-8">
-      <h1 className="text-3xl font-headline font-bold tracking-tight">
-        Dashboard
+       <h1 className="text-3xl font-headline font-bold tracking-tight">
+        Welcome, {user.name}!
       </h1>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -111,9 +116,9 @@ export default function DashboardPage() {
                       <div className="font-medium">{purchase.customerName}</div>
                     </TableCell>
                      <TableCell>
-                      <Badge variant={purchase.paymentStatus === 'Paid' ? 'default' : 'secondary'} 
+                      <Badge variant={purchase.paymentStatus === 'Paid' ? 'default' : 'secondary'}
                              className={
-                               purchase.paymentStatus === 'Paid' ? 'bg-green-500/20 text-green-700 hover:bg-green-500/30' : 
+                               purchase.paymentStatus === 'Paid' ? 'bg-green-500/20 text-green-700 hover:bg-green-500/30' :
                                'bg-yellow-500/20 text-yellow-700 hover:bg-yellow-500/30'
                              }>
                         {purchase.paymentStatus}
