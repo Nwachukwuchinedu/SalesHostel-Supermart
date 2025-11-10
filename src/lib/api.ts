@@ -1,3 +1,4 @@
+
 const getApiUrl = (endpoint: string) => {
     const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
     if (!baseUrl) {
@@ -19,8 +20,7 @@ const getApiUrl = (endpoint: string) => {
       return response;
     },
     get: async (endpoint: string, headers: Record<string, string> = {}) => {
-        const response = await fetch(getApi"
-        , {
+        const response = await fetch(getApiUrl(endpoint), {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
