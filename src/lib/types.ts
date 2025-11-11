@@ -1,3 +1,4 @@
+
 export type UserRole = "Admin" | "Staff" | "Supplier" | "Customer";
 
 export type User = {
@@ -31,18 +32,29 @@ export type Product = {
 };
 
 export type SupplyProduct = {
-  productId: string;
-  productName: string;
-  quantity: number;
-  quantityType: "pcs" | "kg" | "ltr" | "box";
+    product: string; // Product ID
+    productName: string;
+    quantity: number;
+    quantityType: 'pcs' | 'kg' | 'ltr' | 'box';
+    totalCost?: number;
 };
-
+  
 export type Supply = {
-  id: string;
-  supplier: string;
-  date: string;
-  products: SupplyProduct[];
-  totalItems: number;
+    _id: string;
+    id: string;
+    supplyId: string;
+    supplier: {
+        _id: string;
+        name: string;
+    };
+    supplierRef?: string;
+    products: SupplyProduct[];
+    totalAmount: number;
+    paymentStatus: 'Pending' | 'Paid' | 'Partial' | 'Overdue';
+    notes?: string;
+    date: string;
+    createdAt: string;
+    updatedAt: string;
 };
 
 export type Purchase = {

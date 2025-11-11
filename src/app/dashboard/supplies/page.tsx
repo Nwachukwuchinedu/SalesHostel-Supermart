@@ -1,8 +1,7 @@
 
-
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -46,13 +45,19 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { MoreHorizontal, PlusCircle, Search } from "lucide-react";
-import { supplies as initialSupplies } from "@/lib/data";
 import type { Supply } from "@/lib/types";
 import { SupplyForm } from "./supply-form";
 import { Separator } from "@/components/ui/separator";
+import { useAuth } from "@/contexts/auth-context";
+import { SupplyService } from "@/services/supply-service";
+import { useToast } from "@/hooks/use-toast";
+import { Badge } from "@/components/ui/badge";
 
 export default function SuppliesPage() {
-  const [supplies, setSupplies] = useState<Supply[]>(initialSupplies);
+  const [supplies, setSupplies] = useState<Supply[]>([]);
+  const { user } = useAuth();
+  const { toast } = useToast();
+  const [loading, setLoading] = useState(true);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [selectedSupply, setSelectedSupply] = useState<Supply | null>(null);
   const [isAlertOpen, setIsAlertOpen] = useState(false);
@@ -60,6 +65,27 @@ export default function SuppliesPage() {
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [dateFilter, setDateFilter] = useState({ from: "", to: "" });
+
+  useEffect(() => {
+    const fetchSupplies = async () => {
+      try {
+        setLoading(true);
+        const response = await SupplyService.getAllSupplies();
+        setSupplies(response.data.map((s: any) => ({...s, id: s._id})));
+      } catch (error) {
+        toast({
+          title: "Error",
+          description: "Failed to fetch supplies.",
+          variant: "destructive",
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchSupplies();
+  }, [toast]);
+  
+  const canManageSupplies = user?.role === 'Admin' || user?.role === 'Staff';
 
   const handleAddSupply = () => {
     setSelectedSupply(null);
@@ -82,32 +108,40 @@ export default function SuppliesPage() {
     setIsAlertOpen(true);
   }
 
-  const handleDeleteConfirm = () => {
+  const handleDeleteConfirm = async () => {
     if (supplyToDelete) {
-        setSupplies(supplies.filter((s) => s.id !== supplyToDelete));
+        try {
+            await SupplyService.deleteSupply(supplyToDelete);
+            setSupplies(supplies.filter((s) => s.id !== supplyToDelete));
+            toast({ title: "Success", description: "Supply record deleted."});
+        } catch (error) {
+            toast({ title: "Error", description: "Failed to delete supply.", variant: "destructive" });
+        }
     }
     setIsAlertOpen(false);
     setSupplyToDelete(null);
   }
 
-  const handleFormSubmit = (values: Supply) => {
-    if(selectedSupply && supplies.find(s => s.id === values.id)) {
-        // Update existing supply
-        setSupplies(supplies.map(s => s.id === values.id ? values : s))
-    } else {
-        // Add new supply
-        setSupplies([values, ...supplies]);
-    }
+  const handleFormSubmit = async () => {
     setIsFormOpen(false);
     setSelectedSupply(null);
+    setLoading(true);
+    try {
+        const response = await SupplyService.getAllSupplies();
+        setSupplies(response.data.map((s: any) => ({...s, id: s._id})));
+    } catch (error) {
+        toast({ title: "Error", description: "Failed to refresh supplies.", variant: "destructive"})
+    } finally {
+        setLoading(false);
+    }
   };
 
   const filteredSupplies = useMemo(() => {
     return supplies.filter(supply => {
         const searchTermLower = searchTerm.toLowerCase();
         const matchesSearch = searchTerm ? 
-            supply.id.toLowerCase().includes(searchTermLower) || 
-            supply.supplier.toLowerCase().includes(searchTermLower) ||
+            supply.supplyId.toLowerCase().includes(searchTermLower) || 
+            supply.supplier?.name.toLowerCase().includes(searchTermLower) ||
             supply.products.some(p => p.productName.toLowerCase().includes(searchTermLower))
             : true;
 
@@ -125,6 +159,10 @@ export default function SuppliesPage() {
         return matchesSearch && matchesDate;
     })
   }, [supplies, searchTerm, dateFilter]);
+  
+  if (user === null || loading) {
+      return <div>Loading...</div>
+  }
 
   return (
     <div className="flex flex-col gap-8 min-w-0">
@@ -135,9 +173,11 @@ export default function SuppliesPage() {
           </h1>
           <p className="text-muted-foreground">Track incoming product supplies.</p>
         </div>
-        <Button onClick={handleAddSupply}>
-          <PlusCircle className="mr-2 h-4 w-4" /> Add Supply
-        </Button>
+        {(canManageSupplies || user?.role === 'Supplier') && (
+            <Button onClick={handleAddSupply}>
+                <PlusCircle className="mr-2 h-4 w-4" /> Add Supply
+            </Button>
+        )}
       </div>
       <Card>
         <CardHeader>
@@ -176,8 +216,9 @@ export default function SuppliesPage() {
                 <TableRow>
                     <TableHead>Supply ID</TableHead>
                     <TableHead>Supplier</TableHead>
+                    <TableHead>Status</TableHead>
                     <TableHead>Date</TableHead>
-                    <TableHead className="text-right">Total Items</TableHead>
+                    <TableHead className="text-right">Total Amount</TableHead>
                     <TableHead>
                     <span className="sr-only">Actions</span>
                     </TableHead>
@@ -187,12 +228,22 @@ export default function SuppliesPage() {
                 {filteredSupplies.map((supply) => (
                     <TableRow key={supply.id}>
                     <TableCell className="font-medium">
-                        {supply.id}
+                        {supply.supplyId}
                     </TableCell>
-                    <TableCell>{supply.supplier}</TableCell>
+                    <TableCell>{supply.supplier?.name || "N/A"}</TableCell>
+                    <TableCell>
+                        <Badge variant={supply.paymentStatus === 'Paid' ? 'default' : 'secondary'}
+                            className={
+                                supply.paymentStatus === 'Paid' ? 'bg-green-500/20 text-green-700 hover:bg-green-500/30' :
+                                supply.paymentStatus === 'Pending' ? 'bg-yellow-500/20 text-yellow-700 hover:bg-yellow-500/30' :
+                                'bg-gray-500/20 text-gray-700 hover:bg-gray-500/30'
+                            }>
+                            {supply.paymentStatus}
+                        </Badge>
+                    </TableCell>
                     <TableCell>{new Date(supply.date).toLocaleDateString()}</TableCell>
                     <TableCell className="text-right">
-                        {supply.totalItems}
+                        ₦{supply.totalAmount.toFixed(2)}
                     </TableCell>
                     <TableCell>
                         <div className="flex justify-end">
@@ -206,8 +257,12 @@ export default function SuppliesPage() {
                             <DropdownMenuContent align="end">
                             <DropdownMenuLabel>Actions</DropdownMenuLabel>
                             <DropdownMenuItem onSelect={() => handleViewDetails(supply)}>View Details</DropdownMenuItem>
-                            <DropdownMenuItem onSelect={() => handleEditSupply(supply)}>Edit</DropdownMenuItem>
-                            <DropdownMenuItem onSelect={() => handleDeleteClick(supply.id)} className="text-red-600">Delete</DropdownMenuItem>
+                            {(canManageSupplies || user?._id === supply.supplier?._id) && (
+                                <DropdownMenuItem onSelect={() => handleEditSupply(supply)}>Edit</DropdownMenuItem>
+                            )}
+                            {canManageSupplies && (
+                                <DropdownMenuItem onSelect={() => handleDeleteClick(supply.id)} className="text-red-600">Delete</DropdownMenuItem>
+                            )}
                             </DropdownMenuContent>
                         </DropdownMenu>
                         </div>
@@ -239,40 +294,45 @@ export default function SuppliesPage() {
           <DialogHeader>
             <DialogTitle>Supply Details</DialogTitle>
             <DialogDescription>
-              Details for supply ID: {selectedSupply?.id}
+              Details for supply ID: {selectedSupply?.supplyId}
             </DialogDescription>
           </DialogHeader>
           {selectedSupply && (
             <div className="space-y-4">
-              <div><strong>Supplier:</strong> {selectedSupply.supplier}</div>
+              <div><strong>Supplier:</strong> {selectedSupply.supplier.name}</div>
               <div><strong>Date:</strong> {new Date(selectedSupply.date).toLocaleDateString()}</div>
+              <div><strong>Status:</strong> {selectedSupply.paymentStatus}</div>
               <Separator />
               <h4 className="font-semibold">Products Supplied</h4>
               <Table>
                 <TableHeader>
                     <TableRow>
                         <TableHead>Product</TableHead>
-                        <TableHead className="text-right">Quantity</TableHead>
+                        <TableHead>Quantity</TableHead>
+                        <TableHead className="text-right">Cost</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
                     {selectedSupply.products.map((p, i) => (
                         <TableRow key={i}>
                             <TableCell>{p.productName}</TableCell>
-                            <TableCell className="text-right">{p.quantity} {p.quantityType}</TableCell>
+                            <TableCell>{p.quantity} {p.quantityType}</TableCell>
+                            <TableCell className="text-right">₦{p.totalCost?.toFixed(2) || 'N/A'}</TableCell>
                         </TableRow>
                     ))}
                 </TableBody>
               </Table>
               <Separator />
               <div className="text-right font-bold text-lg">
-                Total Items: {selectedSupply.totalItems}
+                Total Amount: ₦{selectedSupply.totalAmount.toFixed(2)}
               </div>
             </div>
           )}
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsDetailsOpen(false)}>Close</Button>
-            <Button onClick={() => handleEditSupply(selectedSupply!)}>Edit</Button>
+            {(canManageSupplies || user?._id === selectedSupply?.supplier?._id) && (
+              <Button onClick={() => handleEditSupply(selectedSupply!)}>Edit</Button>
+            )}
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -294,5 +354,3 @@ export default function SuppliesPage() {
     </div>
   );
 }
-
-    
