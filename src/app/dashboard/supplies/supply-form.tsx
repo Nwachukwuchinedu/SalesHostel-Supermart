@@ -113,6 +113,14 @@ export function SupplyForm({ initialData, onSubmit, onCancel }: SupplyFormProps)
     control: form.control,
     name: "products",
   });
+
+  const watchedProducts = form.watch("products");
+
+  const calculateTotal = () => {
+    return watchedProducts.reduce((total, item) => {
+      return total + (item.totalCost || 0);
+    }, 0);
+  };
   
   const handleSubmit = async (values: SupplyFormValues) => {
      try {
@@ -133,8 +141,6 @@ export function SupplyForm({ initialData, onSubmit, onCancel }: SupplyFormProps)
         toast({ title: "Error", description: error.message || "An error occurred.", variant: "destructive" });
      }
   };
-
-  const watchedProducts = form.watch('products');
   
   return (
     <Form {...form}>
@@ -295,7 +301,7 @@ export function SupplyForm({ initialData, onSubmit, onCancel }: SupplyFormProps)
         
         <div className="flex justify-between items-center pt-4 border-t px-4">
             <div className="text-lg font-semibold">
-                Backend will calculate total cost.
+                Total Cost: ₦{calculateTotal().toFixed(2)}
             </div>
             <div className="flex justify-end gap-4">
             <Button type="button" variant="outline" onClick={onCancel}>
