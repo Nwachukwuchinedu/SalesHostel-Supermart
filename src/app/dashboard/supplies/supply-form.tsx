@@ -121,7 +121,7 @@ export function SupplyForm({ initialData, onSubmit, onCancel }: SupplyFormProps)
   
   const handleSubmit = async (values: SupplyFormValues) => {
      try {
-        const payload = { ...values };
+        const payload: any = { ...values };
         if (user?.role === 'Supplier') {
             payload.supplierRef = user._id;
         }
@@ -139,9 +139,10 @@ export function SupplyForm({ initialData, onSubmit, onCancel }: SupplyFormProps)
      }
   };
 
-  const calculateTotalAmount = () => {
-    return form.getValues('products').reduce((acc, item) => acc + (item.totalCost || 0), 0);
-  }
+  const watchedProducts = form.watch('products');
+  const totalAmount = useMemo(() => {
+    return watchedProducts.reduce((acc, item) => acc + (item.totalCost || 0), 0);
+  }, [watchedProducts]);
 
   return (
     <Form {...form}>
@@ -302,7 +303,7 @@ export function SupplyForm({ initialData, onSubmit, onCancel }: SupplyFormProps)
         
         <div className="flex justify-between items-center pt-4 border-t px-4">
             <div className="text-lg font-semibold">
-                Total Cost: ₦{calculateTotalAmount().toFixed(2)}
+                Total Cost: ₦{totalAmount.toFixed(2)}
             </div>
             <div className="flex justify-end gap-4">
             <Button type="button" variant="outline" onClick={onCancel}>
@@ -315,5 +316,3 @@ export function SupplyForm({ initialData, onSubmit, onCancel }: SupplyFormProps)
     </Form>
   );
 }
-
-    
