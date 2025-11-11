@@ -1,6 +1,7 @@
+
 "use client";
 
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
 import type { User } from '@/lib/types';
 import { api } from '@/lib/api';
 import { useRouter } from 'next/navigation';
@@ -21,23 +22,63 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
-  useEffect(() => {
+  const refreshAuth = useCallback(async () => {
     try {
+      const refreshResponse = await api.post('/api/v1/auth/refresh', {});
+      const refreshData = await refreshResponse.json();
+      if (refreshData.success) {
+        const { accessToken } = refreshData.data;
+        localStorage.setItem('accessToken', accessToken);
+        // At this point, we have a valid access token, but we need user data.
+        // Let's assume we need to fetch it or it was stored previously.
         const userData = localStorage.getItem('user');
-        const accessToken = localStorage.getItem('accessToken');
-        if (userData && accessToken) {
-            setUser(JSON.parse(userData));
+        if (userData) {
+          setUser(JSON.parse(userData));
         }
-    } catch (error) {
-        console.error("Failed to parse user data from localStorage", error);
+      } else {
+        // If refresh fails, clear everything.
+        setUser(null);
         localStorage.removeItem('user');
         localStorage.removeItem('accessToken');
+        Cookies.remove('csrfToken');
+        Cookies.remove('refreshToken');
+      }
+    } catch (error) {
+      console.error("Failed to refresh token", error);
+      setUser(null);
+      localStorage.removeItem('user');
+      localStorage.removeItem('accessToken');
     }
-    setLoading(false);
   }, []);
 
+
+  useEffect(() => {
+    const initializeAuth = async () => {
+      const accessToken = localStorage.getItem('accessToken');
+      const userData = localStorage.getItem('user');
+      const refreshToken = Cookies.get('refreshToken');
+  
+      if (accessToken && userData) {
+        // Assume user is logged in if we have token and data
+        setUser(JSON.parse(userData));
+      } else if (refreshToken) {
+        // If no access token but have a refresh token, try to refresh
+        await refreshAuth();
+      }
+      setLoading(false);
+    };
+  
+    initializeAuth();
+  }, [refreshAuth]);
+
   const login = async (email: string, password: string) => {
-    const response = await api.post('/api/v1/auth/login', { email, password });
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+        credentials: 'include',
+    });
+
     const data = await response.json();
 
     if (!response.ok || !data.success) {
@@ -76,7 +117,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   return (
     <AuthContext.Provider value={{ user, loading, login, signup, logout }}>
-      {!loading && children}
+      {children}
     </AuthContext.Provider>
   );
 }
