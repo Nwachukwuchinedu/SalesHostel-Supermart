@@ -45,7 +45,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { MoreHorizontal, PlusCircle, Search } from "lucide-react";
-import type { Supply } from "@/lib/types";
+import type { Supply, SupplySummary } from "@/lib/types";
 import { SupplyForm } from "./supply-form";
 import { Separator } from "@/components/ui/separator";
 import { useAuth } from "@/contexts/auth-context";
@@ -54,7 +54,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Badge } from "@/components/ui/badge";
 
 export default function SuppliesPage() {
-  const [supplies, setSupplies] = useState<Supply[]>([]);
+  const [supplies, setSupplies] = useState<SupplySummary[]>([]);
   const { user } = useAuth();
   const { toast } = useToast();
   const [loading, setLoading] = useState(true);
@@ -92,15 +92,25 @@ export default function SuppliesPage() {
     setIsFormOpen(true);
   };
   
-  const handleEditSupply = (supply: Supply) => {
-    setSelectedSupply(supply);
-    setIsDetailsOpen(false);
-    setIsFormOpen(true);
+  const handleEditSupply = async (supplyId: string) => {
+    try {
+        const res = await SupplyService.getSupplyById(supplyId);
+        setSelectedSupply({...res.data, id: res.data._id});
+        setIsDetailsOpen(false);
+        setIsFormOpen(true);
+    } catch(err) {
+        toast({ title: "Error", description: "Failed to fetch supply details.", variant: "destructive" });
+    }
   };
 
-  const handleViewDetails = (supply: Supply) => {
-    setSelectedSupply(supply);
-    setIsDetailsOpen(true);
+  const handleViewDetails = async (supplyId: string) => {
+    try {
+        const res = await SupplyService.getSupplyById(supplyId);
+        setSelectedSupply({...res.data, id: res.data._id});
+        setIsDetailsOpen(true);
+    } catch(err) {
+        toast({ title: "Error", description: "Failed to fetch supply details.", variant: "destructive" });
+    }
   };
 
   const handleDeleteClick = (supplyId: string) => {
@@ -141,13 +151,12 @@ export default function SuppliesPage() {
         const searchTermLower = searchTerm.toLowerCase();
         const matchesSearch = searchTerm ? 
             supply.supplyId.toLowerCase().includes(searchTermLower) || 
-            supply.supplier?.name.toLowerCase().includes(searchTermLower) ||
-            supply.products.some(p => p.productName.toLowerCase().includes(searchTermLower))
+            (supply.supplierName && supply.supplierName.toLowerCase().includes(searchTermLower))
             : true;
 
         const fromDate = dateFilter.from ? new Date(dateFilter.from) : null;
         const toDate = dateFilter.to ? new Date(dateFilter.to) : null;
-        const supplyDate = new Date(supply.date);
+        const supplyDate = new Date(supply.updatedAt);
         
         if(fromDate) fromDate.setHours(0,0,0,0);
         if(toDate) toDate.setHours(23,59,59,999);
@@ -190,7 +199,7 @@ export default function SuppliesPage() {
                 <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                 <Input
                 type="search"
-                placeholder="Search by ID, supplier, product..."
+                placeholder="Search by ID, supplier..."
                 className="w-full rounded-lg bg-background pl-8"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
@@ -230,7 +239,7 @@ export default function SuppliesPage() {
                     <TableCell className="font-medium">
                         {supply.supplyId}
                     </TableCell>
-                    <TableCell>{supply.supplier?.name || "N/A"}</TableCell>
+                    <TableCell>{supply.supplierName || "N/A"}</TableCell>
                     <TableCell>
                         <Badge variant={supply.paymentStatus === 'Paid' ? 'default' : 'secondary'}
                             className={
@@ -241,7 +250,7 @@ export default function SuppliesPage() {
                             {supply.paymentStatus}
                         </Badge>
                     </TableCell>
-                    <TableCell>{new Date(supply.date).toLocaleDateString()}</TableCell>
+                    <TableCell>{new Date(supply.updatedAt).toLocaleDateString()}</TableCell>
                     <TableCell className="text-right">
                         ₦{(supply.totalAmount || 0).toFixed(2)}
                     </TableCell>
@@ -256,9 +265,9 @@ export default function SuppliesPage() {
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
                             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                            <DropdownMenuItem onSelect={() => handleViewDetails(supply)}>View Details</DropdownMenuItem>
+                            <DropdownMenuItem onSelect={() => handleViewDetails(supply.id)}>View Details</DropdownMenuItem>
                             {(canManageSupplies || user?._id === supply.supplier?._id) && (
-                                <DropdownMenuItem onSelect={() => handleEditSupply(supply)}>Edit</DropdownMenuItem>
+                                <DropdownMenuItem onSelect={() => handleEditSupply(supply.id)}>Edit</DropdownMenuItem>
                             )}
                             {canManageSupplies && (
                                 <DropdownMenuItem onSelect={() => handleDeleteClick(supply.id)} className="text-red-600">Delete</DropdownMenuItem>
@@ -330,8 +339,8 @@ export default function SuppliesPage() {
           )}
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsDetailsOpen(false)}>Close</Button>
-            {(canManageSupplies || user?._id === selectedSupply?.supplier?._id) && (
-              <Button onClick={() => handleEditSupply(selectedSupply!)}>Edit</Button>
+            {(canManageSupplies || user?._id === selectedSupply?.supplier?._id) && selectedSupply && (
+              <Button onClick={() => handleEditSupply(selectedSupply!.id)}>Edit</Button>
             )}
           </DialogFooter>
         </DialogContent>
@@ -354,5 +363,3 @@ export default function SuppliesPage() {
     </div>
   );
 }
-
-    

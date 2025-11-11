@@ -31,6 +31,13 @@ export const SupplyService = {
         }
         return response.json();
     },
+    getAllSupplierNames: async () => {
+        const response = await api.get('/api/v1/supplies/suppliers');
+        if(!response.ok) {
+            throw new Error('Failed to fetch supplier names');
+        }
+        return response.json();
+    },
     createSupply: async (supplyData: SupplyInput) => {
         const response = await api.post('/api/v1/supplies', supplyData);
         if (!response.ok) {

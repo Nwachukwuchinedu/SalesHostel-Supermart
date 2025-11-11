@@ -52,10 +52,28 @@ export type Supply = {
     totalAmount?: number;
     paymentStatus: 'Pending' | 'Paid' | 'Partial' | 'Overdue';
     notes?: string;
-    date: string;
+    date: string; // This is the supply date set by user
     createdAt: string;
     updatedAt: string;
 };
+
+export type SupplySummary = {
+    _id: string;
+    id: string;
+    supplyId: string;
+    supplierName?: string;
+    paymentStatus: 'Pending' | 'Paid' | 'Partial' | 'Overdue';
+    totalAmount?: number;
+    updatedAt: string;
+    date: string; // Re-adding for consistency, will use updatedAt if not present
+    supplier: { // Keep for details view compatibility
+        _id: string;
+        name: string;
+    };
+    products: SupplyProduct[];
+    notes?: string;
+}
+
 
 export type Purchase = {
   id: string;

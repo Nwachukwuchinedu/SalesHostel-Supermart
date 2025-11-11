@@ -26,7 +26,6 @@ import { PlusCircle, Trash2 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useAuth } from "@/contexts/auth-context";
-import { api } from "@/lib/api";
 import { ProductService } from "@/services/product-service";
 import { SupplyService } from "@/services/supply-service";
 import { useToast } from "@/hooks/use-toast";
@@ -58,19 +57,15 @@ interface SupplyFormProps {
 export function SupplyForm({ initialData, onSubmit, onCancel }: SupplyFormProps) {
   const { user } = useAuth();
   const { toast } = useToast();
-  const [suppliers, setSuppliers] = useState<User[]>([]);
+  const [suppliers, setSuppliers] = useState<{_id: string; name: string}[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Assuming you have a service or api method to get users by role
         if (user?.role === 'Admin' || user?.role === 'Staff') {
-          const supplierRes = await api.get('/api/v1/users?role=Supplier');
-          if (supplierRes.ok) {
-            const supplierData = await supplierRes.json();
-            setSuppliers(supplierData.data);
-          }
+          const supplierRes = await SupplyService.getAllSupplierNames();
+          setSuppliers(supplierRes.data);
         }
         const productRes = await ProductService.getAllProducts({ limit: 1000 });
         setProducts(productRes.data.map((p: any) => ({...p, id: p._id})));
@@ -140,10 +135,7 @@ export function SupplyForm({ initialData, onSubmit, onCancel }: SupplyFormProps)
   };
 
   const watchedProducts = form.watch('products');
-  const totalAmount = useMemo(() => {
-    return watchedProducts.reduce((acc, item) => acc + (item.totalCost || 0), 0);
-  }, [watchedProducts]);
-
+  
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
@@ -165,7 +157,7 @@ export function SupplyForm({ initialData, onSubmit, onCancel }: SupplyFormProps)
                             </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                            {suppliers.map(s => <SelectItem key={s.id} value={s.id}>{s.name}</SelectItem>)}
+                            {suppliers.map(s => <SelectItem key={s._id} value={s._id}>{s.name}</SelectItem>)}
                             </SelectContent>
                         </Select>
                         <FormMessage />
@@ -303,7 +295,7 @@ export function SupplyForm({ initialData, onSubmit, onCancel }: SupplyFormProps)
         
         <div className="flex justify-between items-center pt-4 border-t px-4">
             <div className="text-lg font-semibold">
-                Total Cost: ₦{totalAmount.toFixed(2)}
+                Backend will calculate total cost.
             </div>
             <div className="flex justify-end gap-4">
             <Button type="button" variant="outline" onClick={onCancel}>
