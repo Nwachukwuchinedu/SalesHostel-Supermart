@@ -117,8 +117,10 @@ export function SupplyForm({ initialData, onSubmit, onCancel }: SupplyFormProps)
   const watchedProducts = form.watch("products");
 
   const calculateTotal = () => {
+    if (!watchedProducts) return 0;
     return watchedProducts.reduce((total, item) => {
-      return total + (item.totalCost || 0);
+      const cost = Number(item.totalCost) || 0;
+      return total + cost;
     }, 0);
   };
   
