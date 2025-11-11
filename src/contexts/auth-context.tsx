@@ -4,6 +4,7 @@ import { createContext, useContext, useState, useEffect, ReactNode } from 'react
 import type { User } from '@/lib/types';
 import { api } from '@/lib/api';
 import { useRouter } from 'next/navigation';
+import Cookies from 'js-cookie';
 
 interface AuthContextType {
   user: User | null;
@@ -67,6 +68,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setUser(null);
         localStorage.removeItem('user');
         localStorage.removeItem('accessToken');
+        Cookies.remove('csrfToken');
+        Cookies.remove('refreshToken');
         router.push('/login');
     }
   };
