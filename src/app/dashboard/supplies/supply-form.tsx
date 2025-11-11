@@ -101,7 +101,7 @@ export function SupplyForm({ initialData, onSubmit, onCancel }: SupplyFormProps)
       date: new Date().toISOString().split("T")[0],
       notes: "",
       paymentStatus: 'Pending' as const,
-      products: [{ product: "", quantity: 1, quantityType: "pcs" as const }],
+      products: [{ product: "", quantity: 1, quantityType: "pcs" as const, totalCost: 0 }],
     };
   }, [initialData, user]);
 
@@ -315,3 +315,5 @@ export function SupplyForm({ initialData, onSubmit, onCancel }: SupplyFormProps)
     </Form>
   );
 }
+
+    

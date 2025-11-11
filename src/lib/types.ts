@@ -49,7 +49,7 @@ export type Supply = {
     };
     supplierRef?: string;
     products: SupplyProduct[];
-    totalAmount: number;
+    totalAmount?: number;
     paymentStatus: 'Pending' | 'Paid' | 'Partial' | 'Overdue';
     notes?: string;
     date: string;
@@ -77,3 +77,5 @@ export type UniqueName = {
     id: string;
     name: string;
 }
+
+    

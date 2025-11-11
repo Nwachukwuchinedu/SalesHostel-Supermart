@@ -243,7 +243,7 @@ export default function SuppliesPage() {
                     </TableCell>
                     <TableCell>{new Date(supply.date).toLocaleDateString()}</TableCell>
                     <TableCell className="text-right">
-                        ₦{supply.totalAmount.toFixed(2)}
+                        ₦{(supply.totalAmount || 0).toFixed(2)}
                     </TableCell>
                     <TableCell>
                         <div className="flex justify-end">
@@ -324,7 +324,7 @@ export default function SuppliesPage() {
               </Table>
               <Separator />
               <div className="text-right font-bold text-lg">
-                Total Amount: ₦{selectedSupply.totalAmount.toFixed(2)}
+                Total Amount: ₦{(selectedSupply.totalAmount || 0).toFixed(2)}
               </div>
             </div>
           )}
@@ -354,3 +354,5 @@ export default function SuppliesPage() {
     </div>
   );
 }
+
+    
