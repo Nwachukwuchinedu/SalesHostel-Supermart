@@ -4,7 +4,6 @@ import { createContext, useContext, useState, useEffect, ReactNode } from 'react
 import type { User } from '@/lib/types';
 import { api } from '@/lib/api';
 import { useRouter } from 'next/navigation';
-import Cookies from 'js-cookie';
 
 interface AuthContextType {
   user: User | null;
@@ -22,18 +21,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const router = useRouter();
 
   useEffect(() => {
-    try {
+    const initializeUser = async () => {
+      try {
         const userData = localStorage.getItem('user');
         const accessToken = localStorage.getItem('accessToken');
         if (userData && accessToken) {
-            setUser(JSON.parse(userData));
+          setUser(JSON.parse(userData));
+        } else {
+          // If no token, maybe try to refresh if you have a refresh token flow
         }
-    } catch (error) {
+      } catch (error) {
         console.error("Failed to parse user data from localStorage", error);
         localStorage.removeItem('user');
         localStorage.removeItem('accessToken');
-    }
-    setLoading(false);
+      } finally {
+        setLoading(false);
+      }
+    };
+    initializeUser();
   }, []);
 
   const login = async (email: string, password: string) => {
@@ -68,8 +73,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setUser(null);
         localStorage.removeItem('user');
         localStorage.removeItem('accessToken');
-        Cookies.remove('csrfToken');
-        Cookies.remove('refreshToken');
+        // Cookies are HttpOnly, server will clear them.
         router.push('/login');
     }
   };

@@ -1,4 +1,3 @@
-import Cookies from 'js-cookie';
 
 const getApiUrl = (endpoint: string) => {
     const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -8,19 +7,13 @@ const getApiUrl = (endpoint: string) => {
     return `${baseUrl}${endpoint}`;
 };
 
-const getAuthHeaders = (isMutable: boolean = false) => {
+const getAuthHeaders = () => {
     const accessToken = localStorage.getItem('accessToken');
     const headers: Record<string, string> = {
         'Content-Type': 'application/json',
     };
     if (accessToken) {
         headers['Authorization'] = `Bearer ${accessToken}`;
-    }
-    if (isMutable) {
-        const csrfToken = Cookies.get('csrfToken');
-        if (csrfToken) {
-            headers['X-CSRF-Token'] = csrfToken;
-        }
     }
     return headers;
 }
@@ -30,7 +23,7 @@ export const api = {
       const response = await fetch(getApiUrl(endpoint), {
         method: 'POST',
         credentials: 'include',
-        headers: getAuthHeaders(true),
+        headers: getAuthHeaders(),
         body: JSON.stringify(body),
       });
       return response;
@@ -47,7 +40,7 @@ export const api = {
         const response = await fetch(getApiUrl(endpoint), {
             method: 'PUT',
             credentials: 'include',
-            headers: getAuthHeaders(true),
+            headers: getAuthHeaders(),
             body: JSON.stringify(body),
         });
         return response;
@@ -56,7 +49,7 @@ export const api = {
         const response = await fetch(getApiUrl(endpoint), {
             method: 'DELETE',
             credentials: 'include',
-            headers: getAuthHeaders(true),
+            headers: getAuthHeaders(),
         });
         return response;
     }
