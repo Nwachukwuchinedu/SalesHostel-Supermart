@@ -308,7 +308,7 @@ export default function SuppliesPage() {
           </DialogHeader>
           {selectedSupply && (
             <div className="space-y-4">
-              <div><strong>Supplier:</strong> {selectedSupply.supplier.name}</div>
+              <div><strong>Supplier:</strong> {selectedSupply.supplier?.name || (selectedSupply as any).supplierName || 'N/A'}</div>
               <div><strong>Date:</strong> {new Date(selectedSupply.date).toLocaleDateString()}</div>
               <div><strong>Status:</strong> {selectedSupply.paymentStatus}</div>
               <Separator />
