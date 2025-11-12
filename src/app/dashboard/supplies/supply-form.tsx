@@ -78,9 +78,10 @@ export function SupplyForm({ initialData, onSubmit, onCancel }: SupplyFormProps)
   
   const defaultValues = useMemo(() => {
     if (initialData) {
+      const isValidDate = initialData.date && !isNaN(new Date(initialData.date).getTime());
       return {
         supplierRef: initialData.supplier?._id,
-        date: new Date(initialData.date).toISOString().split("T")[0],
+        date: isValidDate ? new Date(initialData.date).toISOString().split("T")[0] : new Date().toISOString().split("T")[0],
         notes: initialData.notes || "",
         paymentStatus: initialData.paymentStatus,
         products: initialData.products.length > 0 ? initialData.products.map(p => ({
@@ -316,3 +317,5 @@ export function SupplyForm({ initialData, onSubmit, onCancel }: SupplyFormProps)
     </Form>
   );
 }
+
+    
