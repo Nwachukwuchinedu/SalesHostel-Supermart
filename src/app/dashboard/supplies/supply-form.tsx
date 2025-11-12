@@ -21,7 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { Supply, User, Product } from "@/lib/types";
+import type { Supply } from "@/lib/types";
 import { PlusCircle, Trash2 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -58,7 +58,7 @@ export function SupplyForm({ initialData, onSubmit, onCancel }: SupplyFormProps)
   const { user } = useAuth();
   const { toast } = useToast();
   const [suppliers, setSuppliers] = useState<{_id: string; name: string}[]>([]);
-  const [products, setProducts] = useState<Product[]>([]);
+  const [products, setProducts] = useState<{_id: string; name: string}[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -67,8 +67,8 @@ export function SupplyForm({ initialData, onSubmit, onCancel }: SupplyFormProps)
           const supplierRes = await SupplyService.getAllSupplierNames();
           setSuppliers(supplierRes.data);
         }
-        const productRes = await ProductService.getAllProducts({ limit: 1000 });
-        setProducts(productRes.data.map((p: any) => ({...p, id: p._id})));
+        const productRes = await ProductService.getAllProductNames();
+        setProducts(productRes.data);
       } catch (error) {
         toast({ title: "Error", description: "Failed to fetch suppliers or products.", variant: "destructive" });
       }
@@ -207,7 +207,7 @@ export function SupplyForm({ initialData, onSubmit, onCancel }: SupplyFormProps)
                         </FormControl>
                         <SelectContent>
                         {products.map((product) => (
-                            <SelectItem key={product.id} value={product.id}>
+                            <SelectItem key={product._id} value={product._id}>
                             {product.name}
                             </SelectItem>
                         ))}

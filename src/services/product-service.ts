@@ -1,3 +1,4 @@
+
 import { api } from '@/lib/api';
 import type { Product } from '@/lib/types';
 
@@ -7,6 +8,13 @@ export const ProductService = {
         const response = await api.get(`/api/v1/products?${query}`);
         if (!response.ok) {
             throw new Error('Failed to fetch products');
+        }
+        return response.json();
+    },
+    getAllProductNames: async () => {
+        const response = await api.get('/api/v1/products/names');
+        if (!response.ok) {
+            throw new Error('Failed to fetch product names');
         }
         return response.json();
     },
@@ -39,3 +47,5 @@ export const ProductService = {
         return response.json();
     }
 };
+
+    
