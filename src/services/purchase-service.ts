@@ -63,6 +63,14 @@ export const PurchaseService = {
             throw new Error('Failed to mark purchase as pending');
         }
         return response.json();
+    },
+    
+    getAllCustomerNames: async () => {
+        const response = await api.get('/api/v1/purchases/customers');
+        if (!response.ok) {
+            throw new Error('Failed to fetch customer names');
+        }
+        return response.json();
     }
 };
 

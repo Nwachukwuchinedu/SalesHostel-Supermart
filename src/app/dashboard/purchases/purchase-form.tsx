@@ -27,7 +27,6 @@ import { useEffect, useMemo, useState } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { PurchaseService } from "@/services/purchase-service";
 import { ProductService } from "@/services/product-service";
-import { UserService } from "@/services/user-service";
 import { useToast } from "@/hooks/use-toast";
 import { Textarea } from "@/components/ui/textarea";
 
@@ -66,7 +65,7 @@ export function PurchaseForm({ initialData, onSubmit, onCancel }: PurchaseFormPr
             try {
                 const [productRes, customerRes] = await Promise.all([
                     ProductService.getAllProducts(),
-                    UserService.getAllCustomerNames(),
+                    PurchaseService.getAllCustomerNames(),
                 ]);
                 setProducts(productRes.data.map((p: any) => ({...p, id: p._id})));
                 setCustomers(customerRes.data);
