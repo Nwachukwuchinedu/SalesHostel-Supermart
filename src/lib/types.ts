@@ -65,8 +65,7 @@ export type SupplySummary = {
     paymentStatus: 'Pending' | 'Paid' | 'Partial' | 'Overdue';
     totalAmount?: number;
     updatedAt: string;
-    date: string; // Re-adding for consistency, will use updatedAt if not present
-    supplier: { // Keep for details view compatibility
+    supplier: { 
         _id: string;
         name: string;
     };
@@ -74,15 +73,43 @@ export type SupplySummary = {
     notes?: string;
 }
 
+export type PurchaseProduct = {
+    product: string; // Product ID
+    name: string;
+    quantity: number;
+    price: number;
+    quantityUnit: "pcs" | "kg" | "ltr" | "box";
+};
 
 export type Purchase = {
-  id: string;
-  customerName: string;
-  products: { name: string; quantity: number; price: number }[];
-  total: number;
-  paymentStatus: "Paid" | "Pending";
-  date: string;
+    id: string;
+    _id: string;
+    purchaseNumber: string;
+    customer: {
+        _id: string;
+        name: string;
+    };
+    customerName?: string;
+    products: PurchaseProduct[];
+    total: number;
+    paymentStatus: "Paid" | "Pending" | "Cancelled" | "Refunded" | "Partial";
+    deliveryStatus: 'Pending' | 'Processing' | 'Shipped' | 'Delivered' | 'Cancelled';
+    date: string;
+    createdAt: string;
+    updatedAt: string;
+    notes?: string;
+    pickUpFee?: number;
+    paymentMethod?: "Cash" | "Card" | "Transfer" | "Check" | "Other";
+    paymentReference?: string;
+    deliveryAddress?: {
+        street?: string;
+        city?: string;
+        state?: string;
+        country?: string;
+        postalCode?: string;
+    };
 };
+
 
 export type Group = {
     _id: string;

@@ -9,12 +9,23 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import { useEffect, useState } from "react";
 
 interface SalesChartProps {
   data: { name: string; total: number }[];
 }
 
 export function SalesChart({ data }: SalesChartProps) {
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  if (!isClient) {
+    return <div>Loading Chart...</div>;
+  }
+  
   return (
     <ResponsiveContainer width="100%" height={350}>
       <BarChart data={data}>

@@ -11,9 +11,11 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { purchases } from "@/lib/data";
 import { SalesChart } from "./sales-chart";
 import { useAuth } from "@/contexts/auth-context";
+import { useEffect, useState } from "react";
+import type { Purchase } from "@/lib/types";
+import { PurchaseService } from "@/services/purchase-service";
 
 const salesData = [
   { name: "Jan", total: Math.floor(Math.random() * 5000) + 1000 },
@@ -31,8 +33,21 @@ const salesData = [
 ];
 
 export default function DashboardPage() {
-  const recentPurchases = purchases.slice(0, 5);
+  const [recentPurchases, setRecentPurchases] = useState<Purchase[]>([]);
   const { user } = useAuth();
+  
+  useEffect(() => {
+    const fetchRecentPurchases = async () => {
+        try {
+            const response = await PurchaseService.getAllPurchases({ limit: 5, sort: '-createdAt' });
+            setRecentPurchases(response.data.map((p: any) => ({...p, id: p._id})));
+        } catch (error) {
+            console.error("Failed to fetch recent purchases", error);
+        }
+    }
+    fetchRecentPurchases();
+  }, [])
+
 
   if (!user) {
     return <div>Loading...</div>;
@@ -113,7 +128,7 @@ export default function DashboardPage() {
                 {recentPurchases.map((purchase) => (
                   <TableRow key={purchase.id}>
                     <TableCell>
-                      <div className="font-medium">{purchase.customerName}</div>
+                      <div className="font-medium">{purchase.customer.name}</div>
                     </TableCell>
                      <TableCell>
                       <Badge variant={purchase.paymentStatus === 'Paid' ? 'default' : 'secondary'}
