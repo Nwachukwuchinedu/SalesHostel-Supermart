@@ -86,7 +86,7 @@ export default function PurchasesPage() {
   useEffect(() => {
     fetchPurchases();
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filters.date, filters.paymentStatus]);
+  }, [filters]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -95,6 +95,10 @@ export default function PurchasesPage() {
 
   const handleStatusChange = (value: string) => {
     setFilters(prev => ({...prev, paymentStatus: value === 'all' ? '' : value}));
+  }
+
+  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFilters(prev => ({...prev, date: e.target.value}));
   }
 
   const handleCreateNew = () => {
@@ -229,7 +233,7 @@ export default function PurchasesPage() {
                 id="date"
                 type="date"
                 value={filters.date}
-                onChange={(e) => setFilters({...filters, date: e.target.value})}
+                onChange={handleDateChange}
               />
             </div>
           </form>
