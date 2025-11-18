@@ -86,11 +86,36 @@ export default function PurchasesPage() {
   useEffect(() => {
     fetchPurchases();
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filters]);
+  }, []);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     fetchPurchases();
+  }
+
+  const handleStatusChange = (value: string) => {
+    setFilters(prev => ({...prev, paymentStatus: value === 'all' ? '' : value}));
+    // We want to fetch immediately on status change.
+    // To do this, we can call fetchPurchases directly.
+    // However, setFilters is async, so we pass the new value to a temporary fetch call.
+    const newStatus = value === 'all' ? '' : value;
+    const fetchParams: any = { sort: '-createdAt' };
+    if (searchTerm) fetchParams.search = searchTerm;
+    if (newStatus) fetchParams.paymentStatus = newStatus;
+    if (filters.date) fetchParams.date = filters.date;
+    
+    const fetchWithNewStatus = async () => {
+        setLoading(true);
+        try {
+            const response = await PurchaseService.getAllPurchases(fetchParams);
+            setPurchases(response.data.map((p: any) => ({...p, id: p._id})));
+        } catch (error) {
+            toast({ title: "Error", description: "Failed to fetch purchases.", variant: "destructive" });
+        } finally {
+            setLoading(false);
+        }
+    };
+    fetchWithNewStatus();
   }
 
   const handleCreateNew = () => {
@@ -192,8 +217,8 @@ export default function PurchasesPage() {
           <CardDescription>
             A list of all purchases made by customers.
           </CardDescription>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end mt-4">
-            <form onSubmit={handleSearch} className="md:col-span-2 relative">
+          <form onSubmit={handleSearch} className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end mt-4">
+            <div className="md:col-span-2 relative">
                 <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                 <Input
                 type="search"
@@ -202,10 +227,10 @@ export default function PurchasesPage() {
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 />
-            </form>
+            </div>
             <div className="grid gap-2">
               <Label htmlFor="paymentStatus">Payment Status</Label>
-              <Select value={filters.paymentStatus} onValueChange={(value) => setFilters({...filters, paymentStatus: value === 'all' ? '' : value})}>
+              <Select value={filters.paymentStatus} onValueChange={handleStatusChange}>
                 <SelectTrigger id="paymentStatus">
                   <SelectValue placeholder="Filter by status" />
                 </SelectTrigger>
@@ -228,7 +253,7 @@ export default function PurchasesPage() {
                 onChange={(e) => setFilters({...filters, date: e.target.value})}
               />
             </div>
-          </div>
+          </form>
         </CardHeader>
         <CardContent className="pt-0">
           <div className="overflow-x-auto">
