@@ -115,6 +115,17 @@ export default function PurchasesPage() {
         toast({ title: "Error", description: "Failed to mark as paid.", variant: "destructive" });
     }
   };
+  
+  const handleMarkAsPending = async (purchaseId: string) => {
+    try {
+        await PurchaseService.markAsPending(purchaseId);
+        toast({ title: "Success", description: "Purchase marked as pending." });
+        fetchPurchases();
+    } catch(error) {
+        toast({ title: "Error", description: "Failed to mark as pending.", variant: "destructive" });
+    }
+  };
+
 
   const handleDelete = async (purchaseId: string) => {
     try {
@@ -236,8 +247,10 @@ export default function PurchasesPage() {
                             <DropdownMenuItem onSelect={() => handleViewReceipt(purchase.id)}>View Receipt</DropdownMenuItem>
                             <DropdownMenuItem onSelect={() => handleEditPurchase(purchase.id)}>Edit</DropdownMenuItem>
                             <DropdownMenuSeparator />
-                            {purchase.paymentStatus !== "Paid" && (
+                            {purchase.paymentStatus !== "Paid" ? (
                                 <DropdownMenuItem onSelect={() => handleMarkAsPaid(purchase.id)}>Mark as Paid</DropdownMenuItem>
+                            ) : (
+                                <DropdownMenuItem onSelect={() => handleMarkAsPending(purchase.id)}>Mark as Pending</DropdownMenuItem>
                             )}
                              <DropdownMenuItem onSelect={() => handleDelete(purchase.id)} className="text-red-500">Delete</DropdownMenuItem>
                           </DropdownMenuContent>
@@ -358,6 +371,8 @@ export default function PurchasesPage() {
 
     </div>
   );
+
+    
 
     
 

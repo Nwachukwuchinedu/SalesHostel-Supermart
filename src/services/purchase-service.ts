@@ -1,3 +1,4 @@
+
 import { api } from '@/lib/api';
 import type { Purchase } from '@/lib/types';
 
@@ -51,5 +52,15 @@ export const PurchaseService = {
             throw new Error('Failed to mark purchase as paid');
         }
         return response.json();
+    },
+
+    markAsPending: async (id: string) => {
+        const response = await api.put(`/api/v1/purchases/${id}`, { paymentStatus: 'Pending' });
+        if (!response.ok) {
+            throw new Error('Failed to mark purchase as pending');
+        }
+        return response.json();
     }
 };
+
+    
