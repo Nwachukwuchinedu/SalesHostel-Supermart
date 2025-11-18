@@ -43,6 +43,14 @@ import { PurchaseService } from "@/services/purchase-service";
 import { useToast } from "@/hooks/use-toast";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/contexts/auth-context";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
 
 export default function PurchasesPage() {
   const [purchases, setPurchases] = useState<Purchase[]>([]);
@@ -56,7 +64,7 @@ export default function PurchasesPage() {
   const [selectedPurchase, setSelectedPurchase] = useState<Purchase | null>(null);
 
   const [searchTerm, setSearchTerm] = useState("");
-  const [filters, setFilters] = useState({ paymentStatus: "", deliveryStatus: "" });
+  const [filters, setFilters] = useState({ paymentStatus: "", date: "" });
 
   const fetchPurchases = async () => {
     try {
@@ -64,7 +72,7 @@ export default function PurchasesPage() {
       const params: any = { sort: '-createdAt' };
       if (searchTerm) params.search = searchTerm;
       if (filters.paymentStatus) params.paymentStatus = filters.paymentStatus;
-      if (filters.deliveryStatus) params.deliveryStatus = filters.deliveryStatus;
+      if (filters.date) params.date = filters.date;
 
       const response = await PurchaseService.getAllPurchases(params);
       setPurchases(response.data.map((p: any) => ({...p, id: p._id})));
@@ -77,6 +85,7 @@ export default function PurchasesPage() {
 
   useEffect(() => {
     fetchPurchases();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters]);
 
   const handleSearch = (e: React.FormEvent) => {
@@ -183,8 +192,8 @@ export default function PurchasesPage() {
           <CardDescription>
             A list of all purchases made by customers.
           </CardDescription>
-          <form onSubmit={handleSearch} className="flex gap-4 mt-4">
-            <div className="relative flex-grow">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end mt-4">
+            <form onSubmit={handleSearch} className="md:col-span-2 relative">
                 <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                 <Input
                 type="search"
@@ -193,9 +202,33 @@ export default function PurchasesPage() {
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 />
+            </form>
+            <div className="grid gap-2">
+              <Label htmlFor="paymentStatus">Payment Status</Label>
+              <Select value={filters.paymentStatus} onValueChange={(value) => setFilters({...filters, paymentStatus: value === 'all' ? '' : value})}>
+                <SelectTrigger id="paymentStatus">
+                  <SelectValue placeholder="Filter by status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Statuses</SelectItem>
+                  <SelectItem value="Paid">Paid</SelectItem>
+                  <SelectItem value="Pending">Pending</SelectItem>
+                  <SelectItem value="Cancelled">Cancelled</SelectItem>
+                  <SelectItem value="Refunded">Refunded</SelectItem>
+                  <SelectItem value="Partial">Partial</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
-            <Button type="submit">Search</Button>
-          </form>
+            <div className="grid gap-2">
+              <Label htmlFor="date">Date</Label>
+              <Input
+                id="date"
+                type="date"
+                value={filters.date}
+                onChange={(e) => setFilters({...filters, date: e.target.value})}
+              />
+            </div>
+          </div>
         </CardHeader>
         <CardContent className="pt-0">
           <div className="overflow-x-auto">
@@ -371,9 +404,4 @@ export default function PurchasesPage() {
 
     </div>
   );
-
-    
-
-    
-
-    
+}
