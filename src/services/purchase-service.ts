@@ -3,8 +3,11 @@ import { api } from '@/lib/api';
 import type { Purchase } from '@/lib/types';
 
 export const PurchaseService = {
-    getAllPurchases: async (params = {}) => {
-        const query = new URLSearchParams(params).toString();
+    getAllPurchases: async (params: Record<string, any> = {}) => {
+        const cleanedParams = Object.fromEntries(
+            Object.entries(params).filter(([, value]) => value !== null && value !== undefined && value !== '')
+        );
+        const query = new URLSearchParams(cleanedParams).toString();
         const response = await api.get(`/api/v1/purchases?${query}`);
         if (!response.ok) {
             throw new Error('Failed to fetch purchases');
