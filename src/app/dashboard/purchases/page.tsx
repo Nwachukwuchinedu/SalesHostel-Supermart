@@ -205,14 +205,14 @@ export default function PurchasesPage() {
                 {purchases.map((purchase) => (
                   <TableRow key={purchase.id}>
                     <TableCell className="font-medium">{purchase.purchaseNumber}</TableCell>
-                    <TableCell>{purchase.customer?.name}</TableCell>
+                    <TableCell>{purchase.customerName}</TableCell>
                     <TableCell>
                       <Badge variant={purchase.paymentStatus === "Paid" ? "default" : "secondary"}>
                         {purchase.paymentStatus}
                       </Badge>
                     </TableCell>
                     <TableCell>
-                      {new Date(purchase.createdAt).toLocaleDateString()}
+                      {new Date(purchase.date).toLocaleDateString()}
                     </TableCell>
                     <TableCell className="text-right">
                       ₦{purchase.total.toFixed(2)}
@@ -275,8 +275,8 @@ export default function PurchasesPage() {
           </DialogHeader>
           {selectedPurchase && (
             <div className="space-y-4">
-              <div><strong>Customer:</strong> {selectedPurchase.customer?.name}</div>
-              <div><strong>Date:</strong> {new Date(selectedPurchase.createdAt).toLocaleDateString()}</div>
+              <div><strong>Customer:</strong> {selectedPurchase.customer?.name || selectedPurchase.customerName}</div>
+              <div><strong>Date:</strong> {new Date(selectedPurchase.createdAt || selectedPurchase.date).toLocaleDateString()}</div>
               <div><strong>Payment Status:</strong> {selectedPurchase.paymentStatus}</div>
               <div><strong>Delivery Status:</strong> {selectedPurchase.deliveryStatus}</div>
               <Separator />
@@ -323,9 +323,9 @@ export default function PurchasesPage() {
                 <Separator />
                 <div className="grid grid-cols-2 gap-2">
                     <div><strong>Customer:</strong></div>
-                    <div>{selectedPurchase.customer?.name}</div>
+                    <div>{selectedPurchase.customer?.name || selectedPurchase.customerName}</div>
                     <div><strong>Date:</strong></div>
-                    <div>{new Date(selectedPurchase.createdAt).toLocaleDateString()}</div>
+                    <div>{new Date(selectedPurchase.createdAt || selectedPurchase.date).toLocaleDateString()}</div>
                     <div><strong>Purchase #:</strong></div>
                     <div>{selectedPurchase.purchaseNumber}</div>
                 </div>
@@ -358,5 +358,7 @@ export default function PurchasesPage() {
 
     </div>
   );
+
+    
 
     
