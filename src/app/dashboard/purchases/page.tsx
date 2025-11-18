@@ -194,7 +194,6 @@ export default function PurchasesPage() {
                   <TableHead>Purchase #</TableHead>
                   <TableHead>Customer</TableHead>
                   <TableHead>Payment</TableHead>
-                  <TableHead>Delivery</TableHead>
                   <TableHead>Date</TableHead>
                   <TableHead className="text-right">Total</TableHead>
                   <TableHead>
@@ -211,9 +210,6 @@ export default function PurchasesPage() {
                       <Badge variant={purchase.paymentStatus === "Paid" ? "default" : "secondary"}>
                         {purchase.paymentStatus}
                       </Badge>
-                    </TableCell>
-                    <TableCell>
-                        <Badge variant="outline">{purchase.deliveryStatus}</Badge>
                     </TableCell>
                     <TableCell>
                       {new Date(purchase.createdAt).toLocaleDateString()}
@@ -362,4 +358,5 @@ export default function PurchasesPage() {
 
     </div>
   );
-}
+
+    
