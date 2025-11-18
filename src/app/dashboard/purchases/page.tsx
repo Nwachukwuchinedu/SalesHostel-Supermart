@@ -86,7 +86,7 @@ export default function PurchasesPage() {
   useEffect(() => {
     fetchPurchases();
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [filters.date, filters.paymentStatus]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -95,27 +95,6 @@ export default function PurchasesPage() {
 
   const handleStatusChange = (value: string) => {
     setFilters(prev => ({...prev, paymentStatus: value === 'all' ? '' : value}));
-    // We want to fetch immediately on status change.
-    // To do this, we can call fetchPurchases directly.
-    // However, setFilters is async, so we pass the new value to a temporary fetch call.
-    const newStatus = value === 'all' ? '' : value;
-    const fetchParams: any = { sort: '-createdAt' };
-    if (searchTerm) fetchParams.search = searchTerm;
-    if (newStatus) fetchParams.paymentStatus = newStatus;
-    if (filters.date) fetchParams.date = filters.date;
-    
-    const fetchWithNewStatus = async () => {
-        setLoading(true);
-        try {
-            const response = await PurchaseService.getAllPurchases(fetchParams);
-            setPurchases(response.data.map((p: any) => ({...p, id: p._id})));
-        } catch (error) {
-            toast({ title: "Error", description: "Failed to fetch purchases.", variant: "destructive" });
-        } finally {
-            setLoading(false);
-        }
-    };
-    fetchWithNewStatus();
   }
 
   const handleCreateNew = () => {
