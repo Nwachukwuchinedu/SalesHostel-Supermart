@@ -57,17 +57,17 @@ interface PurchaseFormProps {
 
 export function PurchaseForm({ initialData, onSubmit, onCancel }: PurchaseFormProps) {
     const { toast } = useToast();
-    const [products, setProducts] = useState<Product[]>([]);
+    const [products, setProducts] = useState<{_id: string; name: string}[]>([]);
     const [customers, setCustomers] = useState<Pick<User, '_id' | 'name'>[]>([]);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const [productRes, customerRes] = await Promise.all([
-                    ProductService.getAllProducts(),
+                    ProductService.getAllProductNames(),
                     PurchaseService.getAllCustomerNames(),
                 ]);
-                setProducts(productRes.data.map((p: any) => ({...p, id: p._id})));
+                setProducts(productRes.data);
                 setCustomers(customerRes.data);
             } catch (error) {
                 toast({ title: "Error", description: "Failed to fetch products or customers.", variant: "destructive" });
@@ -80,7 +80,7 @@ export function PurchaseForm({ initialData, onSubmit, onCancel }: PurchaseFormPr
         if (initialData) {
             return {
                 ...initialData,
-                customer: initialData.customer._id,
+                customer: initialData.customer?._id,
                 products: initialData.products.length > 0 ? initialData.products.map(p => ({
                     product: p.product,
                     quantity: p.quantity,
@@ -174,8 +174,8 @@ export function PurchaseForm({ initialData, onSubmit, onCancel }: PurchaseFormPr
                                     </FormControl>
                                     <SelectContent>
                                     {products.map((p) => (
-                                        <SelectItem key={p._id} value={p._id} disabled={p.quantityAvailable === 0}>
-                                        {p.name} ({p.quantityAvailable} in stock)
+                                        <SelectItem key={p._id} value={p._id}>
+                                          {p.name}
                                         </SelectItem>
                                     ))}
                                     </SelectContent>
@@ -312,4 +312,3 @@ export function PurchaseForm({ initialData, onSubmit, onCancel }: PurchaseFormPr
     </Form>
   );
 }
-
