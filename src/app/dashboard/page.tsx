@@ -1,3 +1,4 @@
+
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -128,7 +129,7 @@ export default function DashboardPage() {
                 {recentPurchases.map((purchase) => (
                   <TableRow key={purchase.id}>
                     <TableCell>
-                      <div className="font-medium">{purchase.customer.name}</div>
+                      <div className="font-medium">{purchase.customerName}</div>
                     </TableCell>
                      <TableCell>
                       <Badge variant={purchase.paymentStatus === 'Paid' ? 'default' : 'secondary'}
