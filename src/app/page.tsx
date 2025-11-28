@@ -12,17 +12,15 @@ import { placeHolderImages } from "@/lib/placeholder-images";
 import { cn } from "@/lib/utils";
 import Autoplay from "embla-carousel-autoplay";
 import {
-  BarChart,
-  Box,
-  Cpu,
-  ShoppingCart,
+  Search,
+  ShieldCheck,
   Truck,
-  ArrowRight,
+  Wallet,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRef } from "react";
-import { Product, Group, UniqueName } from "@/lib/types";
+import { Product } from "@/lib/types";
 
 // Mock data as we don't have endpoints for this on landing page
 const products: Partial<Product>[] = [
@@ -69,28 +67,28 @@ const categories = [
 
 const features = [
   {
-    icon: Box,
-    title: "Effortless Inventory Management",
+    icon: Search,
+    title: "Wide Product Selection",
     description:
-      "Keep track of your stock levels in real-time. Add new products, manage categories, and never run out of your best-sellers.",
+      "Browse our extensive catalog of high-quality products. From fresh produce to household essentials, find everything you need in one place.",
   },
   {
-    icon: ShoppingCart,
-    title: "Streamlined Purchase Tracking",
+    icon: Wallet,
+    title: "Simple & Secure Checkout",
     description:
-      "Record every sale with our intuitive point-of-sale interface. View purchase history, manage orders, and print receipts with ease.",
+      "Enjoy a seamless shopping experience with our easy-to-use and secure checkout process. Your order is just a few clicks away.",
   },
   {
     icon: Truck,
-    title: "Simplified Supply Chain",
+    title: "Fast, Reliable Delivery",
     description:
-      "Log incoming supplies from your vendors. Keep an eye on costs and ensure your inventory is always up-to-date.",
+      "Get your favorite products delivered right to your doorstep. We ensure your order arrives fresh and on time, every time.",
   },
   {
-    icon: Cpu,
-    title: "AI-Powered Reporting",
+    icon: ShieldCheck,
+    title: "Quality You Can Trust",
     description:
-      "Generate insightful sales summaries and financial reports with the power of AI. Make data-driven decisions to grow your business.",
+      "We partner with the best suppliers to bring you fresh, high-quality products. Your satisfaction is our top priority.",
   },
 ];
 
@@ -107,12 +105,10 @@ export default function LandingPage() {
               <div className="flex flex-col justify-center space-y-4">
                 <div className="space-y-2">
                   <h1 className="text-4xl font-headline font-bold tracking-tighter sm:text-5xl md:text-6xl text-primary">
-                    Streamline Your Business Operations
+                    Your Favorite Goods, Delivered Fast
                   </h1>
                   <p className="max-w-[600px] text-muted-foreground md:text-xl">
-                    SalesHostel Digital provides a complete suite of tools for
-                    inventory management, sales tracking, and AI-powered
-                    reporting to help you grow.
+                    SalesHostel Digital makes it easier than ever to shop for groceries and essentials. Quality products, seamless ordering, and quick delivery.
                   </p>
                 </div>
                 <div className="flex flex-col gap-2 min-[400px]:flex-row">
@@ -122,7 +118,7 @@ export default function LandingPage() {
                       "inline-flex h-10 items-center justify-center rounded-md bg-primary px-8 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
                     )}
                   >
-                    Get Started
+                    Start Shopping
                   </Link>
                   <Link
                     href="#features"
@@ -197,8 +193,7 @@ export default function LandingPage() {
                   Featured Products
                 </h2>
                 <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                  Discover a selection of our finest products, managed
-                  effortlessly with our inventory system.
+                  Discover a selection of our finest products, all available for quick and easy purchase.
                 </p>
               </div>
             </div>
@@ -234,11 +229,10 @@ export default function LandingPage() {
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
                 <h2 className="text-3xl font-headline font-bold tracking-tighter sm:text-5xl">
-                  Powerful Tools for Your Business
+                  Why Shop With SalesHostel Digital?
                 </h2>
                 <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                  Everything you need to manage your sales and inventory, all
-                  in one place.
+                  We provide a seamless and enjoyable shopping experience from start to finish.
                 </p>
               </div>
             </div>
@@ -268,11 +262,10 @@ export default function LandingPage() {
           <div className="container mx-auto grid items-center justify-center gap-4 px-4 text-center md:px-6">
             <div className="space-y-3">
               <h2 className="text-3xl font-headline font-bold tracking-tighter md:text-4xl/tight">
-                Ready to Take Control of Your Business?
+                Ready to Start Shopping?
               </h2>
               <p className="mx-auto max-w-[600px] text-primary-foreground/80 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                Sign up today and start managing your sales and inventory like a
-                pro.
+                Sign up today and get access to fresh products and amazing deals.
               </p>
             </div>
             <div className="mx-auto w-full max-w-sm space-y-2">
