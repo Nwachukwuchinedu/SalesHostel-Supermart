@@ -1,8 +1,11 @@
+
 import type {Metadata, Viewport} from 'next';
 import './globals.css';
 import { cn } from '@/lib/utils';
 import { Toaster } from "@/components/ui/toaster"
 import { AuthProvider } from '@/contexts/auth-context';
+import { LandingNavbar } from '@/components/layout/landing-navbar';
+import { Footer } from '@/components/layout/footer';
 
 export const metadata: Metadata = {
   title: 'SalesHostel Digital',
@@ -30,7 +33,9 @@ export default function RootLayout({
       </head>
       <body className={cn("font-body antialiased", "min-h-screen bg-background font-sans")}>
         <AuthProvider>
-          {children}
+            <LandingNavbar />
+            {children}
+            <Footer />
         </AuthProvider>
         <Toaster />
       </body>
