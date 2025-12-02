@@ -100,5 +100,20 @@
     
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        window.env = {
+            API_BASE_URL: "<?php 
+                $url = getenv('API_BASE_URL');
+                if (!$url && file_exists(__DIR__ . '/../.htaccess')) {
+                    $htaccess = file_get_contents(__DIR__ . '/../.htaccess');
+                    if (preg_match('/SetEnv\s+API_BASE_URL\s+[\'"]?([^\'"\s]+)[\'"]?/', $htaccess, $matches)) {
+                        $url = $matches[1];
+                    }
+                }
+                echo $url; 
+            ?>"
+        };
+    </script>
 </head>
 <body class="font-body antialiased min-h-screen bg-background font-sans text-foreground">
