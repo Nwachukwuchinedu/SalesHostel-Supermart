@@ -1,4 +1,4 @@
-name: Deploy to Namecheap
+name: Deploy Frontend PHP
 
 on:
   push:
@@ -12,20 +12,15 @@ jobs:
     - name: Deploy via SSH
       uses: appleboy/ssh-action@v1.0.0
       with:
-        host: ${{ secrets.SERVER_HOST }}    
-        username: ${{ secrets.SERVER_USER }} 
+        host: ${{ secrets.SERVER_HOST }}
+        username: ${{ secrets.SERVER_USER }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
-        port: 21098 # Namecheap's specific port
+        port: 21098
         script: |
-          # Go to your app folder
-          cd /home/shopdbji/app
+          # 1. Go to the web root folder
+          cd /home/shopdbji/public_html
 
-          # Pull the latest changes from GitHub
+          # 2. Pull the latest PHP files from GitHub
           git pull origin main
 
-          # Install only necessary libraries (Saves Memory!)
-          npm install --omit=dev
-
-          # Create a temporary file to force Node.js to restart
-          mkdir -p tmp
-          touch tmp/restart.txt
+          # PHP does not need npm install or a server restart!
