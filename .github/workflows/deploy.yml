@@ -17,10 +17,15 @@ jobs:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: 21098
         script: |
-          # 1. Go to the web root folder
-          cd /home/shopdbji/public_html
+          # 1. Go to the Git-linked app folder
+          cd /home/shopdbji/app
 
-          # 2. Pull the latest PHP files from GitHub
+          # 2. Pull the latest PHP source code
           git pull origin main
-
-          # PHP does not need npm install or a server restart!
+          
+          # 3. Copy the updated PHP files to the LIVE web root
+          # (This assumes your PHP files are in the root of your repo)
+          cp -r /home/shopdbji/app/* /home/shopdbji/public_html/
+          
+          # 4. Clean up any leftover artifacts from the copy
+          rm -rf /home/shopdbji/public_html/tmp /home/shopdbji/public_html/.git
