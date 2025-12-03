@@ -1,3 +1,14 @@
 User-agent: *
 Allow: /
+
+# Disallow sensitive directories
+Disallow: /dashboard/
+Disallow: /includes/
+
+# Disallow system files and error pages
+Disallow: /router.php
+Disallow: /404
+Disallow: /force-404
+
+# Sitemap location
 Sitemap: https://shop12mart.com/sitemap
