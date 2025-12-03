@@ -1,6 +1,6 @@
 [package]
 name = "nwachukwuchinedu/SalesHostel-Supermart"
-version = "0.1.0"
+version = "0.1.1"
 description = "Description for package SalesHostel-Supermart"
 
 [dependencies]

@@ -16,7 +16,7 @@
                 </div>
                 <h1 class="text-4xl font-bold tracking-tight mb-4">Welcome Back!</h1>
                 <p class="text-lg text-muted-foreground">
-                    Manage your inventory, track sales, and grow your business with our powerful retail platform.
+                    Access your account to track orders, view purchase history, and manage your profile.
                 </p>
             </div>
             

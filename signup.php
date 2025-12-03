@@ -16,7 +16,7 @@
                 </div>
                 <h1 class="text-4xl font-bold tracking-tight mb-4">Join Us Today</h1>
                 <p class="text-lg text-muted-foreground">
-                    Create an account to start managing your inventory, tracking sales, and growing your business.
+                    Create an account to start shopping for your daily essentials with ease.
                 </p>
             </div>
             
