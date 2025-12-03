@@ -3,8 +3,8 @@
             <div class="grid gap-8 md:grid-cols-4">
                 <div class="space-y-4 md:col-span-2">
                     <a href="/" class="flex items-center gap-2">
-                        <i data-lucide="building" class="h-6 w-6 text-primary"></i>
-                        <span class="font-headline text-lg font-semibold">
+                        <i data-lucide="shopping-basket" class="h-6 w-6 text-primary"></i>
+                        <span class="font-headline text-lg font-semibold bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
                             Shop12mart
                         </span>
                     </a>

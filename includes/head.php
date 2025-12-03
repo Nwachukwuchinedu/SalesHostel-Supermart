@@ -5,10 +5,11 @@
     $pageTitle = isset($pageTitle) ? $pageTitle . ' | Shop12mart' : 'Shop12mart - Your Daily Essentials Delivered';
     $pageDescription = isset($pageDescription) ? $pageDescription : 'Shop for groceries, household items, and daily essentials at Shop12mart. Fast delivery, quality products, and secure payments.';
     $pageUrl = "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-    $pageImage = "https://$_SERVER[HTTP_HOST]/assets/images/og-image.jpg"; // Placeholder
+    $pageImage = "https://$_SERVER[HTTP_HOST]/assets/images/og-image.png";
     ?>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg">
     <title><?php echo htmlspecialchars($pageTitle); ?></title>
     <meta name="description" content="<?php echo htmlspecialchars($pageDescription); ?>">
     <link rel="canonical" href="<?php echo htmlspecialchars($pageUrl); ?>">
