@@ -2,7 +2,7 @@
         <div class="container mx-auto py-12 px-4 md:px-6">
             <div class="grid gap-8 md:grid-cols-4">
                 <div class="space-y-4 md:col-span-2">
-                    <a href="/index.php" class="flex items-center gap-2">
+                    <a href="/index" class="flex items-center gap-2">
                         <i data-lucide="building" class="h-6 w-6 text-primary"></i>
                         <span class="font-headline text-lg font-semibold">
                             SalesHostel Digital
@@ -17,8 +17,8 @@
                     <ul class="space-y-2">
                         <li><a href="#features" class="text-sm text-muted-foreground hover:text-foreground">Features</a></li>
                         <li><a href="#products" class="text-sm text-muted-foreground hover:text-foreground">Products</a></li>
-                        <li><a href="/signup.php" class="text-sm text-muted-foreground hover:text-foreground">Sign Up</a></li>
-                        <li><a href="/login.php" class="text-sm text-muted-foreground hover:text-foreground">Login</a></li>
+                        <li><a href="/signup" class="text-sm text-muted-foreground hover:text-foreground">Sign Up</a></li>
+                        <li><a href="/login" class="text-sm text-muted-foreground hover:text-foreground">Login</a></li>
                     </ul>
                 </div>
                 <div>

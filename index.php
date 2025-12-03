@@ -19,7 +19,7 @@
                             </p>
                         </div>
                         <div class="flex flex-col sm:flex-row gap-4 fade-up stagger-2">
-                            <a href="signup.php" class="inline-flex h-12 items-center justify-center rounded-lg bg-primary px-8 text-base font-medium text-primary-foreground shadow-lg transition-transform hover:scale-105 hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring">
+                            <a href="signup" class="inline-flex h-12 items-center justify-center rounded-lg bg-primary px-8 text-base font-medium text-primary-foreground shadow-lg transition-transform hover:scale-105 hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring">
                                 Start Free Trial
                             </a>
                             <a href="#features" class="inline-flex h-12 items-center justify-center rounded-lg border border-input bg-background/50 backdrop-blur-sm px-8 text-base font-medium shadow-sm transition-transform hover:scale-105 hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring">
@@ -161,7 +161,7 @@
                         Join hundreds of other retailers who are saving time and increasing profits with SalesHostel Digital.
                     </p>
                     <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                        <a href="signup.php" class="inline-flex h-12 items-center justify-center rounded-lg bg-primary px-8 text-base font-medium text-primary-foreground shadow-lg transition-transform hover:scale-105 hover:bg-primary/90">
+                        <a href="signup" class="inline-flex h-12 items-center justify-center rounded-lg bg-primary px-8 text-base font-medium text-primary-foreground shadow-lg transition-transform hover:scale-105 hover:bg-primary/90">
                             Get Started Now
                         </a>
                     </div>

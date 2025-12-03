@@ -65,7 +65,7 @@
 
             <div class="text-center text-sm">
                 <span class="text-muted-foreground">Don't have an account?</span>
-                <a href="signup.php" class="font-medium text-primary hover:underline ml-1">Sign up for free</a>
+                <a href="signup" class="font-medium text-primary hover:underline ml-1">Sign up for free</a>
             </div>
         </div>
     </div>
@@ -109,7 +109,7 @@
                 await AuthService.login(email, password);
                 showToast('Login successful! Redirecting...', 'success');
                 setTimeout(() => {
-                    window.location.href = '/dashboard/index.php';
+                    window.location.href = '/dashboard/index';
                 }, 1000);
             } catch (error) {
                 showToast(error.message, 'error');

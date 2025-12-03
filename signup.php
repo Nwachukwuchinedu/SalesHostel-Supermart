@@ -70,7 +70,7 @@
 
             <div class="text-center text-sm">
                 <span class="text-muted-foreground">Already have an account?</span>
-                <a href="login.php" class="font-medium text-primary hover:underline ml-1">Login</a>
+                <a href="login" class="font-medium text-primary hover:underline ml-1">Login</a>
             </div>
         </div>
     </div>
@@ -116,7 +116,7 @@
                 await AuthService.signup({ name, email, password, phone });
                 showToast('Account created successfully! Redirecting to login...', 'success');
                 setTimeout(() => {
-                    window.location.href = '/login.php';
+                    window.location.href = '/login';
                 }, 1500);
             } catch (error) {
                 showToast(error.message, 'error');

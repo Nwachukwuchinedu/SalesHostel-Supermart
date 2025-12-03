@@ -88,7 +88,7 @@
                                 <h3 class="font-semibold text-lg">Recent Purchases</h3>
                                 <p class="text-sm text-muted-foreground">You made 265 sales this month.</p>
                             </div>
-                            <a href="purchases.php" class="text-sm font-medium text-primary hover:underline">View All</a>
+                            <a href="purchases" class="text-sm font-medium text-primary hover:underline">View All</a>
                         </div>
                         <div class="p-0 flex-1 overflow-auto">
                             <table class="w-full text-sm text-left">
