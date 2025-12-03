@@ -45,7 +45,7 @@ function isActive($href, $current_page) {
                 <i data-lucide="settings" class="h-4 w-4"></i>
                 Settings
             </a>
-            <a href="/login" class="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all duration-200 hover:text-primary hover:bg-primary/5">
+            <a href="#" onclick="event.preventDefault(); AuthService.logout();" class="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all duration-200 hover:text-primary hover:bg-primary/5">
                 <i data-lucide="log-out" class="h-4 w-4"></i>
                 Logout
             </a>
@@ -84,7 +84,7 @@ function isActive($href, $current_page) {
                 <i data-lucide="settings" class="h-4 w-4"></i>
                 Settings
             </a>
-            <a href="/login" class="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all duration-200 hover:text-primary hover:bg-primary/5">
+            <a href="#" onclick="event.preventDefault(); AuthService.logout();" class="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all duration-200 hover:text-primary hover:bg-primary/5">
                 <i data-lucide="log-out" class="h-4 w-4"></i>
                 Logout
             </a>
