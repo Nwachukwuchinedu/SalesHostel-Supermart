@@ -1,0 +1,39 @@
+<?php
+// 1. Tell the browser this is an XML file
+header("Content-Type: application/xml; charset=utf-8");
+
+// 2. Print the XML declaration (done via PHP to avoid short-tag errors)
+echo '<?xml version="1.0" encoding="UTF-8"?>';
+?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://shop12mart.com/</loc>
+    <lastmod><?php echo date('Y-m-d'); ?></lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://shop12mart.com/about</loc>
+    <lastmod><?php echo date('Y-m-d'); ?></lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://shop12mart.com/contact</loc>
+    <lastmod><?php echo date('Y-m-d'); ?></lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://shop12mart.com/login</loc>
+    <lastmod><?php echo date('Y-m-d'); ?></lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://shop12mart.com/signup</loc>
+    <lastmod><?php echo date('Y-m-d'); ?></lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+</urlset>
