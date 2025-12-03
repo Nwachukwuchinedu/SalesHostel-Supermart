@@ -1,18 +1,18 @@
 // Middleware for Authentication and Role-Based Access Control
 
 const protectedRoutes = [
-    '/dashboard/index.php',
-    '/dashboard/products.php',
-    '/dashboard/purchases.php',
-    '/dashboard/supplies.php',
-    '/dashboard/reports.php'
+    '/dashboard/',
+    '/dashboard/products',
+    '/dashboard/purchases',
+    '/dashboard/supplies',
+    '/dashboard/reports'
 ];
 
 const rolePermissions = {
     'Admin': ['*'],
-    'Staff': ['/dashboard/index.php', '/dashboard/products.php', '/dashboard/purchases.php', '/dashboard/reports.php'],
-    'Supplier': ['/dashboard/index.php', '/dashboard/supplies.php'],
-    'Customer': ['/dashboard/index.php', '/dashboard/purchases.php']
+    'Staff': ['/dashboard/', '/dashboard/products', '/dashboard/purchases', '/dashboard/reports'],
+    'Supplier': ['/dashboard/', '/dashboard/supplies'],
+    'Customer': ['/dashboard/', '/dashboard/purchases']
 };
 
 function checkAuth() {
@@ -26,7 +26,7 @@ function checkAuth() {
     if (isProtected) {
         if (!accessToken || !user) {
             // Not authenticated, redirect to login
-            window.location.href = '/login.php';
+            window.location.href = '/login';
             return;
         }
 
@@ -42,12 +42,12 @@ function checkAuth() {
 
         if (!hasAccess) {
             alert('You do not have permission to access this page.');
-            window.location.href = '/dashboard/index.php'; // Redirect to a safe page
+            window.location.href = '/dashboard/'; // Redirect to a safe page
         }
     } else {
         // If on login/signup page and already logged in, redirect to dashboard
-        if ((currentPath.includes('/login.php') || currentPath.includes('/signup.php')) && accessToken) {
-            window.location.href = '/dashboard/index.php';
+        if ((currentPath.includes('/login') || currentPath.includes('/signup')) && accessToken) {
+            window.location.href = '/dashboard/';
         }
     }
 }

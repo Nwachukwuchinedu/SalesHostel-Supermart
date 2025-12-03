@@ -1,0 +1,5 @@
+name: shop12mart
+app_id: da_2l9IzteU4ywk
+owner: nwachukwuchinedu
+package: .
+kind: wasmer.io/App.v0

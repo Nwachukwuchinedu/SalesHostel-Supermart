@@ -1,0 +1,19 @@
+[package]
+name = "nwachukwuchinedu/SalesHostel-Supermart"
+version = "0.1.1"
+description = "Description for package SalesHostel-Supermart"
+
+[dependencies]
+"php/php" = "^8.3"
+
+[fs]
+"/app" = "."
+
+[[command]]
+name = "run"
+module = "php/php:php"
+runner = "wasi"
+
+[command.annotations.wasi]
+env = ["DOCUMENT_ROOT=/app"]
+main-args = ["-t", "/app", "-S", "localhost:8080"]

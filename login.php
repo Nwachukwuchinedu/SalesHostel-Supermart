@@ -1,4 +1,4 @@
-<?php include 'includes/head.php'; ?>
+<?php include __DIR__ . '/includes/head.php'; ?>
 
 <div class="min-h-screen w-full flex relative overflow-hidden">
     <!-- Uneven Faded Grid Background -->
@@ -16,7 +16,7 @@
                 </div>
                 <h1 class="text-4xl font-bold tracking-tight mb-4">Welcome Back!</h1>
                 <p class="text-lg text-muted-foreground">
-                    Manage your inventory, track sales, and grow your business with our powerful retail platform.
+                    Access your account to track orders, view purchase history, and manage your profile.
                 </p>
             </div>
             
@@ -65,7 +65,7 @@
 
             <div class="text-center text-sm">
                 <span class="text-muted-foreground">Don't have an account?</span>
-                <a href="signup.php" class="font-medium text-primary hover:underline ml-1">Sign up for free</a>
+                <a href="signup" class="font-medium text-primary hover:underline ml-1">Sign up for free</a>
             </div>
         </div>
     </div>
@@ -109,7 +109,7 @@
                 await AuthService.login(email, password);
                 showToast('Login successful! Redirecting...', 'success');
                 setTimeout(() => {
-                    window.location.href = '/dashboard/index.php';
+                    window.location.href = '/dashboard/';
                 }, 1000);
             } catch (error) {
                 showToast(error.message, 'error');

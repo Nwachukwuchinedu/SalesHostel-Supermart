@@ -43,7 +43,7 @@ const api = {
             if (response.status === 401) {
                 localStorage.removeItem('user');
                 localStorage.removeItem('accessToken');
-                window.location.href = '/login.php';
+                window.location.href = '/login';
                 throw new Error('Unauthorized');
             }
             return response;
@@ -116,7 +116,7 @@ const AuthService = {
         } finally {
             localStorage.removeItem('user');
             localStorage.removeItem('accessToken');
-            window.location.href = '/login.php';
+            window.location.href = '/login';
         }
     },
     getCurrentUser: () => {
