@@ -152,6 +152,7 @@ echo UI::alertDialog('delete-alert', 'Are you absolutely sure?', 'This action ca
 
 <div id="toast-container" class="fixed bottom-4 right-4 z-50 flex flex-col gap-2"></div>
 
+<script src="/assets/js/auth-middleware.js"></script>
 <script src="/assets/js/config.js"></script>
 <script src="/assets/js/api.js"></script>
 <script src="/assets/js/main.js"></script>

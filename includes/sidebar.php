@@ -1,11 +1,11 @@
 <?php
 $current_page = basename($_SERVER['PHP_SELF'], '.php');
 $nav_links = [
-    ['href' => '/dashboard/', 'label' => 'Dashboard', 'icon' => 'layout-dashboard'],
-    ['href' => '/dashboard/products', 'label' => 'Products', 'icon' => 'box'],
-    ['href' => '/dashboard/supplies', 'label' => 'Supplies', 'icon' => 'truck'],
-    ['href' => '/dashboard/purchases', 'label' => 'Purchases', 'icon' => 'shopping-cart'],
-    ['href' => '/dashboard/reports', 'label' => 'Reports', 'icon' => 'bar-chart'],
+    ['href' => '/dashboard/', 'label' => 'Dashboard', 'icon' => 'layout-dashboard', 'roles' => ['Admin', 'Staff', 'Supplier']],
+    ['href' => '/dashboard/products', 'label' => 'Products', 'icon' => 'box', 'roles' => ['Admin', 'Staff']],
+    ['href' => '/dashboard/supplies', 'label' => 'Supplies', 'icon' => 'truck', 'roles' => ['Admin', 'Supplier']],
+    ['href' => '/dashboard/purchases', 'label' => 'Purchases', 'icon' => 'shopping-cart', 'roles' => ['Admin', 'Staff']],
+    ['href' => '/dashboard/reports', 'label' => 'Reports', 'icon' => 'bar-chart', 'roles' => ['Admin', 'Staff']],
 ];
 
 // Helper function to check if link is active
@@ -32,7 +32,8 @@ function isActive($href, $current_page) {
         <nav class="grid items-start px-4 text-sm font-medium gap-1">
             <?php foreach ($nav_links as $link): ?>
                 <a href="<?php echo $link['href']; ?>" 
-                   class="flex items-center gap-3 rounded-lg px-3 py-2 transition-all duration-200 hover:text-primary hover:bg-primary/5 <?php echo isActive($link['href'], $current_page) ? 'bg-primary/10 text-primary font-semibold shadow-sm' : 'text-muted-foreground'; ?>">
+                   data-roles='<?php echo json_encode($link['roles']); ?>'
+                   class="sidebar-link flex items-center gap-3 rounded-lg px-3 py-2 transition-all duration-200 hover:text-primary hover:bg-primary/5 <?php echo isActive($link['href'], $current_page) ? 'bg-primary/10 text-primary font-semibold shadow-sm' : 'text-muted-foreground'; ?>">
                     <i data-lucide="<?php echo $link['icon']; ?>" class="h-4 w-4"></i>
                     <?php echo $link['label']; ?>
                 </a>
@@ -71,7 +72,8 @@ function isActive($href, $current_page) {
         <nav class="grid items-start px-4 text-sm font-medium gap-1">
             <?php foreach ($nav_links as $link): ?>
                 <a href="<?php echo $link['href']; ?>" 
-                   class="flex items-center gap-3 rounded-lg px-3 py-2 transition-all duration-200 hover:text-primary hover:bg-primary/5 <?php echo isActive($link['href'], $current_page) ? 'bg-primary/10 text-primary font-semibold shadow-sm' : 'text-muted-foreground'; ?>">
+                   data-roles='<?php echo json_encode($link['roles']); ?>'
+                   class="sidebar-link flex items-center gap-3 rounded-lg px-3 py-2 transition-all duration-200 hover:text-primary hover:bg-primary/5 <?php echo isActive($link['href'], $current_page) ? 'bg-primary/10 text-primary font-semibold shadow-sm' : 'text-muted-foreground'; ?>">
                     <i data-lucide="<?php echo $link['icon']; ?>" class="h-4 w-4"></i>
                     <?php echo $link['label']; ?>
                 </a>
