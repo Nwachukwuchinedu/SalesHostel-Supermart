@@ -3,8 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SalesHostel Digital</title>
-    <meta name="description" content="Inventory and sales management">
+    <!-- SEO Meta Tags -->
+    <title>SalesHostel - Modern Inventory & Sales Management for Retail</title>
+    <meta name="description" content="Over 500 businesses use SalesHostel to track sales, manage suppliers, and grow with real-time insights. The all-in-one platform for modern retail.">
+    <meta name="keywords" content="inventory management, retail pos, sales tracking, supplier management, business analytics, retail software">
+    <meta name="author" content="SalesHostel Digital">
+    <link rel="canonical" href="https://shop12mart.com" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://shop12mart.com/">
+    <meta property="og:title" content="SalesHostel - Modern Inventory & Sales Management for Retail">
+    <meta property="og:description" content="Over 500 businesses use SalesHostel to track sales, manage suppliers, and grow with real-time insights. The all-in-one platform for modern retail.">
+    <meta property="og:image" content="https://shop12mart.com/assets/images/og-image.jpg">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://shop12mart.com/">
+    <meta property="twitter:title" content="SalesHostel - Modern Inventory & Sales Management for Retail">
+    <meta property="twitter:description" content="Over 500 businesses use SalesHostel to track sales, manage suppliers, and grow with real-time insights. The all-in-one platform for modern retail.">
+    <meta property="twitter:image" content="https://shop12mart.com/assets/images/og-image.jpg">
+
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "SalesHostel Digital",
+      "url": "https://shop12mart.com",
+      "logo": "https://shop12mart.com/assets/images/logo.png",
+      "description": "SalesHostel is a technology company providing modern inventory and sales management solutions for retail businesses.",
+      "foundingDate": "2023",
+      "founders": [
+        {
+          "@type": "Person",
+          "name": "Chinedu Nwachukwu"
+        }
+      ],
+      "sameAs": [
+        "https://www.facebook.com/saleshostel",
+        "https://twitter.com/saleshostel",
+        "https://www.linkedin.com/company/saleshostel"
+      ],
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "telephone": "+234-800-SALESHOSTEL",
+        "contactType": "customer service"
+      }
+    }
+    </script>
+    
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "SalesHostel",
+      "url": "https://shop12mart.com",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://shop12mart.com/search?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />

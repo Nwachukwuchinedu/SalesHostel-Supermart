@@ -15,10 +15,12 @@
                 <div>
                     <h4 class="font-semibold mb-4">Quick Links</h4>
                     <ul class="space-y-2">
+
+                        <li><a href="about" class="text-sm text-muted-foreground hover:text-foreground">About Us</a></li>
+                        <li><a href="contact" class="text-sm text-muted-foreground hover:text-foreground">Contact Us</a></li>
                         <li><a href="#features" class="text-sm text-muted-foreground hover:text-foreground">Features</a></li>
-                        <li><a href="#products" class="text-sm text-muted-foreground hover:text-foreground">Products</a></li>
-                        <li><a href="/signup" class="text-sm text-muted-foreground hover:text-foreground">Sign Up</a></li>
-                        <li><a href="/login" class="text-sm text-muted-foreground hover:text-foreground">Login</a></li>
+                        <li><a href="signup" class="text-sm text-muted-foreground hover:text-foreground">Sign Up</a></li>
+                        <li><a href="login" class="text-sm text-muted-foreground hover:text-foreground">Login</a></li>
                     </ul>
                 </div>
                 <div>
