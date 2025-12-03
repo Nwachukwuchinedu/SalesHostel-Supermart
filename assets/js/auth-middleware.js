@@ -11,8 +11,7 @@ const protectedRoutes = [
 const rolePermissions = {
     'Admin': ['*'],
     'Staff': ['/dashboard/', '/dashboard/products', '/dashboard/purchases', '/dashboard/reports'],
-    'Supplier': ['/dashboard/', '/dashboard/supplies'],
-    'Customer': ['/dashboard/', '/dashboard/purchases']
+    'Supplier': ['/dashboard/', '/dashboard/supplies']
 };
 
 function checkAuth() {
@@ -41,6 +40,12 @@ function checkAuth() {
         const hasAccess = allowedRoutes.some(route => currentPath.includes(route));
 
         if (!hasAccess) {
+            // If user has no dashboard access at all (e.g. Customer), redirect to home
+            if (allowedRoutes.length === 0) {
+                window.location.href = '/';
+                return;
+            }
+
             alert('You do not have permission to access this page.');
             window.location.href = '/dashboard/'; // Redirect to a safe page
         }
