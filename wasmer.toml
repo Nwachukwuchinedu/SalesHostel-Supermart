@@ -1,0 +1,18 @@
+[package]
+name = "nwachukwuchinedu/SalesHostel-Supermart"
+version = "0.1.0"
+description = "Description for package SalesHostel-Supermart"
+
+[[module]]
+name = "SalesHostel-Supermart"
+source = "SalesHostel-Supermart.wasm"
+abi = "wasi"
+
+[module.interfaces]
+wasi = "0.1.0-unstable"
+
+[[command]]
+name = "SalesHostel-Supermart"
+module = "SalesHostel-Supermart"
+runner = "wasi"
+web = "php -S 0.0.0.0:8080 -t public"
