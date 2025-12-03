@@ -12,18 +12,18 @@
                     <div class="flex flex-col justify-center space-y-8">
                         <div class="space-y-4">
                             <h1 class="text-5xl font-headline font-bold tracking-tight sm:text-6xl md:text-7xl text-foreground fade-up">
-                                Manage Your <span class="text-primary">Inventory</span> with Confidence
+                                Your Daily Essentials, <span class="text-primary">Delivered</span> with Care
                             </h1>
                             <p class="max-w-[600px] text-muted-foreground text-lg md:text-xl fade-up stagger-1">
-                                The all-in-one platform for modern retail. Track sales, manage suppliers, and grow your business with real-time insights.
+                                Experience the most seamless way to shop for groceries, household items, and more. Quality products, competitive prices, and fast delivery.
                             </p>
                         </div>
                         <div class="flex flex-col sm:flex-row gap-4 fade-up stagger-2">
                             <a href="signup" class="inline-flex h-12 items-center justify-center rounded-lg bg-primary px-8 text-base font-medium text-primary-foreground shadow-lg transition-transform hover:scale-105 hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring">
-                                Start Free Trial
+                                Start Shopping
                             </a>
-                            <a href="#features" class="inline-flex h-12 items-center justify-center rounded-lg border border-input bg-background/50 backdrop-blur-sm px-8 text-base font-medium shadow-sm transition-transform hover:scale-105 hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring">
-                                View Demo
+                            <a href="#products" class="inline-flex h-12 items-center justify-center rounded-lg border border-input bg-background/50 backdrop-blur-sm px-8 text-base font-medium shadow-sm transition-transform hover:scale-105 hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring">
+                                Browse Catalog
                             </a>
                         </div>
                         <div class="flex items-center gap-4 text-sm text-muted-foreground fade-up stagger-3">
@@ -32,11 +32,11 @@
                                 <div class="h-8 w-8 rounded-full border-2 border-background bg-gray-300"></div>
                                 <div class="h-8 w-8 rounded-full border-2 border-background bg-gray-400"></div>
                             </div>
-                            <p>Trusted by 500+ businesses</p>
+                            <p>Loved by 1,000+ happy customers</p>
                         </div>
                     </div>
                     
-                    <!-- 3D Abstract / Dashboard Mockup Area -->
+                    <!-- 3D Abstract / Product Mockup Area -->
                     <div class="relative lg:h-[600px] flex items-center justify-center fade-up stagger-2">
                         <div class="relative w-full max-w-[600px] aspect-square">
                             <!-- Abstract Shapes -->
@@ -44,21 +44,13 @@
                             <div class="absolute bottom-0 left-0 w-64 h-64 bg-secondary/20 rounded-full blur-3xl animate-pulse" style="animation-delay: 1s;"></div>
                             
                             <!-- Glassmorphic Card Mockup -->
-                            <div class="absolute inset-4 glass-card rounded-2xl p-6 transform rotate-2 hover:rotate-0 transition-transform duration-500">
-                                <div class="flex items-center justify-between mb-8">
-                                    <div class="space-y-1">
-                                        <div class="h-2 w-24 bg-muted rounded"></div>
-                                        <div class="h-4 w-32 bg-foreground/10 rounded"></div>
+                            <div class="absolute inset-4 glass-card rounded-2xl p-6 transform rotate-2 hover:rotate-0 transition-transform duration-500 flex items-center justify-center">
+                                <div class="text-center space-y-4">
+                                    <div class="h-32 w-32 bg-primary/10 rounded-full mx-auto flex items-center justify-center">
+                                        <i data-lucide="shopping-bag" class="h-16 w-16 text-primary"></i>
                                     </div>
-                                    <div class="h-10 w-10 rounded-full bg-primary/10"></div>
-                                </div>
-                                <div class="space-y-4">
-                                    <div class="h-32 w-full bg-muted/50 rounded-lg"></div>
-                                    <div class="grid grid-cols-3 gap-4">
-                                        <div class="h-20 bg-muted/50 rounded-lg"></div>
-                                        <div class="h-20 bg-muted/50 rounded-lg"></div>
-                                        <div class="h-20 bg-muted/50 rounded-lg"></div>
-                                    </div>
+                                    <h3 class="text-2xl font-bold">Premium Quality</h3>
+                                    <p class="text-muted-foreground">Hand-picked items just for you.</p>
                                 </div>
                             </div>
                         </div>
@@ -72,10 +64,10 @@
             <div class="container mx-auto px-4 md:px-6">
                 <div class="text-center max-w-3xl mx-auto mb-16 space-y-4">
                     <h2 class="text-3xl font-headline font-bold tracking-tight sm:text-4xl md:text-5xl">
-                        Everything You Need to Run Your Store
+                        Why Shop With Us?
                     </h2>
                     <p class="text-muted-foreground text-lg">
-                        Powerful features packaged in a simple, intuitive interface.
+                        We prioritize your convenience and satisfaction above all else.
                     </p>
                 </div>
 
@@ -84,10 +76,10 @@
                     <div class="md:col-span-2 glass-card rounded-2xl p-8 flex flex-col justify-between hover:shadow-lg transition-all duration-300 hover:-translate-y-1 group">
                         <div class="space-y-2">
                             <div class="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary mb-4 group-hover:scale-110 transition-transform">
-                                <i data-lucide="bar-chart-3" class="h-6 w-6"></i>
+                                <i data-lucide="truck" class="h-6 w-6"></i>
                             </div>
-                            <h3 class="text-2xl font-bold">Real-time Analytics</h3>
-                            <p class="text-muted-foreground">Monitor your sales, revenue, and profit margins instantly. Make data-driven decisions with our comprehensive reporting tools.</p>
+                            <h3 class="text-2xl font-bold">Fast & Reliable Delivery</h3>
+                            <p class="text-muted-foreground">Get your orders delivered to your doorstep in record time. We ensure your items arrive fresh and in perfect condition.</p>
                         </div>
                         <div class="w-full h-32 bg-gradient-to-t from-primary/5 to-transparent rounded-lg mt-4 border border-primary/10"></div>
                     </div>
@@ -97,8 +89,8 @@
                         <div class="h-12 w-12 rounded-lg bg-secondary/10 flex items-center justify-center text-secondary mb-4 group-hover:scale-110 transition-transform">
                             <i data-lucide="smartphone" class="h-6 w-6"></i>
                         </div>
-                        <h3 class="text-2xl font-bold mb-2">Mobile First</h3>
-                        <p class="text-muted-foreground mb-8">Manage your store from anywhere. Our responsive design works perfectly on all devices.</p>
+                        <h3 class="text-2xl font-bold mb-2">Shop on the Go</h3>
+                        <p class="text-muted-foreground mb-8">Our platform is optimized for mobile, making it easy to browse and buy wherever you are.</p>
                         <div class="flex-1 bg-muted/50 rounded-xl border border-border/50 relative overflow-hidden">
                             <div class="absolute inset-x-4 top-4 bottom-0 bg-background rounded-t-xl shadow-lg border border-border"></div>
                         </div>
@@ -107,19 +99,217 @@
                     <!-- Small Card 1 -->
                     <div class="glass-card rounded-2xl p-8 hover:shadow-lg transition-all duration-300 hover:-translate-y-1 group">
                         <div class="h-12 w-12 rounded-lg bg-orange-500/10 flex items-center justify-center text-orange-600 mb-4 group-hover:scale-110 transition-transform">
-                            <i data-lucide="box" class="h-6 w-6"></i>
+                            <i data-lucide="star" class="h-6 w-6"></i>
                         </div>
-                        <h3 class="text-xl font-bold mb-2">Inventory Tracking</h3>
-                        <p class="text-muted-foreground text-sm">Automated low stock alerts and easy restocking workflows.</p>
+                        <h3 class="text-xl font-bold mb-2">Top Quality</h3>
+                        <p class="text-muted-foreground text-sm">We source only the best products for our customers.</p>
                     </div>
 
                     <!-- Small Card 2 -->
                     <div class="glass-card rounded-2xl p-8 hover:shadow-lg transition-all duration-300 hover:-translate-y-1 group">
                         <div class="h-12 w-12 rounded-lg bg-green-500/10 flex items-center justify-center text-green-600 mb-4 group-hover:scale-110 transition-transform">
-                            <i data-lucide="users" class="h-6 w-6"></i>
+                            <i data-lucide="shield-check" class="h-6 w-6"></i>
                         </div>
-                        <h3 class="text-xl font-bold mb-2">Supplier Management</h3>
-                        <p class="text-muted-foreground text-sm">Keep track of all your vendors and purchase history in one place.</p>
+                        <h3 class="text-xl font-bold mb-2">Secure Payments</h3>
+                        <p class="text-muted-foreground text-sm">Your transactions are safe and encrypted.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Featured Products Section -->
+        <section id="products" class="w-full py-24 relative">
+            <div class="container mx-auto px-4 md:px-6">
+                <div class="text-center max-w-3xl mx-auto mb-16 space-y-4">
+                    <h2 class="text-3xl font-headline font-bold tracking-tight sm:text-4xl md:text-5xl">
+                        Fresh Arrivals
+                    </h2>
+                    <p class="text-muted-foreground text-lg">
+                        Check out some of our most popular items this week.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <!-- Product 1 -->
+                    <div class="glass-card rounded-xl overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1 group">
+                        <div class="aspect-square bg-muted/50 relative overflow-hidden">
+                            <div class="absolute inset-0 flex items-center justify-center text-muted-foreground/20">
+                                <i data-lucide="image" class="h-12 w-12"></i>
+                            </div>
+                            <!-- Placeholder for product image -->
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
+                                <button class="w-full bg-primary text-primary-foreground py-2 rounded-lg font-medium text-sm">Add to Cart</button>
+                            </div>
+                        </div>
+                        <div class="p-4 space-y-2">
+                            <div class="flex justify-between items-start">
+                                <h3 class="font-semibold truncate">Organic Avocados</h3>
+                                <span class="text-sm font-bold text-primary">₦1,500</span>
+                            </div>
+                            <p class="text-xs text-muted-foreground line-clamp-2">Fresh, creamy avocados sourced directly from local farmers.</p>
+                            <div class="flex items-center gap-1 text-yellow-500 text-xs">
+                                <i data-lucide="star" class="h-3 w-3 fill-current"></i>
+                                <i data-lucide="star" class="h-3 w-3 fill-current"></i>
+                                <i data-lucide="star" class="h-3 w-3 fill-current"></i>
+                                <i data-lucide="star" class="h-3 w-3 fill-current"></i>
+                                <i data-lucide="star-half" class="h-3 w-3 fill-current"></i>
+                                <span class="text-muted-foreground ml-1">(4.8)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Product 2 -->
+                    <div class="glass-card rounded-xl overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1 group">
+                        <div class="aspect-square bg-muted/50 relative overflow-hidden">
+                            <div class="absolute inset-0 flex items-center justify-center text-muted-foreground/20">
+                                <i data-lucide="image" class="h-12 w-12"></i>
+                            </div>
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
+                                <button class="w-full bg-primary text-primary-foreground py-2 rounded-lg font-medium text-sm">Add to Cart</button>
+                            </div>
+                        </div>
+                        <div class="p-4 space-y-2">
+                            <div class="flex justify-between items-start">
+                                <h3 class="font-semibold truncate">Premium Rice (5kg)</h3>
+                                <span class="text-sm font-bold text-primary">₦8,000</span>
+                            </div>
+                            <p class="text-xs text-muted-foreground line-clamp-2">High-quality, stone-free rice perfect for any meal.</p>
+                            <div class="flex items-center gap-1 text-yellow-500 text-xs">
+                                <i data-lucide="star" class="h-3 w-3 fill-current"></i>
+                                <i data-lucide="star" class="h-3 w-3 fill-current"></i>
+                                <i data-lucide="star" class="h-3 w-3 fill-current"></i>
+                                <i data-lucide="star" class="h-3 w-3 fill-current"></i>
+                                <i data-lucide="star" class="h-3 w-3 fill-current"></i>
+                                <span class="text-muted-foreground ml-1">(5.0)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Product 3 -->
+                    <div class="glass-card rounded-xl overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1 group">
+                        <div class="aspect-square bg-muted/50 relative overflow-hidden">
+                            <div class="absolute inset-0 flex items-center justify-center text-muted-foreground/20">
+                                <i data-lucide="image" class="h-12 w-12"></i>
+                            </div>
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
+                                <button class="w-full bg-primary text-primary-foreground py-2 rounded-lg font-medium text-sm">Add to Cart</button>
+                            </div>
+                        </div>
+                        <div class="p-4 space-y-2">
+                            <div class="flex justify-between items-start">
+                                <h3 class="font-semibold truncate">Vegetable Oil (3L)</h3>
+                                <span class="text-sm font-bold text-primary">₦4,500</span>
+                            </div>
+                            <p class="text-xs text-muted-foreground line-clamp-2">Cholesterol-free vegetable oil for healthy cooking.</p>
+                            <div class="flex items-center gap-1 text-yellow-500 text-xs">
+                                <i data-lucide="star" class="h-3 w-3 fill-current"></i>
+                                <i data-lucide="star" class="h-3 w-3 fill-current"></i>
+                                <i data-lucide="star" class="h-3 w-3 fill-current"></i>
+                                <i data-lucide="star" class="h-3 w-3 fill-current"></i>
+                                <i data-lucide="star" class="h-3 w-3 text-muted-foreground"></i>
+                                <span class="text-muted-foreground ml-1">(4.2)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Product 4 -->
+                    <div class="glass-card rounded-xl overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1 group">
+                        <div class="aspect-square bg-muted/50 relative overflow-hidden">
+                            <div class="absolute inset-0 flex items-center justify-center text-muted-foreground/20">
+                                <i data-lucide="image" class="h-12 w-12"></i>
+                            </div>
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
+                                <button class="w-full bg-primary text-primary-foreground py-2 rounded-lg font-medium text-sm">Add to Cart</button>
+                            </div>
+                        </div>
+                        <div class="p-4 space-y-2">
+                            <div class="flex justify-between items-start">
+                                <h3 class="font-semibold truncate">Fresh Tomatoes (Basket)</h3>
+                                <span class="text-sm font-bold text-primary">₦12,000</span>
+                            </div>
+                            <p class="text-xs text-muted-foreground line-clamp-2">Juicy, red tomatoes fresh from the farm.</p>
+                            <div class="flex items-center gap-1 text-yellow-500 text-xs">
+                                <i data-lucide="star" class="h-3 w-3 fill-current"></i>
+                                <i data-lucide="star" class="h-3 w-3 fill-current"></i>
+                                <i data-lucide="star" class="h-3 w-3 fill-current"></i>
+                                <i data-lucide="star" class="h-3 w-3 fill-current"></i>
+                                <i data-lucide="star" class="h-3 w-3 fill-current"></i>
+                                <span class="text-muted-foreground ml-1">(4.9)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-12 text-center">
+                    <a href="signup" class="inline-flex items-center justify-center rounded-lg border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-8 py-2 transition-colors">
+                        View All Products
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonials Section -->
+        <section class="w-full py-24 bg-muted/30">
+            <div class="container mx-auto px-4 md:px-6">
+                <div class="text-center max-w-3xl mx-auto mb-16 space-y-4">
+                    <h2 class="text-3xl font-headline font-bold tracking-tight sm:text-4xl">
+                        What Our Customers Say
+                    </h2>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="glass-card p-8 rounded-xl space-y-4">
+                        <div class="flex gap-1 text-yellow-500">
+                            <i data-lucide="star" class="h-4 w-4 fill-current"></i>
+                            <i data-lucide="star" class="h-4 w-4 fill-current"></i>
+                            <i data-lucide="star" class="h-4 w-4 fill-current"></i>
+                            <i data-lucide="star" class="h-4 w-4 fill-current"></i>
+                            <i data-lucide="star" class="h-4 w-4 fill-current"></i>
+                        </div>
+                        <p class="text-muted-foreground italic">"I love shopping here! The delivery is always on time, and the produce is fresher than what I get at the open market."</p>
+                        <div class="flex items-center gap-3 pt-4 border-t border-border/50">
+                            <div class="h-10 w-10 rounded-full bg-primary/20 flex items-center justify-center font-bold text-primary">CJ</div>
+                            <div>
+                                <div class="font-semibold">Chinedu J.</div>
+                                <div class="text-xs text-muted-foreground">Verified Customer</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="glass-card p-8 rounded-xl space-y-4">
+                        <div class="flex gap-1 text-yellow-500">
+                            <i data-lucide="star" class="h-4 w-4 fill-current"></i>
+                            <i data-lucide="star" class="h-4 w-4 fill-current"></i>
+                            <i data-lucide="star" class="h-4 w-4 fill-current"></i>
+                            <i data-lucide="star" class="h-4 w-4 fill-current"></i>
+                            <i data-lucide="star" class="h-4 w-4 fill-current"></i>
+                        </div>
+                        <p class="text-muted-foreground italic">"The mobile site is so easy to use. I can order my weekly groceries while on the bus home from work. Highly recommended!"</p>
+                        <div class="flex items-center gap-3 pt-4 border-t border-border/50">
+                            <div class="h-10 w-10 rounded-full bg-secondary/20 flex items-center justify-center font-bold text-secondary">AM</div>
+                            <div>
+                                <div class="font-semibold">Amina M.</div>
+                                <div class="text-xs text-muted-foreground">Verified Customer</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="glass-card p-8 rounded-xl space-y-4">
+                        <div class="flex gap-1 text-yellow-500">
+                            <i data-lucide="star" class="h-4 w-4 fill-current"></i>
+                            <i data-lucide="star" class="h-4 w-4 fill-current"></i>
+                            <i data-lucide="star" class="h-4 w-4 fill-current"></i>
+                            <i data-lucide="star" class="h-4 w-4 fill-current"></i>
+                            <i data-lucide="star-half" class="h-4 w-4 fill-current"></i>
+                        </div>
+                        <p class="text-muted-foreground italic">"Great customer service. I had an issue with one item, and they resolved it immediately. Will definitely buy again."</p>
+                        <div class="flex items-center gap-3 pt-4 border-t border-border/50">
+                            <div class="h-10 w-10 rounded-full bg-orange-500/20 flex items-center justify-center font-bold text-orange-600">DA</div>
+                            <div>
+                                <div class="font-semibold">David A.</div>
+                                <div class="text-xs text-muted-foreground">Verified Customer</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -130,20 +320,20 @@
             <div class="container mx-auto px-4 md:px-6">
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
                     <div class="space-y-2">
-                        <h3 class="text-4xl font-bold text-primary">10k+</h3>
-                        <p class="text-sm text-muted-foreground font-medium uppercase tracking-wider">Transactions</p>
+                        <h3 class="text-4xl font-bold text-primary">5k+</h3>
+                        <p class="text-sm text-muted-foreground font-medium uppercase tracking-wider">Happy Customers</p>
                     </div>
                     <div class="space-y-2">
-                        <h3 class="text-4xl font-bold text-primary">500+</h3>
-                        <p class="text-sm text-muted-foreground font-medium uppercase tracking-wider">Active Stores</p>
+                        <h3 class="text-4xl font-bold text-primary">1000+</h3>
+                        <p class="text-sm text-muted-foreground font-medium uppercase tracking-wider">Products</p>
                     </div>
                     <div class="space-y-2">
-                        <h3 class="text-4xl font-bold text-primary">99.9%</h3>
-                        <p class="text-sm text-muted-foreground font-medium uppercase tracking-wider">Uptime</p>
+                        <h3 class="text-4xl font-bold text-primary">24h</h3>
+                        <p class="text-sm text-muted-foreground font-medium uppercase tracking-wider">Delivery Avg.</p>
                     </div>
                     <div class="space-y-2">
-                        <h3 class="text-4xl font-bold text-primary">24/7</h3>
-                        <p class="text-sm text-muted-foreground font-medium uppercase tracking-wider">Support</p>
+                        <h3 class="text-4xl font-bold text-primary">4.9</h3>
+                        <p class="text-sm text-muted-foreground font-medium uppercase tracking-wider">Customer Rating</p>
                     </div>
                 </div>
             </div>
@@ -155,14 +345,14 @@
             <div class="container mx-auto px-4 md:px-6 text-center">
                 <div class="max-w-2xl mx-auto space-y-8">
                     <h2 class="text-3xl font-headline font-bold tracking-tight sm:text-4xl">
-                        Ready to Transform Your Business?
+                        Ready to Start Shopping?
                     </h2>
                     <p class="text-muted-foreground text-lg">
-                        Join hundreds of other retailers who are saving time and increasing profits with SalesHostel Digital.
+                        Join our community of satisfied customers and experience the best in retail.
                     </p>
                     <div class="flex flex-col sm:flex-row gap-4 justify-center">
                         <a href="signup" class="inline-flex h-12 items-center justify-center rounded-lg bg-primary px-8 text-base font-medium text-primary-foreground shadow-lg transition-transform hover:scale-105 hover:bg-primary/90">
-                            Get Started Now
+                            Create Free Account
                         </a>
                     </div>
                 </div>

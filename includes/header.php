@@ -10,7 +10,7 @@
                 </span>
             </a>
             <nav class="hidden items-center gap-6 md:flex">
-                <a href="#features" class="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">Features</a>
+                <a href="#features" class="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">Why Us</a>
                 <a href="#products" class="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">Products</a>
             </nav>
             <div class="hidden items-center gap-2 md:flex">
@@ -28,7 +28,7 @@
         <!-- Mobile Menu -->
         <div id="mobile-menu" class="hidden md:hidden bg-card border-t">
             <nav class="flex flex-col gap-4 p-4">
-                <a href="#features" class="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground mobile-link">Features</a>
+                <a href="#features" class="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground mobile-link">Why Us</a>
                 <a href="#products" class="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground mobile-link">Products</a>
                 <div class="flex items-center gap-2 mt-2">
                     <a href="login" class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 w-full">Login</a>
