@@ -33,14 +33,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 ?>
 
-<div class="flex min-h-screen w-full flex-col bg-muted/40">
+<div class="flex min-h-screen w-full flex-col bg-muted/20">
     <?php include '../includes/sidebar.php'; ?>
     
-    <div class="flex flex-col sm:gap-4 sm:py-4 md:ml-64">
+    <div class="flex flex-col sm:gap-4 sm:py-4 md:ml-64 transition-all duration-300">
         <?php include '../includes/dashboard_header.php'; ?>
         
         <main class="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
-            <div class="flex flex-col gap-8 min-w-0">
+            <div class="flex flex-col gap-8 min-w-0 fade-up">
                 <div>
                     <h1 class="text-3xl font-headline font-bold tracking-tight">
                         Reports
@@ -50,26 +50,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     </p>
                 </div>
 
-                <div class="rounded-xl border bg-card text-card-foreground shadow">
+                <div class="glass-card rounded-xl p-6">
                     <form method="POST" action="">
-                        <div class="flex flex-col space-y-1.5 p-6">
-                            <h3 class="font-semibold leading-none tracking-tight">Generate a New Report</h3>
+                        <div class="flex flex-col space-y-1.5 mb-6">
+                            <h3 class="font-semibold leading-none tracking-tight text-lg">Generate a New Report</h3>
                             <p class="text-sm text-muted-foreground">
                                 Select a date range and filters to generate a sales report and get AI-powered insights.
                             </p>
                         </div>
-                        <div class="p-6 pt-0 grid gap-6 md:grid-cols-2">
+                        <div class="grid gap-6 md:grid-cols-2">
                             <div class="grid gap-2">
-                                <label class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70" for="start-date">Start Date</label>
-                                <input class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" id="start-date" name="startDate" type="date" value="<?php echo date('Y-m-01'); ?>">
+                                <label class="text-sm font-medium leading-none" for="start-date">Start Date</label>
+                                <input class="flex h-10 w-full rounded-lg border border-input bg-background/50 px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-200 focus:border-primary" id="start-date" name="startDate" type="date" value="<?php echo date('Y-m-01'); ?>">
                             </div>
                             <div class="grid gap-2">
-                                <label class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70" for="end-date">End Date</label>
-                                <input class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" id="end-date" name="endDate" type="date" value="<?php echo date('Y-m-d'); ?>">
+                                <label class="text-sm font-medium leading-none" for="end-date">End Date</label>
+                                <input class="flex h-10 w-full rounded-lg border border-input bg-background/50 px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-200 focus:border-primary" id="end-date" name="endDate" type="date" value="<?php echo date('Y-m-d'); ?>">
                             </div>
                             <div class="grid gap-2">
-                                <label class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70" for="reportType">Report Type</label>
-                                <select id="reportType" name="reportType" onchange="toggleFilters()" class="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                                <label class="text-sm font-medium leading-none" for="reportType">Report Type</label>
+                                <select id="reportType" name="reportType" onchange="toggleFilters()" class="flex h-10 w-full items-center justify-between rounded-lg border border-input bg-background/50 px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-200 focus:border-primary">
                                     <option value="general">General</option>
                                     <option value="customer">By Customer</option>
                                     <option value="supplier">By Supplier</option>
@@ -78,27 +78,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             </div>
                             
                             <!-- Dynamic Filters -->
-                            <div id="customerFilter" class="grid gap-2 hidden">
-                                <label class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70" for="customer">Customer</label>
-                                <select name="customer" class="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                            <div id="customerFilter" class="grid gap-2 hidden animate-in fade-in slide-in-from-top-2 duration-200">
+                                <label class="text-sm font-medium leading-none" for="customer">Customer</label>
+                                <select name="customer" class="flex h-10 w-full items-center justify-between rounded-lg border border-input bg-background/50 px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-200 focus:border-primary">
                                     <option value="">Select a customer</option>
                                     <?php foreach ($customers as $c): ?>
                                         <option value="<?php echo $c['name']; ?>"><?php echo $c['name']; ?></option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>
-                            <div id="supplierFilter" class="grid gap-2 hidden">
-                                <label class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70" for="supplier">Supplier</label>
-                                <select name="supplier" class="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                            <div id="supplierFilter" class="grid gap-2 hidden animate-in fade-in slide-in-from-top-2 duration-200">
+                                <label class="text-sm font-medium leading-none" for="supplier">Supplier</label>
+                                <select name="supplier" class="flex h-10 w-full items-center justify-between rounded-lg border border-input bg-background/50 px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-200 focus:border-primary">
                                     <option value="">Select a supplier</option>
                                     <?php foreach ($suppliers as $s): ?>
                                         <option value="<?php echo $s['name']; ?>"><?php echo $s['name']; ?></option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>
-                            <div id="staffFilter" class="grid gap-2 hidden">
-                                <label class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70" for="staff">Staff</label>
-                                <select name="staff" class="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                            <div id="staffFilter" class="grid gap-2 hidden animate-in fade-in slide-in-from-top-2 duration-200">
+                                <label class="text-sm font-medium leading-none" for="staff">Staff</label>
+                                <select name="staff" class="flex h-10 w-full items-center justify-between rounded-lg border border-input bg-background/50 px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-200 focus:border-primary">
                                     <option value="">Select a staff member</option>
                                     <?php foreach ($staff as $s): ?>
                                         <option value="<?php echo $s['name']; ?>"><?php echo $s['name']; ?></option>
@@ -107,8 +107,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             </div>
 
                         </div>
-                        <div class="flex items-center p-6 pt-0 border-t mt-4">
-                            <button type="submit" class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 mt-4">
+                        <div class="flex items-center pt-6 mt-2">
+                            <button type="submit" class="inline-flex items-center justify-center whitespace-nowrap rounded-lg text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 shadow-lg shadow-primary/20 hover:shadow-primary/40 hover:-translate-y-0.5 transition-all duration-200">
+                                <i data-lucide="file-bar-chart" class="mr-2 h-4 w-4"></i>
                                 Generate Report
                             </button>
                         </div>
@@ -116,23 +117,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </div>
 
                 <?php if ($reportGenerated): ?>
-                <div class="grid gap-8 lg:grid-cols-2">
-                    <div class="rounded-xl border bg-card text-card-foreground shadow">
-                        <div class="flex flex-row items-center gap-2 p-6 pb-2">
-                            <i data-lucide="wand" class="h-6 w-6 text-primary"></i>
-                            <h3 class="font-semibold leading-none tracking-tight">Sales Report Summary</h3>
+                <div class="grid gap-8 lg:grid-cols-2 fade-up" style="animation-delay: 0.2s;">
+                    <div class="glass-card rounded-xl p-6 space-y-4">
+                        <div class="flex flex-row items-center gap-2 pb-2 border-b border-border/50">
+                            <div class="p-2 bg-primary/10 rounded-lg text-primary">
+                                <i data-lucide="wand" class="h-5 w-5"></i>
+                            </div>
+                            <h3 class="font-semibold leading-none tracking-tight text-lg">Sales Report Summary</h3>
                         </div>
-                        <div class="p-6 pt-4">
-                            <p class="text-sm text-muted-foreground whitespace-pre-wrap"><?php echo nl2br($salesReport); ?></p>
+                        <div class="pt-2">
+                            <p class="text-sm text-muted-foreground whitespace-pre-wrap leading-relaxed"><?php echo nl2br($salesReport); ?></p>
                         </div>
                     </div>
-                    <div class="rounded-xl border bg-card text-card-foreground shadow">
-                        <div class="flex flex-row items-center gap-2 p-6 pb-2">
-                            <i data-lucide="bot" class="h-6 w-6 text-accent"></i>
-                            <h3 class="font-semibold leading-none tracking-tight">AI-Powered Insights</h3>
+                    <div class="glass-card rounded-xl p-6 space-y-4">
+                        <div class="flex flex-row items-center gap-2 pb-2 border-b border-border/50">
+                            <div class="p-2 bg-purple-500/10 rounded-lg text-purple-600">
+                                <i data-lucide="bot" class="h-5 w-5"></i>
+                            </div>
+                            <h3 class="font-semibold leading-none tracking-tight text-lg">AI-Powered Insights</h3>
                         </div>
-                        <div class="p-6 pt-4">
-                            <p class="text-sm text-muted-foreground whitespace-pre-wrap"><?php echo nl2br($financialInsights); ?></p>
+                        <div class="pt-2">
+                            <p class="text-sm text-muted-foreground whitespace-pre-wrap leading-relaxed"><?php echo nl2br($financialInsights); ?></p>
                         </div>
                     </div>
                 </div>
@@ -142,8 +147,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
 </div>
 
+<script src="/assets/js/config.js"></script>
+<script src="/assets/js/api.js"></script>
+<script src="/assets/js/main.js"></script>
 <script>
     lucide.createIcons();
+    
+    // GSAP Animations
+    document.addEventListener('DOMContentLoaded', () => {
+        gsap.to(".fade-up", {
+            y: 0,
+            opacity: 1,
+            duration: 0.6,
+            stagger: 0.1,
+            ease: "power2.out"
+        });
+    });
     
     // Sidebar Toggle Logic
     const openSidebarBtn = document.getElementById('open-sidebar');
