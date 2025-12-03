@@ -1,217 +1,220 @@
 <?php include 'includes/header.php'; ?>
 
-<?php
-// Mock Data
-$products = [
-    [
-        "id" => "1",
-        "name" => "Organic Fuji Apples",
-        "sellingPrice" => 2.99,
-        "imageUrl" => "https://images.unsplash.com/photo-1579613832125-5d34a13ffe2a?q=80&w=2070&auto=format&fit=crop",
-    ],
-    [
-        "id" => "2",
-        "name" => "Artisanal Sourdough",
-        "sellingPrice" => 5.5,
-        "imageUrl" => "https://images.unsplash.com/photo-1589981525979-683c313316d3?q=80&w=2070&auto=format&fit=crop",
-    ],
-    [
-        "id" => "3",
-        "name" => "Fresh Almond Milk",
-        "sellingPrice" => 3.75,
-        "imageUrl" => "https://images.unsplash.com/photo-1620189507195-68309c04c4d8?q=80&w=2070&auto=format&fit=crop",
-    ],
-    [
-        "id" => "4",
-        "name" => "Chicken Breast",
-        "sellingPrice" => 9.99,
-        "imageUrl" => "https://images.unsplash.com/photo-1604503468734-b3c8b4e78?q=80&w=1974&auto=format&fit=crop",
-    ],
-];
+<div class="flex flex-col min-h-screen relative overflow-hidden">
+    <!-- Uneven Faded Grid Background -->
+    <div class="bg-grid-uneven fixed inset-0 pointer-events-none"></div>
 
-$categories = [
-    ["name" => "Fruits", "icon" => "🍎"],
-    ["name" => "Bakery", "icon" => "🍞"],
-    ["name" => "Beverages", "icon" => "🥤"],
-    ["name" => "Meat", "icon" => "🥩"],
-    ["name" => "Dairy", "icon" => "🧀"],
-    ["name" => "Vegetables", "icon" => "🥦"],
-    ["name" => "Snacks", "icon" => "🍿"],
-    ["name" => "Seafood", "icon" => "🦐"],
-];
-
-$features = [
-    [
-        "icon" => "search",
-        "title" => "Wide Product Selection",
-        "description" => "Browse our extensive catalog of high-quality products. From fresh produce to household essentials, find everything you need in one place.",
-    ],
-    [
-        "icon" => "wallet",
-        "title" => "Simple & Secure Checkout",
-        "description" => "Enjoy a seamless shopping experience with our easy-to-use and secure checkout process. Your order is just a few clicks away.",
-    ],
-    [
-        "icon" => "truck",
-        "title" => "Fast, Reliable Delivery",
-        "description" => "Get your favorite products delivered right to your doorstep. We ensure your order arrives fresh and on time, every time.",
-    ],
-    [
-        "icon" => "shield-check",
-        "title" => "Quality You Can Trust",
-        "description" => "We partner with the best suppliers to bring you fresh, high-quality products. Your satisfaction is our top priority.",
-    ],
-];
-?>
-
-<div class="flex flex-col min-h-screen bg-background">
-    <main class="flex-1">
+    <main class="flex-1 relative z-10">
         <!-- Hero Section -->
-        <section class="w-full py-20 md:py-32 lg:py-40 bg-card/50">
-            <div class="container mx-auto px-4 md:px-6">
-                <div class="grid gap-6 lg:grid-cols-2 lg:gap-12">
-                    <div class="flex flex-col justify-center space-y-4">
-                        <div class="space-y-2">
-                            <h1 class="text-4xl font-headline font-bold tracking-tighter sm:text-5xl md:text-6xl text-primary">
-                                Your Favorite Goods, Delivered Fast
+        <section class="w-full py-24 md:py-32 lg:py-40 relative">
+            <div class="container mx-auto px-4 md:px-6 relative z-10">
+                <div class="grid gap-12 lg:grid-cols-2 items-center">
+                    <div class="flex flex-col justify-center space-y-8">
+                        <div class="space-y-4">
+                            <h1 class="text-5xl font-headline font-bold tracking-tight sm:text-6xl md:text-7xl text-foreground fade-up">
+                                Manage Your <span class="text-primary">Inventory</span> with Confidence
                             </h1>
-                            <p class="max-w-[600px] text-muted-foreground md:text-xl">
-                                SalesHostel Digital makes it easier than ever to shop for groceries and essentials. Quality products, seamless ordering, and quick delivery.
+                            <p class="max-w-[600px] text-muted-foreground text-lg md:text-xl fade-up stagger-1">
+                                The all-in-one platform for modern retail. Track sales, manage suppliers, and grow your business with real-time insights.
                             </p>
                         </div>
-                        <div class="flex flex-col gap-2 min-[400px]:flex-row">
-                            <a href="signup.php" class="inline-flex h-10 items-center justify-center rounded-md bg-primary px-8 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50">
-                                Start Shopping
+                        <div class="flex flex-col sm:flex-row gap-4 fade-up stagger-2">
+                            <a href="signup.php" class="inline-flex h-12 items-center justify-center rounded-lg bg-primary px-8 text-base font-medium text-primary-foreground shadow-lg transition-transform hover:scale-105 hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring">
+                                Start Free Trial
                             </a>
-                            <a href="#features" class="inline-flex h-10 items-center justify-center rounded-md border border-input bg-background px-8 text-sm font-medium shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50">
-                                Learn More
+                            <a href="#features" class="inline-flex h-12 items-center justify-center rounded-lg border border-input bg-background/50 backdrop-blur-sm px-8 text-base font-medium shadow-sm transition-transform hover:scale-105 hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring">
+                                View Demo
                             </a>
                         </div>
+                        <div class="flex items-center gap-4 text-sm text-muted-foreground fade-up stagger-3">
+                            <div class="flex -space-x-2">
+                                <div class="h-8 w-8 rounded-full border-2 border-background bg-gray-200"></div>
+                                <div class="h-8 w-8 rounded-full border-2 border-background bg-gray-300"></div>
+                                <div class="h-8 w-8 rounded-full border-2 border-background bg-gray-400"></div>
+                            </div>
+                            <p>Trusted by 500+ businesses</p>
+                        </div>
                     </div>
-                    <img
-                        src="https://picsum.photos/seed/5/600/400"
-                        width="600"
-                        height="400"
-                        alt="Hero"
-                        class="mx-auto aspect-video overflow-hidden rounded-xl object-cover sm:w-full lg:order-last"
-                    />
-                </div>
-            </div>
-        </section>
-
-        <!-- Categories Section -->
-        <section class="w-full py-12 md:py-20 bg-background">
-            <div class="container mx-auto px-4 md:px-6">
-                <h2 class="text-3xl font-headline font-bold tracking-tight text-center mb-12">
-                    Endless Categories
-                </h2>
-                <!-- Simple Horizontal Scroll Carousel -->
-                <div class="w-full overflow-x-auto pb-4 hide-scrollbar">
-                    <div class="flex gap-4">
-                        <?php foreach ($categories as $category): ?>
-                            <div class="flex-none w-1/2 sm:w-1/3 md:w-1/4 lg:w-1/6 xl:w-1/8">
-                                <div class="p-1">
-                                    <div class="rounded-xl border bg-card text-card-foreground shadow hover:shadow-lg transition-shadow duration-300">
-                                        <div class="flex flex-col items-center justify-center aspect-square p-4">
-                                            <div class="text-4xl mb-2"><?php echo $category['icon']; ?></div>
-                                            <p class="text-sm font-medium text-center">
-                                                <?php echo $category['name']; ?>
-                                            </p>
-                                        </div>
+                    
+                    <!-- 3D Abstract / Dashboard Mockup Area -->
+                    <div class="relative lg:h-[600px] flex items-center justify-center fade-up stagger-2">
+                        <div class="relative w-full max-w-[600px] aspect-square">
+                            <!-- Abstract Shapes -->
+                            <div class="absolute top-0 right-0 w-64 h-64 bg-primary/20 rounded-full blur-3xl animate-pulse"></div>
+                            <div class="absolute bottom-0 left-0 w-64 h-64 bg-secondary/20 rounded-full blur-3xl animate-pulse" style="animation-delay: 1s;"></div>
+                            
+                            <!-- Glassmorphic Card Mockup -->
+                            <div class="absolute inset-4 glass-card rounded-2xl p-6 transform rotate-2 hover:rotate-0 transition-transform duration-500">
+                                <div class="flex items-center justify-between mb-8">
+                                    <div class="space-y-1">
+                                        <div class="h-2 w-24 bg-muted rounded"></div>
+                                        <div class="h-4 w-32 bg-foreground/10 rounded"></div>
+                                    </div>
+                                    <div class="h-10 w-10 rounded-full bg-primary/10"></div>
+                                </div>
+                                <div class="space-y-4">
+                                    <div class="h-32 w-full bg-muted/50 rounded-lg"></div>
+                                    <div class="grid grid-cols-3 gap-4">
+                                        <div class="h-20 bg-muted/50 rounded-lg"></div>
+                                        <div class="h-20 bg-muted/50 rounded-lg"></div>
+                                        <div class="h-20 bg-muted/50 rounded-lg"></div>
                                     </div>
                                 </div>
                             </div>
-                        <?php endforeach; ?>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Featured Products Section -->
-        <section id="products" class="w-full py-12 md:py-20 bg-card/50">
+        <!-- Bento Grid Features Section -->
+        <section id="features" class="w-full py-24 bg-muted/30 relative">
             <div class="container mx-auto px-4 md:px-6">
-                <div class="flex flex-col items-center justify-center space-y-4 text-center">
-                    <div class="space-y-2">
-                        <h2 class="text-3xl font-headline font-bold tracking-tight sm:text-4xl">
-                            Featured Products
-                        </h2>
-                        <p class="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                            Discover a selection of our finest products, all available for quick and easy purchase.
-                        </p>
-                    </div>
+                <div class="text-center max-w-3xl mx-auto mb-16 space-y-4">
+                    <h2 class="text-3xl font-headline font-bold tracking-tight sm:text-4xl md:text-5xl">
+                        Everything You Need to Run Your Store
+                    </h2>
+                    <p class="text-muted-foreground text-lg">
+                        Powerful features packaged in a simple, intuitive interface.
+                    </p>
                 </div>
-                <div class="mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 pt-12">
-                    <?php foreach ($products as $product): ?>
-                        <div class="rounded-xl border bg-card text-card-foreground shadow overflow-hidden transition-transform duration-300 ease-in-out hover:-translate-y-2 hover:shadow-xl">
-                            <img
-                                src="<?php echo $product['imageUrl']; ?>"
-                                alt="<?php echo $product['name']; ?>"
-                                width="400"
-                                height="300"
-                                class="object-cover w-full h-48"
-                            />
-                            <div class="p-4">
-                                <h3 class="text-lg font-bold"><?php echo $product['name']; ?></h3>
-                                <p class="text-2xl font-headline text-primary">
-                                    ₦<?php echo number_format($product['sellingPrice'], 2); ?>
-                                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[300px]">
+                    <!-- Large Card 1 -->
+                    <div class="md:col-span-2 glass-card rounded-2xl p-8 flex flex-col justify-between hover:shadow-lg transition-all duration-300 hover:-translate-y-1 group">
+                        <div class="space-y-2">
+                            <div class="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary mb-4 group-hover:scale-110 transition-transform">
+                                <i data-lucide="bar-chart-3" class="h-6 w-6"></i>
                             </div>
+                            <h3 class="text-2xl font-bold">Real-time Analytics</h3>
+                            <p class="text-muted-foreground">Monitor your sales, revenue, and profit margins instantly. Make data-driven decisions with our comprehensive reporting tools.</p>
                         </div>
-                    <?php endforeach; ?>
+                        <div class="w-full h-32 bg-gradient-to-t from-primary/5 to-transparent rounded-lg mt-4 border border-primary/10"></div>
+                    </div>
+
+                    <!-- Tall Card 1 -->
+                    <div class="md:row-span-2 glass-card rounded-2xl p-8 flex flex-col hover:shadow-lg transition-all duration-300 hover:-translate-y-1 group">
+                        <div class="h-12 w-12 rounded-lg bg-secondary/10 flex items-center justify-center text-secondary mb-4 group-hover:scale-110 transition-transform">
+                            <i data-lucide="smartphone" class="h-6 w-6"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-2">Mobile First</h3>
+                        <p class="text-muted-foreground mb-8">Manage your store from anywhere. Our responsive design works perfectly on all devices.</p>
+                        <div class="flex-1 bg-muted/50 rounded-xl border border-border/50 relative overflow-hidden">
+                            <div class="absolute inset-x-4 top-4 bottom-0 bg-background rounded-t-xl shadow-lg border border-border"></div>
+                        </div>
+                    </div>
+
+                    <!-- Small Card 1 -->
+                    <div class="glass-card rounded-2xl p-8 hover:shadow-lg transition-all duration-300 hover:-translate-y-1 group">
+                        <div class="h-12 w-12 rounded-lg bg-orange-500/10 flex items-center justify-center text-orange-600 mb-4 group-hover:scale-110 transition-transform">
+                            <i data-lucide="box" class="h-6 w-6"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2">Inventory Tracking</h3>
+                        <p class="text-muted-foreground text-sm">Automated low stock alerts and easy restocking workflows.</p>
+                    </div>
+
+                    <!-- Small Card 2 -->
+                    <div class="glass-card rounded-2xl p-8 hover:shadow-lg transition-all duration-300 hover:-translate-y-1 group">
+                        <div class="h-12 w-12 rounded-lg bg-green-500/10 flex items-center justify-center text-green-600 mb-4 group-hover:scale-110 transition-transform">
+                            <i data-lucide="users" class="h-6 w-6"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2">Supplier Management</h3>
+                        <p class="text-muted-foreground text-sm">Keep track of all your vendors and purchase history in one place.</p>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- Features Section -->
-        <section id="features" class="w-full py-12 md:py-24 lg:py-32">
-            <div class="container mx-auto space-y-12 px-4 md:px-6">
-                <div class="flex flex-col items-center justify-center space-y-4 text-center">
+        <!-- Stats Section -->
+        <section class="w-full py-20 border-y bg-background/50 backdrop-blur-sm">
+            <div class="container mx-auto px-4 md:px-6">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
                     <div class="space-y-2">
-                        <h2 class="text-3xl font-headline font-bold tracking-tighter sm:text-5xl">
-                            Why Shop With SalesHostel Digital?
-                        </h2>
-                        <p class="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                            We provide a seamless and enjoyable shopping experience from start to finish.
-                        </p>
+                        <h3 class="text-4xl font-bold text-primary">10k+</h3>
+                        <p class="text-sm text-muted-foreground font-medium uppercase tracking-wider">Transactions</p>
                     </div>
-                </div>
-                <div class="mx-auto grid items-start gap-8 sm:max-w-4xl sm:grid-cols-2 md:gap-12 lg:max-w-5xl lg:grid-cols-2">
-                    <?php foreach ($features as $feature): ?>
-                        <div class="flex gap-4 items-start">
-                            <div class="bg-primary/10 text-primary p-3 rounded-full">
-                                <i data-lucide="<?php echo $feature['icon']; ?>" class="h-6 w-6"></i>
-                            </div>
-                            <div class="grid gap-1">
-                                <h3 class="text-lg font-bold"><?php echo $feature['title']; ?></h3>
-                                <p class="text-sm text-muted-foreground">
-                                    <?php echo $feature['description']; ?>
-                                </p>
-                            </div>
-                        </div>
-                    <?php endforeach; ?>
+                    <div class="space-y-2">
+                        <h3 class="text-4xl font-bold text-primary">500+</h3>
+                        <p class="text-sm text-muted-foreground font-medium uppercase tracking-wider">Active Stores</p>
+                    </div>
+                    <div class="space-y-2">
+                        <h3 class="text-4xl font-bold text-primary">99.9%</h3>
+                        <p class="text-sm text-muted-foreground font-medium uppercase tracking-wider">Uptime</p>
+                    </div>
+                    <div class="space-y-2">
+                        <h3 class="text-4xl font-bold text-primary">24/7</h3>
+                        <p class="text-sm text-muted-foreground font-medium uppercase tracking-wider">Support</p>
+                    </div>
                 </div>
             </div>
         </section>
 
         <!-- CTA Section -->
-        <section class="w-full py-12 md:py-24 lg:py-32 bg-primary text-primary-foreground">
-            <div class="container mx-auto grid items-center justify-center gap-4 px-4 text-center md:px-6">
-                <div class="space-y-3">
-                    <h2 class="text-3xl font-headline font-bold tracking-tighter md:text-4xl/tight">
-                        Ready to Start Shopping?
+        <section class="w-full py-24 relative overflow-hidden">
+            <div class="absolute inset-0 bg-primary/5 -z-10"></div>
+            <div class="container mx-auto px-4 md:px-6 text-center">
+                <div class="max-w-2xl mx-auto space-y-8">
+                    <h2 class="text-3xl font-headline font-bold tracking-tight sm:text-4xl">
+                        Ready to Transform Your Business?
                     </h2>
-                    <p class="mx-auto max-w-[600px] text-primary-foreground/80 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                        Sign up today and get access to fresh products and amazing deals.
+                    <p class="text-muted-foreground text-lg">
+                        Join hundreds of other retailers who are saving time and increasing profits with SalesHostel Digital.
                     </p>
-                </div>
-                <div class="mx-auto w-full max-w-sm space-y-2">
-                    <a href="signup.php" class="inline-flex h-12 items-center justify-center rounded-md bg-background px-8 text-lg font-medium text-primary shadow-lg transition-colors hover:bg-background/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring">
-                        Sign Up for Free
-                    </a>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                        <a href="signup.php" class="inline-flex h-12 items-center justify-center rounded-lg bg-primary px-8 text-base font-medium text-primary-foreground shadow-lg transition-transform hover:scale-105 hover:bg-primary/90">
+                            Get Started Now
+                        </a>
+                    </div>
                 </div>
             </div>
         </section>
     </main>
 </div>
+
+<script>
+    // Initialize GSAP Animations
+    document.addEventListener('DOMContentLoaded', () => {
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Hero Animations
+        gsap.to(".fade-up", {
+            y: 0,
+            opacity: 1,
+            duration: 0.8,
+            stagger: 0.2,
+            ease: "power3.out"
+        });
+
+        // Bento Grid Hover Effect (Tilt)
+        const cards = document.querySelectorAll('.glass-card');
+        cards.forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                // Calculate tilt
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                const rotateX = ((y - centerY) / centerY) * -2; // Max 2deg rotation
+                const rotateY = ((x - centerX) / centerX) * 2;
+
+                gsap.to(card, {
+                    transform: `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`,
+                    duration: 0.4,
+                    ease: "power2.out"
+                });
+            });
+
+            card.addEventListener('mouseleave', () => {
+                gsap.to(card, {
+                    transform: "perspective(1000px) rotateX(0) rotateY(0) scale(1)",
+                    duration: 0.4,
+                    ease: "power2.out"
+                });
+            });
+        });
+    });
+</script>
 
 <?php include 'includes/footer.php'; ?>
