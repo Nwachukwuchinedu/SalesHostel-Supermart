@@ -1,4 +1,4 @@
-<?php include '../includes/head.php'; ?>
+<?php include __DIR__ . '/../includes/head.php'; ?>
 
 <?php
 // Mock Data for Select Options
@@ -34,10 +34,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 ?>
 
 <div class="flex min-h-screen w-full flex-col bg-muted/20">
-    <?php include '../includes/sidebar.php'; ?>
+    <?php include __DIR__ . '/../includes/sidebar.php'; ?>
     
     <div class="flex flex-col sm:gap-4 sm:py-4 md:ml-64 transition-all duration-300">
-        <?php include '../includes/dashboard_header.php'; ?>
+        <?php include __DIR__ . '/../includes/dashboard_header.php'; ?>
         
         <main class="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
             <div class="flex flex-col gap-8 min-w-0 fade-up">

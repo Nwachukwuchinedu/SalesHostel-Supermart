@@ -1,4 +1,4 @@
-<?php include 'includes/head.php'; ?>
+<?php include __DIR__ . '/includes/head.php'; ?>
 
 <div class="min-h-screen w-full flex relative overflow-hidden">
     <!-- Uneven Faded Grid Background -->

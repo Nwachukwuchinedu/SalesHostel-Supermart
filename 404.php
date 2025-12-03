@@ -1,4 +1,4 @@
-<?php include 'includes/head.php'; ?>
+<?php include __DIR__ . '/includes/head.php'; ?>
 <div class="flex min-h-screen flex-col items-center justify-center bg-muted/20 p-4 text-center">
     <div class="glass-card max-w-md space-y-6 p-8 rounded-xl fade-up">
         <div class="flex justify-center">
