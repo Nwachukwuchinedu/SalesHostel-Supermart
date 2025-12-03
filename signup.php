@@ -1,4 +1,8 @@
-<?php include __DIR__ . '/includes/head.php'; ?>
+<?php 
+$pageTitle = "Sign Up";
+$pageDescription = "Create a free SalesHostel Digital account to start shopping for quality products today.";
+include __DIR__ . '/includes/head.php'; 
+?>
 
 <div class="min-h-screen w-full flex relative overflow-hidden">
     <!-- Uneven Faded Grid Background -->
