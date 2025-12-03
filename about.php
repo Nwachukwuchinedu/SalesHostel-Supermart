@@ -1,4 +1,8 @@
-<?php include 'includes/head.php'; ?>
+<?php 
+$pageTitle = "About Us";
+$pageDescription = "Learn about SalesHostel Digital, our mission to provide quality products, and the team dedicated to serving you.";
+include 'includes/head.php'; 
+?>
 <?php include 'includes/header.php'; ?>
 
 <main class="flex-1 pt-16">

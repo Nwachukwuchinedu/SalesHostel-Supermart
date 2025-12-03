@@ -1,4 +1,8 @@
-<?php include __DIR__ . '/includes/head.php'; ?>
+<?php 
+$pageTitle = "Login";
+$pageDescription = "Sign in to your SalesHostel Digital account to track orders and manage your profile.";
+include __DIR__ . '/includes/head.php'; 
+?>
 
 <div class="min-h-screen w-full flex relative overflow-hidden">
     <!-- Uneven Faded Grid Background -->

@@ -1,4 +1,8 @@
-<?php include 'includes/header.php'; ?>
+<?php 
+$pageTitle = "Home";
+$pageDescription = "Your one-stop shop for daily essentials, groceries, and household items. Fast delivery and secure payments.";
+include 'includes/header.php'; 
+?>
 
 <div class="flex flex-col min-h-screen relative overflow-hidden">
     <!-- Uneven Faded Grid Background -->

@@ -1,10 +1,67 @@
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
 <head>
+    <?php
+    $pageTitle = isset($pageTitle) ? $pageTitle . ' | SalesHostel Digital' : 'SalesHostel Digital - Your Daily Essentials Delivered';
+    $pageDescription = isset($pageDescription) ? $pageDescription : 'Shop for groceries, household items, and daily essentials at SalesHostel Digital. Fast delivery, quality products, and secure payments.';
+    $pageUrl = "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+    $pageImage = "https://$_SERVER[HTTP_HOST]/assets/images/og-image.jpg"; // Placeholder
+    ?>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SalesHostel Digital</title>
-    <meta name="description" content="Inventory and sales management">
+    <title><?php echo htmlspecialchars($pageTitle); ?></title>
+    <meta name="description" content="<?php echo htmlspecialchars($pageDescription); ?>">
+    <link rel="canonical" href="<?php echo htmlspecialchars($pageUrl); ?>">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="<?php echo htmlspecialchars($pageUrl); ?>">
+    <meta property="og:title" content="<?php echo htmlspecialchars($pageTitle); ?>">
+    <meta property="og:description" content="<?php echo htmlspecialchars($pageDescription); ?>">
+    <meta property="og:image" content="<?php echo htmlspecialchars($pageImage); ?>">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="<?php echo htmlspecialchars($pageUrl); ?>">
+    <meta property="twitter:title" content="<?php echo htmlspecialchars($pageTitle); ?>">
+    <meta property="twitter:description" content="<?php echo htmlspecialchars($pageDescription); ?>">
+    <meta property="twitter:image" content="<?php echo htmlspecialchars($pageImage); ?>">
+
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "SalesHostel Digital",
+      "url": "https://<?php echo $_SERVER['HTTP_HOST']; ?>",
+      "logo": "https://<?php echo $_SERVER['HTTP_HOST']; ?>/assets/images/logo.png",
+      "sameAs": [
+        "https://www.facebook.com/saleshostel",
+        "https://twitter.com/saleshostel",
+        "https://www.instagram.com/saleshostel"
+      ],
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "telephone": "+234-800-123-4567",
+        "contactType": "customer service",
+        "areaServed": "NG",
+        "availableLanguage": "en"
+      }
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "SalesHostel Digital",
+      "url": "https://<?php echo $_SERVER['HTTP_HOST']; ?>",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://<?php echo $_SERVER['HTTP_HOST']; ?>/search?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
