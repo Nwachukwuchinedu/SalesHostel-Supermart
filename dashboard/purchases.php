@@ -192,7 +192,7 @@ $receiptFooter = '
 </button>
 ';
 
-echo UI::dialog('receipt-modal', 'SalesHostel Digital', $receiptContent, $receiptFooter);
+echo UI::dialog('receipt-modal', 'Shop12mart', $receiptContent, $receiptFooter);
 ?>
 
 <!-- Delete Alert Dialog -->
@@ -498,7 +498,7 @@ echo UI::alertDialog('delete-alert', 'Are you absolutely sure?', 'This action ca
              
              receiptContent.innerHTML = `
                 <div class="text-center mb-6">
-                    <h2 class="text-xl font-bold">SalesHostel Digital</h2>
+                    <h2 class="text-xl font-bold">Shop12mart</h2>
                     <p class="text-muted-foreground text-xs">Receipt #${purchase.purchaseNumber || 'N/A'}</p>
                 </div>
                 

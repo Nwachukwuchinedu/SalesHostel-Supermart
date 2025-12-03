@@ -1,6 +1,6 @@
 <?php 
 $pageTitle = "Sign Up";
-$pageDescription = "Create a free SalesHostel Digital account to start shopping for quality products today.";
+$pageDescription = "Create a free Shop12mart account to start shopping for quality products today.";
 include __DIR__ . '/includes/head.php'; 
 ?>
 
@@ -16,7 +16,7 @@ include __DIR__ . '/includes/head.php';
                     <div class="h-12 w-12 rounded-xl bg-primary flex items-center justify-center text-primary-foreground shadow-lg shadow-primary/25">
                         <i data-lucide="building" class="h-6 w-6"></i>
                     </div>
-                    <span class="font-headline text-3xl font-bold tracking-tight">SalesHostel Digital</span>
+                    <span class="font-headline text-3xl font-bold tracking-tight">Shop12mart</span>
                 </div>
                 <h1 class="text-4xl font-bold tracking-tight mb-4">Join Us Today</h1>
                 <p class="text-lg text-muted-foreground">

@@ -6,7 +6,7 @@
             <a href="/" class="flex items-center gap-2">
                 <i data-lucide="building" class="h-6 w-6 text-primary"></i>
                 <span class="font-headline text-lg font-semibold">
-                    SalesHostel Digital
+                    Shop12mart
                 </span>
             </a>
             <nav class="hidden items-center gap-6 md:flex">

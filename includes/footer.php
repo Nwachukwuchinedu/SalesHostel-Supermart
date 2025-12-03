@@ -5,7 +5,7 @@
                     <a href="/" class="flex items-center gap-2">
                         <i data-lucide="building" class="h-6 w-6 text-primary"></i>
                         <span class="font-headline text-lg font-semibold">
-                            SalesHostel Digital
+                            Shop12mart
                         </span>
                     </a>
                     <p class="text-sm text-muted-foreground max-w-sm">
@@ -31,7 +31,7 @@
                 </div>
             </div>
             <div class="mt-8 pt-8 border-t text-center text-sm text-muted-foreground">
-                <p>&copy; <?php echo date("Y"); ?> SalesHostel Digital. All rights reserved.</p>
+                <p>&copy; <?php echo date("Y"); ?> Shop12mart. All rights reserved.</p>
             </div>
         </div>
     </footer>

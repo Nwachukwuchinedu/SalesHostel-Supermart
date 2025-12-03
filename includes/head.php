@@ -2,8 +2,8 @@
 <html lang="en" class="scroll-smooth">
 <head>
     <?php
-    $pageTitle = isset($pageTitle) ? $pageTitle . ' | SalesHostel Digital' : 'SalesHostel Digital - Your Daily Essentials Delivered';
-    $pageDescription = isset($pageDescription) ? $pageDescription : 'Shop for groceries, household items, and daily essentials at SalesHostel Digital. Fast delivery, quality products, and secure payments.';
+    $pageTitle = isset($pageTitle) ? $pageTitle . ' | Shop12mart' : 'Shop12mart - Your Daily Essentials Delivered';
+    $pageDescription = isset($pageDescription) ? $pageDescription : 'Shop for groceries, household items, and daily essentials at Shop12mart. Fast delivery, quality products, and secure payments.';
     $pageUrl = "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
     $pageImage = "https://$_SERVER[HTTP_HOST]/assets/images/og-image.jpg"; // Placeholder
     ?>
@@ -32,7 +32,7 @@
     {
       "@context": "https://schema.org",
       "@type": "Organization",
-      "name": "SalesHostel Digital",
+      "name": "Shop12mart",
       "url": "https://<?php echo $_SERVER['HTTP_HOST']; ?>",
       "logo": "https://<?php echo $_SERVER['HTTP_HOST']; ?>/assets/images/logo.png",
       "sameAs": [
@@ -53,7 +53,7 @@
     {
       "@context": "https://schema.org",
       "@type": "WebSite",
-      "name": "SalesHostel Digital",
+      "name": "Shop12mart",
       "url": "https://<?php echo $_SERVER['HTTP_HOST']; ?>",
       "potentialAction": {
         "@type": "SearchAction",
