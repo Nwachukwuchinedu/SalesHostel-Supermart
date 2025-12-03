@@ -14,7 +14,7 @@ include __DIR__ . '/includes/head.php';
             <div class="mb-8 fade-up">
                 <div class="flex items-center gap-3 mb-6">
                     <div class="h-12 w-12 rounded-xl bg-primary flex items-center justify-center text-primary-foreground shadow-lg shadow-primary/25">
-                        <i data-lucide="building" class="h-6 w-6"></i>
+                        <i data-lucide="shopping-basket" class="h-6 w-6"></i>
                     </div>
                     <span class="font-headline text-3xl font-bold tracking-tight">Shop12mart</span>
                 </div>
@@ -42,7 +42,7 @@ include __DIR__ . '/includes/head.php';
             <div class="text-center lg:text-left">
                 <div class="flex lg:hidden justify-center mb-6">
                     <div class="h-12 w-12 rounded-xl bg-primary flex items-center justify-center text-primary-foreground shadow-lg shadow-primary/25">
-                        <i data-lucide="building" class="h-6 w-6"></i>
+                        <i data-lucide="shopping-basket" class="h-6 w-6"></i>
                     </div>
                 </div>
                 <h2 class="text-3xl font-bold tracking-tight">Sign in to your account</h2>

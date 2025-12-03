@@ -23,7 +23,7 @@ function isActive($href, $current_page) {
     <div class="flex h-16 items-center border-b border-border/50 px-6">
         <a href="/" class="flex items-center gap-2 font-semibold">
             <div class="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
-                <i data-lucide="building" class="h-5 w-5"></i>
+                <i data-lucide="shopping-basket" class="h-5 w-5"></i>
             </div>
             <span class="font-headline text-lg tracking-tight">SalesHostel</span>
         </a>
@@ -59,7 +59,7 @@ function isActive($href, $current_page) {
     <div class="flex h-16 items-center border-b border-border/50 px-6 justify-between">
         <a href="/" class="flex items-center gap-2 font-semibold">
             <div class="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
-                <i data-lucide="building" class="h-5 w-5"></i>
+                <i data-lucide="shopping-basket" class="h-5 w-5"></i>
             </div>
             <span class="font-headline text-lg tracking-tight">SalesHostel</span>
         </a>

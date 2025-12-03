@@ -4,8 +4,8 @@
     <header id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-transparent">
         <div class="container mx-auto flex h-16 items-center justify-between px-4 md:px-6">
             <a href="/" class="flex items-center gap-2">
-                <i data-lucide="building" class="h-6 w-6 text-primary"></i>
-                <span class="font-headline text-lg font-semibold">
+                <i data-lucide="shopping-basket" class="h-6 w-6 text-primary"></i>
+                <span class="font-headline text-lg font-semibold bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
                     Shop12mart
                 </span>
             </a>
