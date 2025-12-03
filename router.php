@@ -4,9 +4,9 @@
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $root = __DIR__;
 
-// 1. Block direct access to .php files in the URL
-// Check if the URI ends with .php
-if (substr($uri, -4) === '.php') {
+// 1. Block direct access to .php files and explicit /index in the URL
+// Check if the URI ends with .php or /index
+if (substr($uri, -4) === '.php' || substr($uri, -6) === '/index') {
     http_response_code(404);
     include __DIR__ . '/404.php';
     exit;

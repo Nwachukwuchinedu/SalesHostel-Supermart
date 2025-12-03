@@ -1,7 +1,7 @@
 <?php
 $current_page = basename($_SERVER['PHP_SELF'], '.php');
 $nav_links = [
-    ['href' => '/dashboard/index', 'label' => 'Dashboard', 'icon' => 'layout-dashboard'],
+    ['href' => '/dashboard/', 'label' => 'Dashboard', 'icon' => 'layout-dashboard'],
     ['href' => '/dashboard/products', 'label' => 'Products', 'icon' => 'box'],
     ['href' => '/dashboard/supplies', 'label' => 'Supplies', 'icon' => 'truck'],
     ['href' => '/dashboard/purchases', 'label' => 'Purchases', 'icon' => 'shopping-cart'],
@@ -21,7 +21,7 @@ function isActive($href, $current_page) {
 
 <aside class="hidden md:flex w-64 flex-col border-r border-border/50 bg-card/80 backdrop-blur-xl h-screen fixed left-0 top-0 z-30 transition-all duration-300">
     <div class="flex h-16 items-center border-b border-border/50 px-6">
-        <a href="/index" class="flex items-center gap-2 font-semibold">
+        <a href="/" class="flex items-center gap-2 font-semibold">
             <div class="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
                 <i data-lucide="building" class="h-5 w-5"></i>
             </div>
@@ -57,7 +57,7 @@ function isActive($href, $current_page) {
 <div id="mobile-sidebar-overlay" class="fixed inset-0 z-40 bg-background/80 backdrop-blur-sm hidden md:hidden animate-in fade-in duration-200"></div>
 <aside id="mobile-sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-card/95 backdrop-blur-xl border-r border-border/50 shadow-2xl transform -translate-x-full transition-transform duration-300 md:hidden">
     <div class="flex h-16 items-center border-b border-border/50 px-6 justify-between">
-        <a href="/index" class="flex items-center gap-2 font-semibold">
+        <a href="/" class="flex items-center gap-2 font-semibold">
             <div class="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
                 <i data-lucide="building" class="h-5 w-5"></i>
             </div>

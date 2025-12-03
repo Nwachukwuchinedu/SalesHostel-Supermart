@@ -2,7 +2,7 @@
         <div class="container mx-auto py-12 px-4 md:px-6">
             <div class="grid gap-8 md:grid-cols-4">
                 <div class="space-y-4 md:col-span-2">
-                    <a href="/index" class="flex items-center gap-2">
+                    <a href="/" class="flex items-center gap-2">
                         <i data-lucide="building" class="h-6 w-6 text-primary"></i>
                         <span class="font-headline text-lg font-semibold">
                             SalesHostel Digital

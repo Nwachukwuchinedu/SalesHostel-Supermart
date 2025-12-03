@@ -109,7 +109,7 @@
                 await AuthService.login(email, password);
                 showToast('Login successful! Redirecting...', 'success');
                 setTimeout(() => {
-                    window.location.href = '/dashboard/index';
+                    window.location.href = '/dashboard/';
                 }, 1000);
             } catch (error) {
                 showToast(error.message, 'error');

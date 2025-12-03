@@ -3,7 +3,7 @@
     <!-- Navbar -->
     <header id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-transparent">
         <div class="container mx-auto flex h-16 items-center justify-between px-4 md:px-6">
-            <a href="index" class="flex items-center gap-2">
+            <a href="/" class="flex items-center gap-2">
                 <i data-lucide="building" class="h-6 w-6 text-primary"></i>
                 <span class="font-headline text-lg font-semibold">
                     SalesHostel Digital
