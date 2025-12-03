@@ -1,5 +1,4 @@
 <?php 
-http_response_code(404);
 include __DIR__ . '/includes/head.php'; 
 ?>
 <div class="flex min-h-screen flex-col items-center justify-center bg-muted/20 p-4 text-center">
