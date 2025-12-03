@@ -3,16 +3,17 @@ name = "nwachukwuchinedu/SalesHostel-Supermart"
 version = "0.1.0"
 description = "Description for package SalesHostel-Supermart"
 
-[[module]]
-name = "SalesHostel-Supermart"
-source = "SalesHostel-Supermart.wasm"
-abi = "wasi"
+[dependencies]
+"php/php" = "^8.3"
 
-[module.interfaces]
-wasi = "0.1.0-unstable"
+[fs]
+"/app" = "."
 
 [[command]]
-name = "SalesHostel-Supermart"
-module = "SalesHostel-Supermart"
+name = "run"
+module = "php/php:php"
 runner = "wasi"
-web = "php -S 0.0.0.0:8080 -t public"
+
+[command.annotations.wasi]
+env = ["DOCUMENT_ROOT=/app"]
+main-args = ["-t", "/app", "-S", "localhost:8080"]

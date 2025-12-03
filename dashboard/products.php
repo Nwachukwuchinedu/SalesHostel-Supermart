@@ -3,14 +3,14 @@ include '../includes/head.php';
 include '../includes/ui/components.php';
 ?>
 
-<div class="flex min-h-screen w-full flex-col bg-muted/40">
+<div class="flex min-h-screen w-full flex-col bg-muted/20">
     <?php include '../includes/sidebar.php'; ?>
     
-    <div class="flex flex-col sm:gap-4 sm:py-4 md:ml-64">
+    <div class="flex flex-col sm:gap-4 sm:py-4 md:ml-64 transition-all duration-300">
         <?php include '../includes/dashboard_header.php'; ?>
         
         <main class="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
-            <div class="flex flex-col gap-8 min-w-0">
+            <div class="flex flex-col gap-8 min-w-0 fade-up">
                 <div class="flex items-center justify-between">
                     <div>
                         <h1 class="text-3xl font-headline font-bold tracking-tight">
@@ -18,59 +18,100 @@ include '../includes/ui/components.php';
                         </h1>
                         <p class="text-muted-foreground">Manage your product inventory.</p>
                     </div>
-                    <?php echo UI::button('Add Product', ['icon' => 'plus-circle', 'id' => 'addProductBtn']); ?>
+                    <button id="addProductBtn" class="inline-flex items-center justify-center whitespace-nowrap rounded-lg text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 shadow-lg shadow-primary/20 hover:shadow-primary/40 hover:-translate-y-0.5 transition-all duration-200">
+                        <i data-lucide="plus-circle" class="mr-2 h-4 w-4"></i>
+                        Add Product
+                    </button>
                 </div>
 
-                <?php
-                $searchContent = '
-                <div class="relative mt-4">
-                    <i data-lucide="search" class="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground"></i>
-                    ' . UI::input(['type' => 'search', 'placeholder' => 'Search by name, group, or tag...', 'class' => 'pl-8', 'id' => 'searchInput']) . '
-                </div>';
+                <div class="glass-card rounded-xl p-6 space-y-6">
+                    <!-- Search -->
+                    <div class="relative">
+                        <i data-lucide="search" class="absolute left-3 top-3 h-4 w-4 text-muted-foreground"></i>
+                        <input type="search" id="searchInput" placeholder="Search by name, group, or tag..." class="flex h-10 w-full md:w-1/3 rounded-lg border border-input bg-background/50 px-3 py-2 pl-9 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-200 focus:border-primary">
+                    </div>
 
-                echo UI::card(
-                    UI::table([
-                        ['text' => 'Image', 'class' => 'w-[80px]'],
-                        ['text' => 'Name'],
-                        ['text' => 'Group'],
-                        ['text' => 'Stock'],
-                        ['text' => 'Price', 'class' => 'text-right'],
-                        ['text' => 'Actions']
-                    ], 'productsTableBody'),
-                    ['title' => 'Product List', 'description' => 'A list of all products in your store.', 'content' => $searchContent]
-                );
-                ?>
-
-                <div class="grid md:grid-cols-2 gap-8">
-                    <?php
-                    // Unique Names Card
-                    $uniqueNameForm = '
-                    <form id="uniqueNameForm" class="flex gap-2 mb-4">
-                        ' . UI::input(['placeholder' => 'Add new unique name', 'id' => 'newUniqueName']) . '
-                        ' . UI::button('Add', ['type' => 'submit']) . '
-                    </form>
-                    <div class="h-40 overflow-auto">
-                        <div id="uniqueNamesList" class="flex flex-col gap-2">
-                            <!-- Unique Names List -->
+                    <!-- Table -->
+                    <div class="rounded-lg border border-border/50 overflow-hidden">
+                        <div class="relative w-full overflow-auto">
+                            <table class="w-full text-sm text-left">
+                                <thead class="text-xs text-muted-foreground uppercase bg-muted/30">
+                                    <tr>
+                                        <th class="px-6 py-3 font-medium w-[80px]">Image</th>
+                                        <th class="px-6 py-3 font-medium">Name</th>
+                                        <th class="px-6 py-3 font-medium">Group</th>
+                                        <th class="px-6 py-3 font-medium">Stock</th>
+                                        <th class="px-6 py-3 font-medium text-right">Price</th>
+                                        <th class="px-6 py-3 font-medium text-right">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="productsTableBody" class="divide-y divide-border/50 bg-card/50">
+                                    <tr>
+                                        <td colspan="6" class="px-6 py-8 text-center text-muted-foreground">
+                                            <div class="flex flex-col items-center gap-2">
+                                                <i data-lucide="loader-2" class="h-6 w-6 animate-spin text-primary"></i>
+                                                <span>Loading products...</span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
-                    </div>';
-                    
-                    echo UI::card($uniqueNameForm, ['title' => '<div class="flex items-center gap-2"><i data-lucide="text" class="h-5 w-5"></i> Unique Names</div>', 'description' => 'Manage the unique names for product selection.']);
+                    </div>
+                </div>
 
-                    // Groups Card
-                    $groupForm = '
-                    <form id="groupForm" class="flex gap-2 mb-4">
-                        ' . UI::input(['placeholder' => 'Add new group', 'id' => 'newGroup']) . '
-                        ' . UI::button('Add', ['type' => 'submit']) . '
-                    </form>
-                    <div class="h-40 overflow-auto">
-                        <div id="groupsList" class="flex flex-col gap-2">
-                            <!-- Groups List -->
+                <div class="grid md:grid-cols-2 gap-6">
+                    <!-- Unique Names Card -->
+                    <div class="glass-card rounded-xl p-6 space-y-4 fade-up" style="animation-delay: 0.1s;">
+                        <div class="flex items-center gap-2 mb-2">
+                            <div class="p-2 bg-primary/10 rounded-lg text-primary">
+                                <i data-lucide="text" class="h-5 w-5"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-lg">Unique Names</h3>
+                                <p class="text-sm text-muted-foreground">Manage unique names for selection.</p>
+                            </div>
                         </div>
-                    </div>';
+                        
+                        <form id="uniqueNameForm" class="flex gap-2">
+                            <input type="text" id="newUniqueName" placeholder="Add new unique name" class="flex h-10 w-full rounded-lg border border-input bg-background/50 px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-200 focus:border-primary">
+                            <button type="submit" class="inline-flex items-center justify-center whitespace-nowrap rounded-lg text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 shadow-sm">
+                                Add
+                            </button>
+                        </form>
+                        
+                        <div class="h-48 overflow-y-auto pr-2 custom-scrollbar">
+                            <div id="uniqueNamesList" class="flex flex-col gap-2">
+                                <!-- Unique Names List -->
+                            </div>
+                        </div>
+                    </div>
 
-                    echo UI::card($groupForm, ['title' => '<div class="flex items-center gap-2"><i data-lucide="tags" class="h-5 w-5"></i> Groups</div>', 'description' => 'Manage the groups for product categorization.']);
-                    ?>
+                    <!-- Groups Card -->
+                    <div class="glass-card rounded-xl p-6 space-y-4 fade-up" style="animation-delay: 0.2s;">
+                        <div class="flex items-center gap-2 mb-2">
+                            <div class="p-2 bg-blue-500/10 rounded-lg text-blue-600">
+                                <i data-lucide="tags" class="h-5 w-5"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-lg">Groups</h3>
+                                <p class="text-sm text-muted-foreground">Manage product categorization.</p>
+                            </div>
+                        </div>
+
+                        <form id="groupForm" class="flex gap-2">
+                            <input type="text" id="newGroup" placeholder="Add new group" class="flex h-10 w-full rounded-lg border border-input bg-background/50 px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-200 focus:border-primary">
+                            <button type="submit" class="inline-flex items-center justify-center whitespace-nowrap rounded-lg text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 shadow-sm">
+                                Add
+                            </button>
+                        </form>
+                        
+                        <div class="h-48 overflow-y-auto pr-2 custom-scrollbar">
+                            <div id="groupsList" class="flex flex-col gap-2">
+                                <!-- Groups List -->
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </main>
@@ -80,47 +121,64 @@ include '../includes/ui/components.php';
 <!-- Product Modal -->
 <?php
 $productFormContent = '
-<form id="productForm" class="grid gap-4">
+<form id="productForm" class="grid gap-6">
     <input type="hidden" name="id" id="productId">
-    <div class="grid gap-2">
-        ' . UI::label('Name') . '
-        ' . UI::input(['name' => 'name', 'id' => 'productName', 'placeholder' => 'Product Name', 'required' => true]) . '
+    <div class="space-y-4 max-h-[60vh] overflow-y-auto pr-2 custom-scrollbar">
+        <div class="grid gap-2">
+            <label class="text-sm font-medium leading-none" for="productName">Name</label>
+            <input type="text" name="name" id="productName" placeholder="Product Name" required class="flex h-10 w-full rounded-lg border border-input bg-background/50 px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-200 focus:border-primary">
+        </div>
+        
+        <div class="grid grid-cols-2 gap-4">
+            <div class="grid gap-2">
+                <label class="text-sm font-medium leading-none" for="productGroup">Group</label>
+                <select name="group" id="productGroup" class="flex h-10 w-full items-center justify-between rounded-lg border border-input bg-background/50 px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-200 focus:border-primary">
+                    <option value="">Select Group</option>
+                </select>
+            </div>
+            <div class="grid gap-2">
+                <label class="text-sm font-medium leading-none" for="productUniqueName">Unique Name (Optional)</label>
+                <select name="uniqueName" id="productUniqueName" class="flex h-10 w-full items-center justify-between rounded-lg border border-input bg-background/50 px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-200 focus:border-primary">
+                    <option value="">Select Unique Name</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+            <div class="grid gap-2">
+                <label class="text-sm font-medium leading-none" for="productPrice">Selling Price</label>
+                <input type="number" name="sellingPrice" id="productPrice" step="0.01" placeholder="0.00" required class="flex h-10 w-full rounded-lg border border-input bg-background/50 px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-200 focus:border-primary">
+            </div>
+            <div class="grid gap-2">
+                <label class="text-sm font-medium leading-none" for="productCost">Cost Price</label>
+                <input type="number" name="costPrice" id="productCost" step="0.01" placeholder="0.00" required class="flex h-10 w-full rounded-lg border border-input bg-background/50 px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-200 focus:border-primary">
+            </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+            <div class="grid gap-2">
+                <label class="text-sm font-medium leading-none" for="productQuantity">Quantity Available</label>
+                <input type="number" name="quantityAvailable" id="productQuantity" placeholder="0" required class="flex h-10 w-full rounded-lg border border-input bg-background/50 px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-200 focus:border-primary">
+            </div>
+            <div class="grid gap-2">
+                <label class="text-sm font-medium leading-none" for="productUnit">Quantity Unit</label>
+                <input type="text" name="quantityUnit" id="productUnit" placeholder="e.g., kg, pcs" required class="flex h-10 w-full rounded-lg border border-input bg-background/50 px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-200 focus:border-primary">
+            </div>
+        </div>
+
+        <div class="grid gap-2">
+            <label class="text-sm font-medium leading-none" for="productImage">Image URL</label>
+            <input type="text" name="imageUrl" id="productImage" placeholder="https://..." class="flex h-10 w-full rounded-lg border border-input bg-background/50 px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-200 focus:border-primary">
+        </div>
     </div>
-    <div class="grid gap-2">
-        ' . UI::label('Group') . '
-        <select name="group" id="productGroup" class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
-            <option value="">Select Group</option>
-        </select>
-    </div>
-    <div class="grid gap-2">
-        ' . UI::label('Unique Name (Optional)') . '
-        <select name="uniqueName" id="productUniqueName" class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
-            <option value="">Select Unique Name</option>
-        </select>
-    </div>
-    <div class="grid gap-2">
-        ' . UI::label('Selling Price') . '
-        ' . UI::input(['name' => 'sellingPrice', 'id' => 'productPrice', 'type' => 'number', 'step' => '0.01', 'placeholder' => '0.00', 'required' => true]) . '
-    </div>
-     <div class="grid gap-2">
-        ' . UI::label('Cost Price') . '
-        ' . UI::input(['name' => 'costPrice', 'id' => 'productCost', 'type' => 'number', 'step' => '0.01', 'placeholder' => '0.00', 'required' => true]) . '
-    </div>
-    <div class="grid gap-2">
-        ' . UI::label('Quantity Available') . '
-        ' . UI::input(['name' => 'quantityAvailable', 'id' => 'productQuantity', 'type' => 'number', 'placeholder' => '0', 'required' => true]) . '
-    </div>
-     <div class="grid gap-2">
-        ' . UI::label('Quantity Unit') . '
-        ' . UI::input(['name' => 'quantityUnit', 'id' => 'productUnit', 'placeholder' => 'e.g., kg, pcs', 'required' => true]) . '
-    </div>
-    <div class="grid gap-2">
-        ' . UI::label('Image URL') . '
-        ' . UI::input(['name' => 'imageUrl', 'id' => 'productImage', 'placeholder' => 'https://...']) . '
-    </div>
-    <div class="flex justify-end gap-2 mt-4">
-        ' . UI::button('Cancel', ['variant' => 'outline', 'type' => 'button', 'attrs' => 'onclick="document.getElementById(\'product-modal\').classList.add(\'hidden\')"']) . '
-        ' . UI::button('Save Product', ['type' => 'submit']) . '
+
+    <div class="flex justify-end gap-2 pt-4 border-t border-border/50">
+        <button type="button" onclick="document.getElementById(\'product-modal\').classList.add(\'hidden\')" class="inline-flex items-center justify-center whitespace-nowrap rounded-lg text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2">
+            Cancel
+        </button>
+        <button type="submit" class="inline-flex items-center justify-center whitespace-nowrap rounded-lg text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 shadow-lg shadow-primary/20">
+            Save Product
+        </button>
     </div>
 </form>
 ';
@@ -132,14 +190,18 @@ echo UI::dialog('product-modal', 'Add New Product', $productFormContent);
 <?php
 $editFormContent = '
 <div class="grid gap-4 py-4">
-    <div class="grid grid-cols-4 items-center gap-4">
-        ' . UI::label('Name', 'edit-value', 'text-right') . '
-        ' . UI::input(['id' => 'edit-value', 'class' => 'col-span-3']) . '
+    <div class="grid gap-2">
+        <label class="text-sm font-medium leading-none" for="edit-value">Name</label>
+        <input type="text" id="edit-value" class="flex h-10 w-full rounded-lg border border-input bg-background/50 px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-200 focus:border-primary">
     </div>
 </div>
 <div class="flex justify-end gap-2">
-    ' . UI::button('Cancel', ['variant' => 'outline', 'type' => 'button', 'attrs' => 'onclick="document.getElementById(\'edit-modal\').classList.add(\'hidden\')"']) . '
-    ' . UI::button('Save Changes', ['id' => 'saveEditBtn']) . '
+    <button type="button" onclick="document.getElementById(\'edit-modal\').classList.add(\'hidden\')" class="inline-flex items-center justify-center whitespace-nowrap rounded-lg text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2">
+        Cancel
+    </button>
+    <button type="button" id="saveEditBtn" class="inline-flex items-center justify-center whitespace-nowrap rounded-lg text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 shadow-lg shadow-primary/20">
+        Save Changes
+    </button>
 </div>
 ';
 echo UI::dialog('edit-modal', 'Edit Item', $editFormContent);
@@ -157,6 +219,17 @@ echo UI::alertDialog('delete-alert', 'Are you absolutely sure?', 'This action ca
 <script src="/assets/js/main.js"></script>
 <script>
     lucide.createIcons();
+    
+    // GSAP Animations
+    document.addEventListener('DOMContentLoaded', () => {
+        gsap.to(".fade-up", {
+            y: 0,
+            opacity: 1,
+            duration: 0.6,
+            stagger: 0.1,
+            ease: "power2.out"
+        });
+    });
     
     // Sidebar Logic
     const openSidebarBtn = document.getElementById('open-sidebar');
@@ -245,31 +318,35 @@ echo UI::alertDialog('delete-alert', 'Are you absolutely sure?', 'This action ca
 
     function renderProducts(products) {
         if (products.length === 0) {
-            productsTableBody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-muted-foreground">No products found.</td></tr>`;
+            productsTableBody.innerHTML = `<tr><td colspan="6" class="px-6 py-8 text-center text-muted-foreground">No products found.</td></tr>`;
             return;
         }
 
         productsTableBody.innerHTML = products.map(product => `
-            <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
-                <td class="p-4 align-middle [&:has([role=checkbox])]:pr-0">
-                    <span class="relative flex h-9 w-9 shrink-0 overflow-hidden rounded-full">
-                        <img class="aspect-square h-full w-full object-cover" src="${product.imageUrl || 'https://via.placeholder.com/40'}" alt="${product.name}" />
+            <tr class="hover:bg-muted/30 transition-colors">
+                <td class="px-6 py-4">
+                    <span class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-lg border border-border/50">
+                        <img class="aspect-square h-full w-full object-cover" src="${product.imageUrl || 'https://via.placeholder.com/40'}" alt="${product.name}" onerror="this.src='https://via.placeholder.com/40'" />
                     </span>
                 </td>
-                <td class="p-4 align-middle [&:has([role=checkbox])]:pr-0 font-medium">${product.name}</td>
-                <td class="p-4 align-middle [&:has([role=checkbox])]:pr-0">${product.group}</td>
-                <td class="p-4 align-middle [&:has([role=checkbox])]:pr-0">${product.quantityAvailable} ${product.quantityUnit}</td>
-                <td class="p-4 align-middle [&:has([role=checkbox])]:pr-0 text-right">₦${parseFloat(product.sellingPrice).toFixed(2)}</td>
-                <td class="p-4 align-middle [&:has([role=checkbox])]:pr-0">
+                <td class="px-6 py-4 font-medium">${product.name}</td>
+                <td class="px-6 py-4">
+                    <span class="inline-flex items-center rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-700/10">${product.group}</span>
+                </td>
+                <td class="px-6 py-4 text-muted-foreground">${product.quantityAvailable} ${product.quantityUnit}</td>
+                <td class="px-6 py-4 text-right font-medium">₦${parseFloat(product.sellingPrice).toLocaleString('en-NG', { minimumFractionDigits: 2 })}</td>
+                <td class="px-6 py-4 text-right">
                     <div class="flex justify-end relative group/dropdown">
-                        <button class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-8 w-8">
+                        <button class="inline-flex items-center justify-center rounded-lg text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-8 w-8">
                             <i data-lucide="more-horizontal" class="h-4 w-4"></i>
                         </button>
-                        <div class="absolute right-0 top-8 w-32 rounded-md border bg-popover p-1 text-popover-foreground shadow-md hidden group-hover/dropdown:block z-10 bg-white">
-                            <div class="relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50" onclick="openEditProduct('${product.id}')">
+                        <div class="absolute right-0 top-8 w-32 rounded-lg border bg-popover p-1 text-popover-foreground shadow-lg hidden group-hover/dropdown:block z-10 bg-white animate-in fade-in zoom-in-95 duration-200">
+                            <div class="relative flex cursor-pointer select-none items-center rounded-md px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground" onclick="openEditProduct('${product.id}')">
+                                <i data-lucide="edit" class="mr-2 h-3.5 w-3.5 text-muted-foreground"></i>
                                 Edit
                             </div>
-                            <div class="relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 text-red-600" onclick="openDeleteAlert('product', '${product.id}', '${product.name}')">
+                            <div class="relative flex cursor-pointer select-none items-center rounded-md px-2 py-1.5 text-sm outline-none transition-colors hover:bg-red-50 hover:text-red-600 text-red-600" onclick="openDeleteAlert('product', '${product.id}', '${product.name}')">
+                                <i data-lucide="trash-2" class="mr-2 h-3.5 w-3.5"></i>
                                 Delete
                             </div>
                         </div>
@@ -282,18 +359,18 @@ echo UI::alertDialog('delete-alert', 'Are you absolutely sure?', 'This action ca
 
     function renderGroups(groups) {
         groupsList.innerHTML = groups.map(group => `
-            <div class="flex items-center justify-between p-2 rounded-md border group">
-                <span>${group.name}</span>
+            <div class="flex items-center justify-between p-3 rounded-lg border border-border/50 bg-background/50 hover:bg-muted/50 transition-colors group">
+                <span class="font-medium text-sm">${group.name}</span>
                 <div class="relative group/dropdown">
-                    <button class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-6 w-6 opacity-0 group-hover:opacity-100">
+                    <button class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity">
                         <i data-lucide="more-horizontal" class="h-4 w-4"></i>
                     </button>
-                    <div class="absolute right-0 top-6 w-32 rounded-md border bg-popover p-1 text-popover-foreground shadow-md hidden group-hover/dropdown:block z-10 bg-white">
-                         <div class="relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground" onclick="openEditItem('group', '${group.id}', '${group.name}')">
-                            <i data-lucide="edit" class="mr-2 h-4 w-4"></i> Edit
+                    <div class="absolute right-0 top-6 w-32 rounded-lg border bg-popover p-1 text-popover-foreground shadow-lg hidden group-hover/dropdown:block z-10 bg-white animate-in fade-in zoom-in-95 duration-200">
+                         <div class="relative flex cursor-pointer select-none items-center rounded-md px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground" onclick="openEditItem('group', '${group.id}', '${group.name}')">
+                            <i data-lucide="edit" class="mr-2 h-3.5 w-3.5 text-muted-foreground"></i> Edit
                         </div>
-                        <div class="relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground text-red-600" onclick="openDeleteAlert('group', '${group.id}', '${group.name}')">
-                            <i data-lucide="trash-2" class="mr-2 h-4 w-4"></i> Delete
+                        <div class="relative flex cursor-pointer select-none items-center rounded-md px-2 py-1.5 text-sm outline-none transition-colors hover:bg-red-50 hover:text-red-600 text-red-600" onclick="openDeleteAlert('group', '${group.id}', '${group.name}')">
+                            <i data-lucide="trash-2" class="mr-2 h-3.5 w-3.5"></i> Delete
                         </div>
                     </div>
                 </div>
@@ -304,18 +381,18 @@ echo UI::alertDialog('delete-alert', 'Are you absolutely sure?', 'This action ca
 
     function renderUniqueNames(names) {
         uniqueNamesList.innerHTML = names.map(name => `
-            <div class="flex items-center justify-between p-2 rounded-md border group">
-                <span>${name.name}</span>
+            <div class="flex items-center justify-between p-3 rounded-lg border border-border/50 bg-background/50 hover:bg-muted/50 transition-colors group">
+                <span class="font-medium text-sm">${name.name}</span>
                 <div class="relative group/dropdown">
-                    <button class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-6 w-6 opacity-0 group-hover:opacity-100">
+                    <button class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity">
                         <i data-lucide="more-horizontal" class="h-4 w-4"></i>
                     </button>
-                    <div class="absolute right-0 top-6 w-32 rounded-md border bg-popover p-1 text-popover-foreground shadow-md hidden group-hover/dropdown:block z-10 bg-white">
-                         <div class="relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground" onclick="openEditItem('uniqueName', '${name.id}', '${name.name}')">
-                            <i data-lucide="edit" class="mr-2 h-4 w-4"></i> Edit
+                    <div class="absolute right-0 top-6 w-32 rounded-lg border bg-popover p-1 text-popover-foreground shadow-lg hidden group-hover/dropdown:block z-10 bg-white animate-in fade-in zoom-in-95 duration-200">
+                         <div class="relative flex cursor-pointer select-none items-center rounded-md px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground" onclick="openEditItem('uniqueName', '${name.id}', '${name.name}')">
+                            <i data-lucide="edit" class="mr-2 h-3.5 w-3.5 text-muted-foreground"></i> Edit
                         </div>
-                        <div class="relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground text-red-600" onclick="openDeleteAlert('uniqueName', '${name.id}', '${name.name}')">
-                            <i data-lucide="trash-2" class="mr-2 h-4 w-4"></i> Delete
+                        <div class="relative flex cursor-pointer select-none items-center rounded-md px-2 py-1.5 text-sm outline-none transition-colors hover:bg-red-50 hover:text-red-600 text-red-600" onclick="openDeleteAlert('uniqueName', '${name.id}', '${name.name}')">
+                            <i data-lucide="trash-2" class="mr-2 h-3.5 w-3.5"></i> Delete
                         </div>
                     </div>
                 </div>
