@@ -1,6 +1,6 @@
 <?php 
 $pageTitle = "Contact Us";
-$pageDescription = "Get in touch with SalesHostel Digital. We are here to help with any questions or support you need.";
+$pageDescription = "Get in touch with Shop12mart. We are here to help with any questions or support you need.";
 include 'includes/head.php'; 
 ?>
 <?php include 'includes/header.php'; ?>

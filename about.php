@@ -1,6 +1,6 @@
 <?php 
 $pageTitle = "About Us";
-$pageDescription = "Learn about SalesHostel Digital, our mission to provide quality products, and the team dedicated to serving you.";
+$pageDescription = "Learn about Shop12mart, our mission to provide quality products, and the team dedicated to serving you.";
 include 'includes/head.php'; 
 ?>
 <?php include 'includes/header.php'; ?>
@@ -30,7 +30,7 @@ include 'includes/head.php';
                         Quality Products, Delivered with Care
                     </h2>
                     <p class="mx-auto max-w-[700px] text-muted-foreground md:text-xl/relaxed">
-                        At SalesHostel Digital, we believe that everyone deserves access to fresh, high-quality products without the hassle. Our mission is to bridge the gap between local suppliers and your doorstep, ensuring you get the best value for your money.
+                        At Shop12mart, we believe that everyone deserves access to fresh, high-quality products without the hassle. Our mission is to bridge the gap between local suppliers and your doorstep, ensuring you get the best value for your money.
                     </p>
                 </div>
                 <div class="flex flex-col items-start space-y-4">
