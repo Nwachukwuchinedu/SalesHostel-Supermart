@@ -295,6 +295,32 @@ const SupplyService = {
     }
 };
 
+const UserService = {
+    getAllUsers: async (params = {}) => {
+        const query = new URLSearchParams(params).toString();
+        const response = await api.get(`/api/v1/users?${query}`);
+        if (!response.ok) throw new Error('Failed to fetch users');
+        return response.json();
+    },
+    getUserById: async (id) => {
+        const response = await api.get(`/api/v1/users/${id}`);
+        if (!response.ok) throw new Error('Failed to fetch user');
+        return response.json();
+    },
+    updateUser: async (id, data) => {
+        const response = await api.put(`/api/v1/users/${id}`, data);
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.message || 'Failed to update user');
+        return result;
+    },
+    deleteUser: async (id) => {
+        const response = await api.delete(`/api/v1/users/${id}`);
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.message || 'Failed to delete user');
+        return result;
+    }
+};
+
 const PublicService = {
     getAllGroups: async (params = {}) => {
         const query = new URLSearchParams(params).toString();

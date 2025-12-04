@@ -10,6 +10,7 @@ $nav_links = [
     ['href' => '/dashboard/supplies', 'label' => 'Supplies', 'icon' => 'truck', 'roles' => ['Admin', 'Supplier']],
     ['href' => '/dashboard/purchases', 'label' => 'Purchases', 'icon' => 'shopping-cart', 'roles' => ['Admin', 'Staff']],
     ['href' => '/dashboard/reports', 'label' => 'Reports', 'icon' => 'bar-chart', 'roles' => ['Admin', 'Staff']],
+    ['href' => '/dashboard/users', 'label' => 'Users', 'icon' => 'users', 'roles' => ['Admin']],
 ];
 
 // Helper function to check if link is active

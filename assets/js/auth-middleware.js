@@ -6,6 +6,7 @@ const protectedRoutes = [
     '/dashboard/purchases',
     '/dashboard/supplies',
     '/dashboard/reports',
+    '/dashboard/users',
     '/user/',
     '/user/orders',
     '/user/shop',
@@ -13,7 +14,7 @@ const protectedRoutes = [
 ];
 
 const rolePermissions = {
-    'Admin': ['/dashboard/', '/dashboard/products', '/dashboard/purchases', '/dashboard/supplies', '/dashboard/reports'],
+    'Admin': ['/dashboard/', '/dashboard/products', '/dashboard/purchases', '/dashboard/supplies', '/dashboard/reports', '/dashboard/users'],
     'Staff': ['/dashboard/', '/dashboard/products', '/dashboard/purchases', '/dashboard/reports'],
     'Supplier': ['/dashboard/', '/dashboard/supplies'],
     'Customer': ['/user/', '/user/orders', '/user/shop', '/user/cart']
