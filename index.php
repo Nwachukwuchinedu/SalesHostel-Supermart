@@ -338,7 +338,7 @@ include 'includes/header.php';
                         <div class="aspect-square bg-muted/50 relative overflow-hidden">
                             ${imageHtml}
                             <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
-                                <button class="w-full bg-primary text-primary-foreground py-2 rounded-lg font-medium text-sm shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">Add to Cart</button>
+                                <button onclick='addToCart(${JSON.stringify({id: product.id, name: product.name, price: product.sellingPrice, image: product.images[0] || null}).replace(/'/g, "&#39;")})' class="w-full bg-primary text-primary-foreground py-2 rounded-lg font-medium text-sm shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">Add to Cart</button>
                             </div>
                             ${product.quantityAvailable < 10 ? `<span class="absolute top-2 right-2 bg-red-500 text-white text-[10px] font-bold px-2 py-1 rounded-full">Low Stock</span>` : ''}
                         </div>
@@ -377,6 +377,11 @@ include 'includes/header.php';
             grid.innerHTML = '<div class="col-span-full text-center py-12 text-red-500">Failed to load products. Please try again later.</div>';
         }
     }
+
+    // Wrapper for CartService.addToCart to be used in inline onclick
+    window.addToCart = (product) => {
+        CartService.addToCart(product);
+    };
 
     // Listen for hash changes to re-fetch if filtering is implemented
     window.addEventListener('hashchange', () => {

@@ -97,3 +97,54 @@ function showToast(message, type = 'default') {
         }, 300);
     }, 3000);
 }
+
+// Cart Logic
+const CartService = {
+    getCart: () => {
+        return JSON.parse(localStorage.getItem('cart') || '[]');
+    },
+
+    saveCart: (cart) => {
+        localStorage.setItem('cart', JSON.stringify(cart));
+        CartService.updateCartCount();
+        // Dispatch event for other components to listen
+        window.dispatchEvent(new Event('cartUpdated'));
+    },
+
+    addToCart: (product) => {
+        const cart = CartService.getCart();
+        const existingItemIndex = cart.findIndex(item => item.id === product.id);
+
+        if (existingItemIndex > -1) {
+            cart[existingItemIndex].quantity += 1;
+            showToast('Item quantity updated in cart', 'success');
+        } else {
+            cart.push({ ...product, quantity: 1 });
+            showToast('Item added to cart', 'success');
+        }
+
+        CartService.saveCart(cart);
+    },
+
+    updateCartCount: () => {
+        const cart = CartService.getCart();
+        const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+
+        const badges = [document.getElementById('cart-count'), document.getElementById('mobile-cart-count')];
+        badges.forEach(badge => {
+            if (badge) {
+                badge.textContent = count;
+                if (count > 0) {
+                    badge.classList.remove('hidden');
+                } else {
+                    badge.classList.add('hidden');
+                }
+            }
+        });
+    }
+};
+
+// Initialize Cart Count
+document.addEventListener('DOMContentLoaded', () => {
+    CartService.updateCartCount();
+});
