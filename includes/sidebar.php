@@ -29,7 +29,7 @@ function isActive($href, $current_page) {
             <div class="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
                 <i data-lucide="shopping-basket" class="h-5 w-5"></i>
             </div>
-            <span class="font-headline text-lg tracking-tight">SalesHostel</span>
+            <span class="font-headline text-lg tracking-tight">Shop12mart</span>
         </a>
     </div>
     <div class="flex-1 overflow-auto py-4">
@@ -66,7 +66,7 @@ function isActive($href, $current_page) {
             <div class="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
                 <i data-lucide="shopping-basket" class="h-5 w-5"></i>
             </div>
-            <span class="font-headline text-lg tracking-tight">SalesHostel</span>
+            <span class="font-headline text-lg tracking-tight">Shop12mart</span>
         </a>
         <button id="close-sidebar" class="md:hidden text-muted-foreground hover:text-foreground">
             <i data-lucide="x" class="h-5 w-5"></i>
