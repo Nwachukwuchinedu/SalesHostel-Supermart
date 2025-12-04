@@ -158,11 +158,11 @@ $productFormContent = '
         <div class="grid grid-cols-2 gap-4">
             <div class="grid gap-2">
                 <label class="text-sm font-medium leading-none" for="productQuantity">Quantity Available</label>
-                <input type="number" name="quantityAvailable" id="productQuantity" placeholder="0" required class="flex h-10 w-full rounded-lg border border-input bg-background/50 px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-200 focus:border-primary">
+                <input type="number" name="quantityAvailable" id="productQuantity" placeholder="0" class="flex h-10 w-full rounded-lg border border-input bg-background/50 px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-200 focus:border-primary">
             </div>
             <div class="grid gap-2">
                 <label class="text-sm font-medium leading-none" for="productUnit">Quantity Unit</label>
-                <input type="text" name="quantityUnit" id="productUnit" placeholder="e.g., kg, pcs" required class="flex h-10 w-full rounded-lg border border-input bg-background/50 px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-200 focus:border-primary">
+                <input type="text" name="quantityUnit" id="productUnit" placeholder="e.g., kg, pcs" class="flex h-10 w-full rounded-lg border border-input bg-background/50 px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-200 focus:border-primary">
             </div>
         </div>
 

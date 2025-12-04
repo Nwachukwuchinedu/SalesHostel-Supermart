@@ -34,12 +34,12 @@
       "@context": "https://schema.org",
       "@type": "Organization",
       "name": "Shop12mart",
-      "url": "https://<?php echo $_SERVER['HTTP_HOST']; ?>",
-      "logo": "https://<?php echo $_SERVER['HTTP_HOST']; ?>/assets/images/logo.png",
+      "url": "https://shop12mart.com/",
+      "logo": "https://shop12mart.com/assets/images/favicon.svg",
       "sameAs": [
-        "https://www.facebook.com/saleshostel",
-        "https://twitter.com/saleshostel",
-        "https://www.instagram.com/saleshostel"
+        "https://www.facebook.com/shop12mart",
+        "https://twitter.com/shop12mart",
+        "https://www.instagram.com/shop12mart"
       ],
       "contactPoint": {
         "@type": "ContactPoint",
@@ -55,10 +55,10 @@
       "@context": "https://schema.org",
       "@type": "WebSite",
       "name": "Shop12mart",
-      "url": "https://<?php echo $_SERVER['HTTP_HOST']; ?>",
+      "url": "https://shop12mart.com/",
       "potentialAction": {
         "@type": "SearchAction",
-        "target": "https://<?php echo $_SERVER['HTTP_HOST']; ?>/search?q={search_term_string}",
+        "target": "https://shop12mart.com/search?q={search_term_string}",
         "query-input": "required name=search_term_string"
       }
     }
