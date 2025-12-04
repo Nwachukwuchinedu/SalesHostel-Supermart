@@ -113,6 +113,20 @@ include __DIR__ . '/includes/head.php';
                 await AuthService.login(email, password);
                 showToast('Login successful! Redirecting...', 'success');
                 
+                // Sync local cart to server
+                const localCart = JSON.parse(localStorage.getItem('cart') || '[]');
+                if (localCart.length > 0) {
+                    try {
+                        for (const item of localCart) {
+                            await CartService.addToCart(item.id || item._id, item.quantity);
+                        }
+                        localStorage.removeItem('cart');
+                        showToast('Cart synced successfully', 'success');
+                    } catch (syncError) {
+                        console.error('Failed to sync cart:', syncError);
+                    }
+                }
+
                 const user = AuthService.getCurrentUser();
                 setTimeout(() => {
                     if (user && user.role === 'Customer') {

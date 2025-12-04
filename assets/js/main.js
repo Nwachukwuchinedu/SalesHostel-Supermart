@@ -99,38 +99,75 @@ function showToast(message, type = 'default') {
 }
 
 // Cart Logic
-const CartService = {
-    getCart: () => {
-        return JSON.parse(localStorage.getItem('cart') || '[]');
+// Cart Logic
+const CartManager = {
+    getCart: async () => {
+        if (AuthService.isAuthenticated()) {
+            try {
+                const res = await CartService.getCart();
+                return res.data.items.map(item => ({
+                    ...item.product,
+                    id: item.product._id,
+                    quantity: item.quantity,
+                    cartItemId: item._id
+                }));
+            } catch (error) {
+                console.error('Failed to fetch cart from server', error);
+                return [];
+            }
+        } else {
+            return JSON.parse(localStorage.getItem('cart') || '[]');
+        }
     },
 
     saveCart: (cart) => {
-        localStorage.setItem('cart', JSON.stringify(cart));
-        CartService.updateCartCount();
-        // Dispatch event for other components to listen
-        window.dispatchEvent(new Event('cartUpdated'));
+        if (!AuthService.isAuthenticated()) {
+            localStorage.setItem('cart', JSON.stringify(cart));
+            CartManager.updateCartCount();
+            window.dispatchEvent(new Event('cartUpdated'));
+        }
     },
 
-    addToCart: (product) => {
-        const cart = CartService.getCart();
-        const existingItemIndex = cart.findIndex(item => item.id === product.id);
-
-        if (existingItemIndex > -1) {
-            cart[existingItemIndex].quantity += 1;
-            showToast('Item quantity updated in cart', 'success');
+    addToCart: async (product) => {
+        if (AuthService.isAuthenticated()) {
+            try {
+                await CartService.addToCart(product.id || product._id, 1);
+                showToast('Item added to cart', 'success');
+                CartManager.updateCartCount();
+                window.dispatchEvent(new Event('cartUpdated'));
+            } catch (error) {
+                showToast(error.message, 'error');
+            }
         } else {
-            cart.push({ ...product, quantity: 1 });
-            showToast('Item added to cart', 'success');
+            const cart = await CartManager.getCart();
+            const existingItemIndex = cart.findIndex(item => item.id === product.id);
+
+            if (existingItemIndex > -1) {
+                cart[existingItemIndex].quantity += 1;
+                showToast('Item quantity updated in cart', 'success');
+            } else {
+                cart.push({ ...product, quantity: 1 });
+                showToast('Item added to cart', 'success');
+            }
+            CartManager.saveCart(cart);
+        }
+    },
+
+    updateCartCount: async () => {
+        let count = 0;
+        if (AuthService.isAuthenticated()) {
+            try {
+                const res = await CartService.getCart();
+                count = res.data.totalQuantity || 0;
+            } catch (error) {
+                console.error('Failed to fetch cart count', error);
+            }
+        } else {
+            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            count = cart.reduce((sum, item) => sum + item.quantity, 0);
         }
 
-        CartService.saveCart(cart);
-    },
-
-    updateCartCount: () => {
-        const cart = CartService.getCart();
-        const count = cart.reduce((sum, item) => sum + item.quantity, 0);
-
-        const badges = [document.getElementById('cart-count'), document.getElementById('mobile-cart-count')];
+        const badges = [document.getElementById('cart-count'), document.getElementById('mobile-cart-count'), document.getElementById('header-cart-count')];
         badges.forEach(badge => {
             if (badge) {
                 badge.textContent = count;
@@ -146,5 +183,5 @@ const CartService = {
 
 // Initialize Cart Count
 document.addEventListener('DOMContentLoaded', () => {
-    CartService.updateCartCount();
+    CartManager.updateCartCount();
 });

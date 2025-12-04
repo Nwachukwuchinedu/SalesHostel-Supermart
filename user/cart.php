@@ -90,12 +90,24 @@
         window.addEventListener('cartUpdated', renderCart);
     });
 
-    function renderCart() {
-        const cart = CartService.getCart();
+    async function renderCart() {
         const container = document.getElementById('cart-items-container');
         const subtotalEl = document.getElementById('cart-subtotal');
         const totalEl = document.getElementById('cart-total');
         const checkoutBtn = document.getElementById('checkout-btn');
+        
+        // Only show full loading state if container is empty
+        if (!container.hasChildNodes() || container.innerHTML.trim() === '') {
+            container.innerHTML = `
+                <div class="flex flex-col items-center justify-center py-12">
+                    <i data-lucide="loader-2" class="h-8 w-8 animate-spin text-primary"></i>
+                    <p class="text-muted-foreground mt-2">Loading cart...</p>
+                </div>
+            `;
+            lucide.createIcons();
+        }
+
+        const cart = await CartManager.getCart();
 
         if (cart.length === 0) {
             container.innerHTML = `
@@ -121,14 +133,24 @@
         let total = 0;
 
         container.innerHTML = cart.map(item => {
-            const itemTotal = item.price * item.quantity;
+            // Handle different price field names from backend vs local
+            const price = parseFloat(item.sellingPrice || item.price || 0);
+            const itemTotal = price * item.quantity;
             total += itemTotal;
             
+            // Handle different image structures
+            let imageUrl = null;
+            if (item.images && item.images.length > 0) imageUrl = item.images[0];
+            else if (item.image) imageUrl = item.image;
+
+            // ID for operations
+            const itemId = item.id || item._id;
+
             return `
-                <div class="flex gap-4 p-4 bg-card/80 backdrop-blur-sm border rounded-xl shadow-sm transition-all hover:shadow-md">
+                <div id="row-${itemId}" class="flex gap-4 p-4 bg-card/80 backdrop-blur-sm border rounded-xl shadow-sm transition-all hover:shadow-md">
                     <div class="h-24 w-24 rounded-lg bg-muted overflow-hidden flex-shrink-0 border border-border/50">
-                        ${item.image 
-                            ? `<img src="${item.image}" alt="${item.name}" class="h-full w-full object-cover">`
+                        ${imageUrl 
+                            ? `<img src="${imageUrl}" alt="${item.name}" class="h-full w-full object-cover">`
                             : `<div class="h-full w-full flex items-center justify-center text-muted-foreground"><i data-lucide="image" class="h-8 w-8"></i></div>`
                         }
                     </div>
@@ -136,25 +158,25 @@
                         <div class="flex justify-between items-start gap-2">
                             <div>
                                 <h3 class="font-semibold text-lg line-clamp-1">${item.name}</h3>
-                                <p class="text-sm text-muted-foreground">Unit Price: ₦${item.price.toLocaleString()}</p>
+                                <p class="text-sm text-muted-foreground">Unit Price: ₦${price.toLocaleString()}</p>
                             </div>
-                            <button onclick="removeFromCart('${item.id}')" class="text-muted-foreground hover:text-destructive transition-colors p-1">
+                            <button onclick="removeFromCart('${itemId}')" class="text-muted-foreground hover:text-destructive transition-colors p-1">
                                 <i data-lucide="trash-2" class="h-4 w-4"></i>
                             </button>
                         </div>
                         
                         <div class="flex justify-between items-end mt-2">
                             <div class="flex items-center border rounded-lg bg-background">
-                                <button onclick="updateQuantity('${item.id}', ${item.quantity - 1})" class="p-2 hover:bg-accent hover:text-accent-foreground transition-colors rounded-l-lg disabled:opacity-50" ${item.quantity <= 1 ? 'disabled' : ''}>
+                                <button onclick="updateQuantity('${itemId}', -1)" class="p-2 hover:bg-accent hover:text-accent-foreground transition-colors rounded-l-lg disabled:opacity-50">
                                     <i data-lucide="minus" class="h-3 w-3"></i>
                                 </button>
-                                <span class="w-8 text-center text-sm font-medium">${item.quantity}</span>
-                                <button onclick="updateQuantity('${item.id}', ${item.quantity + 1})" class="p-2 hover:bg-accent hover:text-accent-foreground transition-colors rounded-r-lg">
+                                <span id="qty-${itemId}" class="w-8 text-center text-sm font-medium">${item.quantity}</span>
+                                <button onclick="updateQuantity('${itemId}', 1)" class="p-2 hover:bg-accent hover:text-accent-foreground transition-colors rounded-r-lg">
                                     <i data-lucide="plus" class="h-3 w-3"></i>
                                 </button>
                             </div>
-                            <div class="font-bold text-lg text-primary">
-                                ₦${itemTotal.toLocaleString()}
+                            <div id="subtotal-${itemId}" class="font-bold text-lg text-primary" data-unit-price="${price}">
+                                ₦${itemTotal.toLocaleString('en-NG', { minimumFractionDigits: 2 })}
                             </div>
                         </div>
                     </div>
@@ -168,21 +190,140 @@
         lucide.createIcons();
     }
 
-    window.updateQuantity = (id, newQty) => {
-        if (newQty < 1) return;
-        const cart = CartService.getCart();
-        const itemIndex = cart.findIndex(item => item.id === id);
+    window.updateQuantity = async (id, change) => {
+        const qtyEl = document.getElementById(`qty-${id}`);
+        const subtotalEl = document.getElementById(`subtotal-${id}`);
+        const cartSubtotalEl = document.getElementById('cart-subtotal');
+        const cartTotalEl = document.getElementById('cart-total');
         
-        if (itemIndex > -1) {
-            cart[itemIndex].quantity = newQty;
-            CartService.saveCart(cart);
+        if (!qtyEl || !subtotalEl) return;
+
+        let currentQty = parseInt(qtyEl.textContent);
+        let newQty = currentQty + change;
+
+        if (newQty < 1) return;
+
+        // Optimistic UI Update
+        qtyEl.textContent = newQty;
+        
+        const unitPrice = parseFloat(subtotalEl.getAttribute('data-unit-price'));
+        const newSubtotal = unitPrice * newQty;
+        subtotalEl.textContent = '₦' + newSubtotal.toLocaleString('en-NG', { minimumFractionDigits: 2 });
+
+        // Update Global Totals
+        const parseCurrency = (str) => parseFloat(str.replace(/[^0-9.-]+/g,""));
+        let currentTotal = parseCurrency(cartTotalEl.textContent);
+        let totalChange = (newQty - currentQty) * unitPrice;
+        let newTotal = currentTotal + totalChange;
+        
+        const formattedTotal = '₦' + newTotal.toLocaleString('en-NG', { minimumFractionDigits: 2 });
+        cartSubtotalEl.textContent = formattedTotal;
+        cartTotalEl.textContent = formattedTotal;
+
+        // Update Badges
+        const badges = document.querySelectorAll('#cart-count, #mobile-cart-count, #header-cart-count');
+        badges.forEach(b => {
+            let count = parseInt(b.textContent || '0');
+            b.textContent = Math.max(0, count + change);
+        });
+
+        if (AuthService.isAuthenticated()) {
+            try {
+                if (change > 0) {
+                    await CartService.increaseQuantity(id);
+                } else {
+                    await CartService.decreaseQuantity(id);
+                }
+            } catch (error) {
+                // Revert UI on error
+                qtyEl.textContent = currentQty;
+                subtotalEl.textContent = '₦' + (unitPrice * currentQty).toLocaleString('en-NG', { minimumFractionDigits: 2 });
+                cartSubtotalEl.textContent = '₦' + currentTotal.toLocaleString('en-NG', { minimumFractionDigits: 2 });
+                cartTotalEl.textContent = '₦' + currentTotal.toLocaleString('en-NG', { minimumFractionDigits: 2 });
+                badges.forEach(b => {
+                    let count = parseInt(b.textContent || '0');
+                    b.textContent = Math.max(0, count - change);
+                });
+                showToast(error.message, 'error');
+            }
+        } else {
+            const cart = await CartManager.getCart();
+            const itemIndex = cart.findIndex(item => (item.id || item._id) === id);
+            if (itemIndex > -1) {
+                cart[itemIndex].quantity = newQty;
+                CartManager.saveCart(cart);
+            }
         }
     };
 
-    window.removeFromCart = (id) => {
-        const cart = CartService.getCart();
-        const newCart = cart.filter(item => item.id !== id);
-        CartService.saveCart(newCart);
+    window.removeFromCart = async (id) => {
+        const rowEl = document.getElementById(`row-${id}`);
+        const qtyEl = document.getElementById(`qty-${id}`);
+        const subtotalEl = document.getElementById(`subtotal-${id}`);
+        const cartSubtotalEl = document.getElementById('cart-subtotal');
+        const cartTotalEl = document.getElementById('cart-total');
+
+        if (!rowEl) return;
+
+        // Store current state for revert
+        const originalDisplay = rowEl.style.display;
+        const currentQty = parseInt(qtyEl.textContent);
+        const unitPrice = parseFloat(subtotalEl.getAttribute('data-unit-price'));
+        const itemTotal = unitPrice * currentQty;
+
+        // Optimistic UI Update
+        rowEl.style.display = 'none'; // Hide row immediately
+        
+        const parseCurrency = (str) => parseFloat(str.replace(/[^0-9.-]+/g,""));
+        let currentTotal = parseCurrency(cartTotalEl.textContent);
+        let newTotal = currentTotal - itemTotal;
+        
+        const formattedTotal = '₦' + newTotal.toLocaleString('en-NG', { minimumFractionDigits: 2 });
+        cartSubtotalEl.textContent = formattedTotal;
+        cartTotalEl.textContent = formattedTotal;
+
+        // Update Badges
+        const badges = document.querySelectorAll('#cart-count, #mobile-cart-count, #header-cart-count');
+        badges.forEach(b => {
+            let count = parseInt(b.textContent || '0');
+            b.textContent = Math.max(0, count - currentQty);
+        });
+
+        if (AuthService.isAuthenticated()) {
+            try {
+                await CartService.removeFromCart(id);
+                showToast('Item removed from cart', 'success');
+                rowEl.remove(); // Completely remove from DOM on success
+                
+                // Check if cart is empty
+                const container = document.getElementById('cart-items-container');
+                const visibleRows = container.querySelectorAll('div[id^="row-"]:not([style*="display: none"])');
+                if (visibleRows.length === 0) {
+                    renderCart(); // Re-render empty state
+                }
+
+            } catch (error) {
+                // Revert UI on error
+                rowEl.style.display = originalDisplay;
+                cartSubtotalEl.textContent = '₦' + currentTotal.toLocaleString('en-NG', { minimumFractionDigits: 2 });
+                cartTotalEl.textContent = '₦' + currentTotal.toLocaleString('en-NG', { minimumFractionDigits: 2 });
+                badges.forEach(b => {
+                    let count = parseInt(b.textContent || '0');
+                    b.textContent = count + currentQty;
+                });
+                showToast(error.message, 'error');
+            }
+        } else {
+            const cart = await CartManager.getCart();
+            const newCart = cart.filter(item => (item.id || item._id) !== id);
+            CartManager.saveCart(newCart);
+            rowEl.remove();
+             // Check if cart is empty
+             const container = document.getElementById('cart-items-container');
+             if (container.children.length === 0) {
+                 renderCart();
+             }
+        }
     };
 </script>
 </body>

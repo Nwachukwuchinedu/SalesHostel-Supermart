@@ -295,6 +295,50 @@ const SupplyService = {
     }
 };
 
+const CartService = {
+    getCart: async () => {
+        const response = await api.get('/api/v1/cart');
+        if (!response.ok) throw new Error('Failed to fetch cart');
+        return response.json();
+    },
+    addToCart: async (productId, quantity = 1) => {
+        const response = await api.post('/api/v1/cart', { productId, quantity });
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.message || 'Failed to add to cart');
+        return result;
+    },
+    removeFromCart: async (productId) => {
+        const response = await api.delete(`/api/v1/cart/${productId}`);
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.message || 'Failed to remove from cart');
+        return result;
+    },
+    clearCart: async () => {
+        const response = await api.delete('/api/v1/cart');
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.message || 'Failed to clear cart');
+        return result;
+    },
+    increaseQuantity: async (productId) => {
+        const response = await fetch(getApiUrl(`/api/v1/cart/${productId}/increase`), {
+            method: 'PATCH',
+            headers: getAuthHeaders()
+        });
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.message || 'Failed to increase quantity');
+        return result;
+    },
+    decreaseQuantity: async (productId) => {
+        const response = await fetch(getApiUrl(`/api/v1/cart/${productId}/decrease`), {
+            method: 'PATCH',
+            headers: getAuthHeaders()
+        });
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.message || 'Failed to decrease quantity');
+        return result;
+    }
+};
+
 const UserService = {
     getAllUsers: async (params = {}) => {
         const query = new URLSearchParams(params).toString();
