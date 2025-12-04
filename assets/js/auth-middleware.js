@@ -5,13 +5,16 @@ const protectedRoutes = [
     '/dashboard/products',
     '/dashboard/purchases',
     '/dashboard/supplies',
-    '/dashboard/reports'
+    '/dashboard/reports',
+    '/user/',
+    '/user/orders'
 ];
 
 const rolePermissions = {
     'Admin': ['*'],
     'Staff': ['/dashboard/', '/dashboard/products', '/dashboard/purchases', '/dashboard/reports'],
-    'Supplier': ['/dashboard/', '/dashboard/supplies']
+    'Supplier': ['/dashboard/', '/dashboard/supplies'],
+    'Customer': ['/user/', '/user/orders']
 };
 
 function checkAuth() {
@@ -40,7 +43,12 @@ function checkAuth() {
         const hasAccess = allowedRoutes.some(route => currentPath.includes(route));
 
         if (!hasAccess) {
-            // If user has no dashboard access at all (e.g. Customer), redirect to home
+            // If user has no dashboard access at all (e.g. Customer trying to access Admin dashboard), redirect to their home
+            if (userRole === 'Customer') {
+                window.location.href = '/user/';
+                return;
+            }
+
             if (allowedRoutes.length === 0) {
                 window.location.href = '/';
                 return;
@@ -50,9 +58,13 @@ function checkAuth() {
             window.location.href = '/403';
         }
     } else {
-        // If on login/signup page and already logged in, redirect to dashboard
+        // If on login/signup page and already logged in
         if ((currentPath.includes('/login') || currentPath.includes('/signup')) && accessToken) {
-            window.location.href = '/dashboard/';
+            if (user && user.role === 'Customer') {
+                window.location.href = '/user/';
+            } else {
+                window.location.href = '/dashboard/';
+            }
         }
     }
 
