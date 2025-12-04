@@ -109,3 +109,28 @@ body {
 .stagger-3 {
     transition-delay: 300ms;
 }
+
+@layer utilities {
+    .text-balance {
+        text-wrap: balance;
+    }
+
+    .animate-scroll {
+        animation: scroll 40s linear infinite;
+    }
+
+    .hover\:pause:hover {
+        animation-play-state: paused;
+    }
+
+    @keyframes scroll {
+        0% {
+            transform: translateX(0);
+        }
+
+        100% {
+            transform: translateX(calc(-50% - 1.5rem));
+            /* Adjust based on gap */
+        }
+    }
+}

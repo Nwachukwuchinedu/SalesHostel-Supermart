@@ -11,8 +11,7 @@ const protectedRoutes = [
 const rolePermissions = {
     'Admin': ['*'],
     'Staff': ['/dashboard/', '/dashboard/products', '/dashboard/purchases', '/dashboard/reports'],
-    'Supplier': ['/dashboard/', '/dashboard/supplies'],
-    'Customer': ['/dashboard/', '/dashboard/purchases']
+    'Supplier': ['/dashboard/', '/dashboard/supplies']
 };
 
 function checkAuth() {
@@ -41,13 +40,34 @@ function checkAuth() {
         const hasAccess = allowedRoutes.some(route => currentPath.includes(route));
 
         if (!hasAccess) {
-            alert('You do not have permission to access this page.');
-            window.location.href = '/dashboard/'; // Redirect to a safe page
+            // If user has no dashboard access at all (e.g. Customer), redirect to home
+            if (allowedRoutes.length === 0) {
+                window.location.href = '/';
+                return;
+            }
+
+            // Redirect to custom 403 page
+            window.location.href = '/403';
         }
     } else {
         // If on login/signup page and already logged in, redirect to dashboard
         if ((currentPath.includes('/login') || currentPath.includes('/signup')) && accessToken) {
             window.location.href = '/dashboard/';
+        }
+    }
+
+    // Hide unauthorized sidebar links (Run this regardless of whether the route is protected, as long as the user is logged in)
+    if (accessToken && user) {
+        const userRole = user.role;
+        // Admin sees everything, so we only need to hide for non-admins
+        if (userRole !== 'Admin') {
+            const sidebarLinks = document.querySelectorAll('.sidebar-link');
+            sidebarLinks.forEach(link => {
+                const roles = JSON.parse(link.getAttribute('data-roles') || '[]');
+                if (roles.length > 0 && !roles.includes(userRole)) {
+                    link.style.display = 'none';
+                }
+            });
         }
     }
 }

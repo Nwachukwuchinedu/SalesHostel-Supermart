@@ -63,6 +63,8 @@ include 'includes/header.php';
             </div>
         </section>
 
+
+
         <!-- Bento Grid Features Section -->
         <section id="features" class="w-full py-24 bg-muted/30 relative">
             <div class="container mx-auto px-4 md:px-6">
@@ -133,114 +135,10 @@ include 'includes/header.php';
                     </p>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                    <!-- Product 1 -->
-                    <div class="glass-card rounded-xl overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1 group">
-                        <div class="aspect-square bg-muted/50 relative overflow-hidden">
-                            <div class="absolute inset-0 flex items-center justify-center text-muted-foreground/20">
-                                <i data-lucide="image" class="h-12 w-12"></i>
-                            </div>
-                            <!-- Placeholder for product image -->
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
-                                <button class="w-full bg-primary text-primary-foreground py-2 rounded-lg font-medium text-sm">Add to Cart</button>
-                            </div>
-                        </div>
-                        <div class="p-4 space-y-2">
-                            <div class="flex justify-between items-start">
-                                <h3 class="font-semibold truncate">Organic Avocados</h3>
-                                <span class="text-sm font-bold text-primary">₦1,500</span>
-                            </div>
-                            <p class="text-xs text-muted-foreground line-clamp-2">Fresh, creamy avocados sourced directly from local farmers.</p>
-                            <div class="flex items-center gap-1 text-yellow-500 text-xs">
-                                <i data-lucide="star" class="h-3 w-3 fill-current"></i>
-                                <i data-lucide="star" class="h-3 w-3 fill-current"></i>
-                                <i data-lucide="star" class="h-3 w-3 fill-current"></i>
-                                <i data-lucide="star" class="h-3 w-3 fill-current"></i>
-                                <i data-lucide="star-half" class="h-3 w-3 fill-current"></i>
-                                <span class="text-muted-foreground ml-1">(4.8)</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Product 2 -->
-                    <div class="glass-card rounded-xl overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1 group">
-                        <div class="aspect-square bg-muted/50 relative overflow-hidden">
-                            <div class="absolute inset-0 flex items-center justify-center text-muted-foreground/20">
-                                <i data-lucide="image" class="h-12 w-12"></i>
-                            </div>
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
-                                <button class="w-full bg-primary text-primary-foreground py-2 rounded-lg font-medium text-sm">Add to Cart</button>
-                            </div>
-                        </div>
-                        <div class="p-4 space-y-2">
-                            <div class="flex justify-between items-start">
-                                <h3 class="font-semibold truncate">Premium Rice (5kg)</h3>
-                                <span class="text-sm font-bold text-primary">₦8,000</span>
-                            </div>
-                            <p class="text-xs text-muted-foreground line-clamp-2">High-quality, stone-free rice perfect for any meal.</p>
-                            <div class="flex items-center gap-1 text-yellow-500 text-xs">
-                                <i data-lucide="star" class="h-3 w-3 fill-current"></i>
-                                <i data-lucide="star" class="h-3 w-3 fill-current"></i>
-                                <i data-lucide="star" class="h-3 w-3 fill-current"></i>
-                                <i data-lucide="star" class="h-3 w-3 fill-current"></i>
-                                <i data-lucide="star" class="h-3 w-3 fill-current"></i>
-                                <span class="text-muted-foreground ml-1">(5.0)</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Product 3 -->
-                    <div class="glass-card rounded-xl overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1 group">
-                        <div class="aspect-square bg-muted/50 relative overflow-hidden">
-                            <div class="absolute inset-0 flex items-center justify-center text-muted-foreground/20">
-                                <i data-lucide="image" class="h-12 w-12"></i>
-                            </div>
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
-                                <button class="w-full bg-primary text-primary-foreground py-2 rounded-lg font-medium text-sm">Add to Cart</button>
-                            </div>
-                        </div>
-                        <div class="p-4 space-y-2">
-                            <div class="flex justify-between items-start">
-                                <h3 class="font-semibold truncate">Vegetable Oil (3L)</h3>
-                                <span class="text-sm font-bold text-primary">₦4,500</span>
-                            </div>
-                            <p class="text-xs text-muted-foreground line-clamp-2">Cholesterol-free vegetable oil for healthy cooking.</p>
-                            <div class="flex items-center gap-1 text-yellow-500 text-xs">
-                                <i data-lucide="star" class="h-3 w-3 fill-current"></i>
-                                <i data-lucide="star" class="h-3 w-3 fill-current"></i>
-                                <i data-lucide="star" class="h-3 w-3 fill-current"></i>
-                                <i data-lucide="star" class="h-3 w-3 fill-current"></i>
-                                <i data-lucide="star" class="h-3 w-3 text-muted-foreground"></i>
-                                <span class="text-muted-foreground ml-1">(4.2)</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Product 4 -->
-                    <div class="glass-card rounded-xl overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1 group">
-                        <div class="aspect-square bg-muted/50 relative overflow-hidden">
-                            <div class="absolute inset-0 flex items-center justify-center text-muted-foreground/20">
-                                <i data-lucide="image" class="h-12 w-12"></i>
-                            </div>
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
-                                <button class="w-full bg-primary text-primary-foreground py-2 rounded-lg font-medium text-sm">Add to Cart</button>
-                            </div>
-                        </div>
-                        <div class="p-4 space-y-2">
-                            <div class="flex justify-between items-start">
-                                <h3 class="font-semibold truncate">Fresh Tomatoes (Basket)</h3>
-                                <span class="text-sm font-bold text-primary">₦12,000</span>
-                            </div>
-                            <p class="text-xs text-muted-foreground line-clamp-2">Juicy, red tomatoes fresh from the farm.</p>
-                            <div class="flex items-center gap-1 text-yellow-500 text-xs">
-                                <i data-lucide="star" class="h-3 w-3 fill-current"></i>
-                                <i data-lucide="star" class="h-3 w-3 fill-current"></i>
-                                <i data-lucide="star" class="h-3 w-3 fill-current"></i>
-                                <i data-lucide="star" class="h-3 w-3 fill-current"></i>
-                                <i data-lucide="star" class="h-3 w-3 fill-current"></i>
-                                <span class="text-muted-foreground ml-1">(4.9)</span>
-                            </div>
-                        </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" id="products-grid">
+                    <!-- Products will be injected here via JS -->
+                    <div class="col-span-full flex justify-center py-12">
+                        <i data-lucide="loader-2" class="h-8 w-8 animate-spin text-primary"></i>
                     </div>
                 </div>
                 
@@ -379,6 +277,9 @@ include 'includes/header.php';
             ease: "power3.out"
         });
 
+        // Fetch and Render Products
+        fetchProducts();
+
         // Bento Grid Hover Effect (Tilt)
         const cards = document.querySelectorAll('.glass-card');
         cards.forEach(card => {
@@ -408,6 +309,80 @@ include 'includes/header.php';
                 });
             });
         });
+    });
+
+    async function fetchProducts() {
+        const grid = document.getElementById('products-grid');
+        try {
+            // Check for group filter in URL hash
+            const hashParams = new URLSearchParams(window.location.hash.split('?')[1]);
+            const groupFilter = hashParams.get('group');
+            
+            const params = { limit: 8 }; // Fetch top 8 products
+            if (groupFilter) params.group = groupFilter;
+
+            const result = await PublicService.getAllProducts(params);
+            
+            if (result.success && result.data.length > 0) {
+                const products = result.data;
+                
+                grid.innerHTML = products.map(product => {
+                    const price = parseFloat(product.sellingPrice || 0).toLocaleString('en-NG', { minimumFractionDigits: 2 });
+                    // Use first image if available, otherwise placeholder
+                    const imageHtml = (product.images && product.images.length > 0) 
+                        ? `<img src="${product.images[0]}" alt="${product.name}" class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">`
+                        : `<div class="absolute inset-0 flex items-center justify-center text-muted-foreground/20"><i data-lucide="image" class="h-12 w-12"></i></div>`;
+
+                    return `
+                    <div class="glass-card rounded-xl overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1 group fade-up">
+                        <div class="aspect-square bg-muted/50 relative overflow-hidden">
+                            ${imageHtml}
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
+                                <button class="w-full bg-primary text-primary-foreground py-2 rounded-lg font-medium text-sm shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">Add to Cart</button>
+                            </div>
+                            ${product.quantityAvailable < 10 ? `<span class="absolute top-2 right-2 bg-red-500 text-white text-[10px] font-bold px-2 py-1 rounded-full">Low Stock</span>` : ''}
+                        </div>
+                        <div class="p-4 space-y-2">
+                            <div class="flex justify-between items-start">
+                                <h3 class="font-semibold truncate pr-2" title="${product.name}">${product.name}</h3>
+                                <span class="text-sm font-bold text-primary whitespace-nowrap">₦${price}</span>
+                            </div>
+                            <p class="text-xs text-muted-foreground line-clamp-2 h-8">${product.description || 'No description available.'}</p>
+                            <div class="flex items-center justify-between pt-1">
+                                <span class="text-[10px] uppercase tracking-wider text-muted-foreground bg-muted px-2 py-1 rounded-md">${product.group || 'General'}</span>
+                                <div class="flex items-center gap-0.5 text-yellow-500 text-xs">
+                                    <i data-lucide="star" class="h-3 w-3 fill-current"></i>
+                                    <span class="text-muted-foreground ml-1">(5.0)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    `;
+                }).join('');
+                
+                // Re-initialize icons
+                lucide.createIcons();
+                
+                // Animate new elements
+                gsap.fromTo(".fade-up", 
+                    { y: 20, opacity: 0 },
+                    { y: 0, opacity: 1, duration: 0.6, stagger: 0.1, ease: "power2.out" }
+                );
+
+            } else {
+                grid.innerHTML = '<div class="col-span-full text-center py-12 text-muted-foreground">No products found.</div>';
+            }
+        } catch (error) {
+            console.error('Failed to fetch products:', error);
+            grid.innerHTML = '<div class="col-span-full text-center py-12 text-red-500">Failed to load products. Please try again later.</div>';
+        }
+    }
+
+    // Listen for hash changes to re-fetch if filtering is implemented
+    window.addEventListener('hashchange', () => {
+        if(window.location.hash.includes('products')) {
+            fetchProducts();
+        }
     });
 </script>
 

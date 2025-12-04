@@ -294,3 +294,40 @@ const SupplyService = {
         return result;
     }
 };
+
+const PublicService = {
+    getAllGroups: async (params = {}) => {
+        const query = new URLSearchParams(params).toString();
+        // Use fetch directly to avoid auth headers if not needed, or use api.get if auth is optional/handled
+        // The user specified "Authentication: Not required", so we can use a simple fetch or a modified api.get
+        // However, api.get adds auth headers which shouldn't hurt if the endpoint ignores them.
+        // But to be safe and strictly follow "Not required", let's use a direct fetch wrapper or ensure api.get handles it.
+        // Given existing api.get structure, it adds headers. Let's create a public helper or just use fetch here.
+
+        try {
+            const response = await fetch(getApiUrl(`/api/v1/public/groups?${query}`), {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' }
+            });
+            if (!response.ok) throw new Error('Failed to fetch public groups');
+            return response.json();
+        } catch (error) {
+            console.error('Public API Groups Error:', error);
+            throw error;
+        }
+    },
+    getAllProducts: async (params = {}) => {
+        const query = new URLSearchParams(params).toString();
+        try {
+            const response = await fetch(getApiUrl(`/api/v1/public/products?${query}`), {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' }
+            });
+            if (!response.ok) throw new Error('Failed to fetch public products');
+            return response.json();
+        } catch (error) {
+            console.error('Public API Products Error:', error);
+            throw error;
+        }
+    }
+};
