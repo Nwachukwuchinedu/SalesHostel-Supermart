@@ -26,7 +26,7 @@ include __DIR__ . '/../includes/ui/components.php';
 
                 <div class="glass-card rounded-xl p-6 space-y-6">
                     <!-- Filters -->
-                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
                         <div class="md:col-span-2 relative">
                             <i data-lucide="search" class="absolute left-3 top-3 h-4 w-4 text-muted-foreground"></i>
                             <input type="search" id="searchInput" placeholder="Search by customer, purchase #..." class="flex h-10 w-full rounded-lg border border-input bg-background/50 px-3 py-2 pl-9 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-200 focus:border-primary">
