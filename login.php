@@ -112,8 +112,14 @@ include __DIR__ . '/includes/head.php';
             try {
                 await AuthService.login(email, password);
                 showToast('Login successful! Redirecting...', 'success');
+                
+                const user = AuthService.getCurrentUser();
                 setTimeout(() => {
-                    window.location.href = '/dashboard/';
+                    if (user && user.role === 'Customer') {
+                        window.location.href = '/user/';
+                    } else {
+                        window.location.href = '/dashboard/';
+                    }
                 }, 1000);
             } catch (error) {
                 showToast(error.message, 'error');

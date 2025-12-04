@@ -2,6 +2,10 @@
 $current_page = basename($_SERVER['PHP_SELF'], '.php');
 $nav_links = [
     ['href' => '/dashboard/', 'label' => 'Dashboard', 'icon' => 'layout-dashboard', 'roles' => ['Admin', 'Staff', 'Supplier']],
+    ['href' => '/user/', 'label' => 'My Dashboard', 'icon' => 'user', 'roles' => ['Customer']],
+    ['href' => '/user/shop', 'label' => 'Shop', 'icon' => 'shopping-bag', 'roles' => ['Customer']],
+    ['href' => '/user/cart', 'label' => 'My Cart', 'icon' => 'shopping-cart', 'roles' => ['Customer']],
+    ['href' => '/user/orders', 'label' => 'My Orders', 'icon' => 'package', 'roles' => ['Customer']],
     ['href' => '/dashboard/products', 'label' => 'Products', 'icon' => 'box', 'roles' => ['Admin', 'Staff']],
     ['href' => '/dashboard/supplies', 'label' => 'Supplies', 'icon' => 'truck', 'roles' => ['Admin', 'Supplier']],
     ['href' => '/dashboard/purchases', 'label' => 'Purchases', 'icon' => 'shopping-cart', 'roles' => ['Admin', 'Staff']],
@@ -25,7 +29,7 @@ function isActive($href, $current_page) {
             <div class="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
                 <i data-lucide="shopping-basket" class="h-5 w-5"></i>
             </div>
-            <span class="font-headline text-lg tracking-tight">SalesHostel</span>
+            <span class="font-headline text-lg tracking-tight">Shop12mart</span>
         </a>
     </div>
     <div class="flex-1 overflow-auto py-4">
@@ -62,7 +66,7 @@ function isActive($href, $current_page) {
             <div class="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
                 <i data-lucide="shopping-basket" class="h-5 w-5"></i>
             </div>
-            <span class="font-headline text-lg tracking-tight">SalesHostel</span>
+            <span class="font-headline text-lg tracking-tight">Shop12mart</span>
         </a>
         <button id="close-sidebar" class="md:hidden text-muted-foreground hover:text-foreground">
             <i data-lucide="x" class="h-5 w-5"></i>

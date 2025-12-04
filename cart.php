@@ -67,6 +67,13 @@ include 'includes/header.php';
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
+        // Redirect authenticated customers to their dashboard cart
+        const user = JSON.parse(localStorage.getItem('user') || 'null');
+        if (user && user.role === 'Customer') {
+            window.location.href = '/user/cart';
+            return;
+        }
+
         renderCart();
         updateCartCount();
     });
