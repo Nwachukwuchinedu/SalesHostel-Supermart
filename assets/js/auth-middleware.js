@@ -13,7 +13,7 @@ const protectedRoutes = [
 ];
 
 const rolePermissions = {
-    'Admin': ['*'],
+    'Admin': ['/dashboard/', '/dashboard/products', '/dashboard/purchases', '/dashboard/supplies', '/dashboard/reports'],
     'Staff': ['/dashboard/', '/dashboard/products', '/dashboard/purchases', '/dashboard/reports'],
     'Supplier': ['/dashboard/', '/dashboard/supplies'],
     'Customer': ['/user/', '/user/orders', '/user/shop', '/user/cart']
@@ -73,16 +73,13 @@ function checkAuth() {
     // Hide unauthorized sidebar links (Run this regardless of whether the route is protected, as long as the user is logged in)
     if (accessToken && user) {
         const userRole = user.role;
-        // Admin sees everything, so we only need to hide for non-admins
-        if (userRole !== 'Admin') {
-            const sidebarLinks = document.querySelectorAll('.sidebar-link');
-            sidebarLinks.forEach(link => {
-                const roles = JSON.parse(link.getAttribute('data-roles') || '[]');
-                if (roles.length > 0 && !roles.includes(userRole)) {
-                    link.style.display = 'none';
-                }
-            });
-        }
+        const sidebarLinks = document.querySelectorAll('.sidebar-link');
+        sidebarLinks.forEach(link => {
+            const roles = JSON.parse(link.getAttribute('data-roles') || '[]');
+            if (roles.length > 0 && !roles.includes(userRole)) {
+                link.style.display = 'none';
+            }
+        });
     }
 }
 
