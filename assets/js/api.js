@@ -257,6 +257,12 @@ const PurchaseService = {
         if (!response.ok) throw new Error(result.message || 'Failed to mark as pending');
         return result;
     },
+    getMyPurchases: async (params = {}) => {
+        const query = new URLSearchParams(params).toString();
+        const response = await api.get(`/api/v1/purchases/my-purchases?${query}`);
+        if (!response.ok) throw new Error('Failed to fetch my purchases');
+        return response.json();
+    },
     getAllCustomerNames: async () => {
         const response = await api.get('/api/v1/purchases/customers');
         if (!response.ok) throw new Error('Failed to fetch customer names');
