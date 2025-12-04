@@ -36,7 +36,7 @@
       "@type": "Organization",
       "name": "Shop12mart",
       "url": "https://shop12mart.com/",
-      "logo": "https://shop12mart.com/assets/images/favicon.svg",
+      "logo": "https://shop12mart.com/assets/images/logo.png",
       "sameAs": [
         "https://www.facebook.com/shop12mart",
         "https://twitter.com/shop12mart",
