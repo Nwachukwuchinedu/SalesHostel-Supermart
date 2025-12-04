@@ -7,14 +7,16 @@ const protectedRoutes = [
     '/dashboard/supplies',
     '/dashboard/reports',
     '/user/',
-    '/user/orders'
+    '/user/orders',
+    '/user/shop',
+    '/user/cart'
 ];
 
 const rolePermissions = {
     'Admin': ['*'],
     'Staff': ['/dashboard/', '/dashboard/products', '/dashboard/purchases', '/dashboard/reports'],
     'Supplier': ['/dashboard/', '/dashboard/supplies'],
-    'Customer': ['/user/', '/user/orders']
+    'Customer': ['/user/', '/user/orders', '/user/shop', '/user/cart']
 };
 
 function checkAuth() {
