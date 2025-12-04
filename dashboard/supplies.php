@@ -464,7 +464,7 @@ echo UI::alertDialog('delete-alert', 'Are you absolutely sure?', 'This action ca
     });
 
     addProductItemBtn.addEventListener('click', () => {
-        // addProductRow is already overridden to call calculateTotalCost
+        addProductRow();
     });
 
     editSupplyBtn.addEventListener('click', () => {
