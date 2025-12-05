@@ -91,7 +91,8 @@ const AuthService = {
         // Store auth data
         if (data.data && data.data.accessToken) {
             localStorage.setItem('accessToken', data.data.accessToken);
-            localStorage.setItem('user', JSON.stringify(data.data.user));
+            // Fetch and cache user details
+            await AuthService.fetchCurrentUser();
         }
         return data;
     },
@@ -100,11 +101,6 @@ const AuthService = {
         const data = await response.json();
         if (!response.ok || !data.success) {
             throw new Error(data.message || 'Signup failed');
-        }
-        // Store auth data
-        if (data.data && data.data.accessToken) {
-            localStorage.setItem('accessToken', data.data.accessToken);
-            localStorage.setItem('user', JSON.stringify(data.data.user));
         }
         return data;
     },
@@ -119,12 +115,44 @@ const AuthService = {
             window.location.href = '/login';
         }
     },
+    fetchCurrentUser: async () => {
+        try {
+            const response = await api.get('/api/v1/auth/me');
+            if (response.ok) {
+                const data = await response.json();
+                if (data.success && data.data.user) {
+                    localStorage.setItem('user', JSON.stringify(data.data.user));
+                    return data.data.user;
+                }
+            }
+        } catch (e) {
+            console.error("Failed to fetch user", e);
+        }
+        return null;
+    },
     getCurrentUser: () => {
         const userStr = localStorage.getItem('user');
         return userStr ? JSON.parse(userStr) : null;
     },
     isAuthenticated: () => {
         return !!localStorage.getItem('accessToken');
+    },
+    verifyEmail: async (email, otp) => {
+        const response = await api.post('/api/v1/auth/verify-email', { email, otp });
+        const data = await response.json();
+        if (!response.ok || !data.success) throw new Error(data.message || 'Verification failed');
+        return data;
+    },
+    resendOtp: async (email) => {
+        const response = await api.post('/api/v1/auth/resend-otp', { email });
+        const data = await response.json();
+        if (!response.ok || !data.success) throw new Error(data.message || 'Resend failed');
+        return data;
+    },
+    checkEmailVerification: async () => {
+        const response = await api.get('/api/v1/auth/check-email-verification');
+        const data = await response.json();
+        return data.success ? data.data : null;
     }
 };
 

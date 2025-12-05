@@ -33,7 +33,7 @@
         </button>
     </div>
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', async () => {
             const user = JSON.parse(localStorage.getItem('user') || 'null');
             if (user && user.role === 'Customer') {
                 const cartBtn = document.getElementById('header-cart-btn');
@@ -42,6 +42,31 @@
                     cartBtn.classList.add('flex');
                 }
             }
+
+            // Global Email Verification Check
+            try {
+                // Use the specific endpoint as requested
+                const verificationStatus = await AuthService.checkEmailVerification();
+                
+                if (verificationStatus && verificationStatus.isEmailVerified === false) {
+                    const banner = document.getElementById('globalEmailVerificationBanner');
+                    if (banner) banner.classList.remove('hidden');
+                }
+            } catch (error) {
+                console.error("Failed to check email verification status", error);
+            }
         });
     </script>
 </header>
+<!-- Global Verification Banner -->
+<div id="globalEmailVerificationBanner" class="hidden w-full border-b border-yellow-200 bg-yellow-50 px-4 py-3 text-sm text-yellow-800 transition-all duration-300">
+    <div class="container mx-auto flex items-center justify-center gap-2">
+        <i data-lucide="alert-triangle" class="h-4 w-4 text-yellow-600"></i>
+        <span>
+            <span class="font-medium">Action Required:</span>
+            Your email is not verified. 
+            <a href="/verify-email" class="font-bold underline underline-offset-2 hover:text-yellow-900">Click here</a> 
+            to verify your account.
+        </span>
+    </div>
+</div>

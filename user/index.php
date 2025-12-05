@@ -114,7 +114,8 @@
 
     async function fetchCustomerData() {
         try {
-            const user = AuthService.getCurrentUser();
+            // Fetch fresh user data to check verification status
+            const user = await AuthService.fetchCurrentUser();
             if (user) {
                 document.getElementById('userNameDisplay').textContent = user.name;
             }
