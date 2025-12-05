@@ -378,9 +378,9 @@ include 'includes/header.php';
         }
     }
 
-    // Wrapper for CartService.addToCart to be used in inline onclick
+    // Wrapper for CartManager.addToCart to be used in inline onclick
     window.addToCart = (product) => {
-        CartService.addToCart(product);
+        CartManager.addToCart(product);
     };
 
     // Listen for hash changes to re-fetch if filtering is implemented

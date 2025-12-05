@@ -16,8 +16,32 @@
         </form>
     </div>
     <div class="flex items-center gap-4">
+        <!-- Cart Icon (Customers Only) -->
+        <button id="header-cart-btn" onclick="window.location.href='/user/cart'" class="relative h-8 w-8 items-center justify-center rounded-full border border-border/50 bg-muted hover:bg-muted/80 transition-colors hidden">
+            <i data-lucide="shopping-cart" class="h-4 w-4"></i>
+            <span id="header-cart-count" class="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-primary text-[10px] font-bold text-primary-foreground flex items-center justify-center hidden">0</span>
+        </button>
+
+        <!-- Notification Icon (All Roles) -->
+        <button class="relative h-8 w-8 items-center justify-center rounded-full border border-border/50 bg-muted hover:bg-muted/80 transition-colors flex">
+            <i data-lucide="bell" class="h-4 w-4"></i>
+            <span class="absolute top-0 right-0 h-2 w-2 rounded-full bg-destructive"></span>
+        </button>
+
         <button class="relative h-8 w-8 rounded-full overflow-hidden border border-border/50 bg-muted hover:bg-muted/80 transition-colors">
             <img src="https://ui.shadcn.com/avatars/01.png" alt="User" class="h-full w-full object-cover" />
         </button>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const user = JSON.parse(localStorage.getItem('user') || 'null');
+            if (user && user.role === 'Customer') {
+                const cartBtn = document.getElementById('header-cart-btn');
+                if (cartBtn) {
+                    cartBtn.classList.remove('hidden');
+                    cartBtn.classList.add('flex');
+                }
+            }
+        });
+    </script>
 </header>
