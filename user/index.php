@@ -177,7 +177,7 @@
                 </td>
                 <td class="px-4 py-4 text-right font-medium whitespace-nowrap">₦${orderTotal.toLocaleString('en-NG', { minimumFractionDigits: 2 })}</td>
                 <td class="px-4 py-4 text-right whitespace-nowrap">
-                    <button class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-8 w-8">
+                    <button onclick="openActionMenu(event, '${order.purchaseId || order._id}')" class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-8 w-8">
                         <i data-lucide="more-horizontal" class="h-4 w-4"></i>
                     </button>
                 </td>
@@ -185,7 +185,147 @@
         `}).join('');
         
         lucide.createIcons();
+        
+        // Store for access
+        window.recentPurchasesData = orders;
+    }
+
+    // --- Action Menu & Modal Logic ---
+    let currentActionPurchaseId = null;
+
+    function openActionMenu(event, purchaseId) {
+        event.stopPropagation();
+        currentActionPurchaseId = purchaseId;
+        
+        const menu = document.getElementById('actionMenu');
+        const buttonRect = event.currentTarget.getBoundingClientRect();
+        
+        // Position menu relative to viewport to avoid overflow clipping issues
+        // Place it to the left of the button, slightly below top
+        menu.style.top = `${buttonRect.bottom + window.scrollY + 5}px`;
+        menu.style.left = `${buttonRect.right - 150}px`; // Align right edge approx
+        
+        menu.classList.remove('hidden');
+        
+        // Close menu when clicking outside
+        const closeMenu = () => {
+             menu.classList.add('hidden');
+             document.removeEventListener('click', closeMenu);
+        };
+        setTimeout(() => document.addEventListener('click', closeMenu), 0);
+    }
+
+    function handleViewPurchase() {
+        if (!currentActionPurchaseId) return;
+        const purchase = window.recentPurchasesData.find(p => (p.purchaseId === currentActionPurchaseId || p._id === currentActionPurchaseId));
+        if (purchase) {
+            openPurchaseModal(purchase);
+        }
+    }
+
+    async function handleDownloadReceipt() {
+        if (!currentActionPurchaseId) return;
+        const purchase = window.recentPurchasesData.find(p => (p.purchaseId === currentActionPurchaseId || p._id === currentActionPurchaseId));
+        
+        if (purchase) {
+             try {
+                showToast('Generating receipt...', 'info');
+                await PurchaseService.downloadReceipt(purchase);
+                showToast('Receipt downloaded successfully', 'success');
+            } catch (error) {
+                showToast('Failed to generate receipt', 'error');
+            }
+        }
+    }
+
+    function openPurchaseModal(purchase) {
+        const modal = document.getElementById('purchaseModal');
+        const content = document.getElementById('purchaseModalContent');
+        
+        // Populate Details
+        const dateStr = new Date(purchase.date || purchase.createdAt).toLocaleDateString();
+        const items = purchase.products || purchase.items || [];
+        const itemsHtml = items.map(item => `
+            <div class="flex justify-between py-2 border-b last:border-0">
+                <span>${item.productName || item.name} (x${item.quantity})</span>
+                <span class="font-medium">₦${(parseFloat(item.price || item.unitPrice || 0) * item.quantity).toLocaleString('en-NG', {minimumFractionDigits: 2})}</span>
+            </div>
+        `).join('');
+
+        content.innerHTML = `
+            <div class="space-y-4">
+                <div class="grid grid-cols-2 gap-4 text-sm">
+                    <div>
+                        <p class="text-muted-foreground">Purchase ID</p>
+                        <p class="font-medium">${purchase.purchaseId || purchase._id.substring(0, 8)}</p>
+                    </div>
+                    <div>
+                        <p class="text-muted-foreground">Date</p>
+                        <p class="font-medium">${dateStr}</p>
+                    </div>
+                    <div>
+                        <p class="text-muted-foreground">Status</p>
+                        <p class="font-medium">${purchase.paymentStatus || purchase.status}</p>
+                    </div>
+                    <div>
+                        <p class="text-muted-foreground">Total Amount</p>
+                        <p class="font-medium">₦${parseFloat(purchase.total || purchase.totalAmount || 0).toLocaleString('en-NG', {minimumFractionDigits: 2})}</p>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold mb-2">Items</h4>
+                    <div class="bg-muted/50 rounded-md p-3 text-sm">
+                        ${itemsHtml}
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+    }
+
+    function closePurchaseModal() {
+        const modal = document.getElementById('purchaseModal');
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
     }
 </script>
+
+<!-- Action Menu (Fixed Position) -->
+<div id="actionMenu" class="hidden fixed z-50 w-40 rounded-md border bg-popover p-1 text-popover-foreground shadow-md">
+    <button onclick="handleViewPurchase()" class="relative flex w-full cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground">
+        <i data-lucide="eye" class="mr-2 h-4 w-4"></i>
+        <span>View Details</span>
+    </button>
+    <button onclick="handleDownloadReceipt()" class="relative flex w-full cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground">
+        <i data-lucide="download" class="mr-2 h-4 w-4"></i>
+        <span>Download PDF</span>
+    </button>
+</div>
+
+<!-- Purchase Details Modal -->
+<div id="purchaseModal" class="hidden fixed inset-0 z-50 bg-background/80 backdrop-blur-sm items-center justify-center p-4">
+    <div class="w-full max-w-lg rounded-xl border bg-card text-card-foreground shadow-lg animate-in fade-in zoom-in-95 duration-200">
+        <div class="flex flex-col space-y-1.5 p-6 border-b">
+            <div class="flex items-center justify-between">
+                <h3 class="font-semibold leading-none tracking-tight">Purchase Details</h3>
+                <button onclick="closePurchaseModal()" class="rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
+                    <i data-lucide="x" class="h-4 w-4"></i>
+                </button>
+            </div>
+        </div>
+        <div class="p-6" id="purchaseModalContent">
+            <!-- Content Injected via JS -->
+        </div>
+        <div class="flex items-center justify-end p-6 pt-0 border-t mt-4 pt-4">
+            <button onclick="handleDownloadReceipt()" class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2">
+                <i data-lucide="download" class="mr-2 h-4 w-4"></i>
+                Download Receipt
+            </button>
+        </div>
+    </div>
+</div>
 </body>
 </html>

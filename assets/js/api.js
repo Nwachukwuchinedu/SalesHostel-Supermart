@@ -273,6 +273,109 @@ const PurchaseService = {
         if (!response.ok) throw new Error('Failed to fetch recent purchases');
         return response.json();
     },
+    downloadReceipt: async (purchase) => {
+        try {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            // --- Header Section ---
+            // Company Name
+            doc.setFontSize(22);
+            doc.setTextColor(44, 62, 80); // Dark Blue
+            doc.setFont("helvetica", "bold");
+            doc.text("Shop12mart", 105, 20, { align: "center" });
+
+            // Subtitle
+            doc.setFontSize(10);
+            doc.setTextColor(100);
+            doc.setFont("helvetica", "normal");
+            doc.text("Your Daily Essentials Delivered", 105, 26, { align: "center" });
+
+            // Watermark (Light Shop12mart)
+            doc.setTextColor(230, 230, 230);
+            doc.setFontSize(60);
+            doc.setFont("helvetica", "bold");
+            doc.text("Shop12mart", 105, 150, { align: "center", angle: 45 });
+
+            // Reset Normal Text
+            doc.setTextColor(0);
+
+            // --- Purchase & Customer Info ---
+            doc.setFontSize(12);
+            doc.setFont("helvetica", "bold");
+            doc.text("PURCHASE RECEIPT", 14, 40);
+
+            // Right Side: Date & ID
+            doc.setFontSize(10);
+            doc.setFont("helvetica", "normal");
+            const dateStr = new Date(purchase.date || purchase.createdAt).toLocaleDateString();
+            const purchaseId = purchase.purchaseId || purchase._id.substring(0, 8);
+
+            doc.text(`Reference: #${purchaseId}`, 196, 40, { align: "right" });
+            doc.text(`Date: ${dateStr}`, 196, 45, { align: "right" });
+            doc.text(`Status: ${purchase.paymentStatus || purchase.status}`, 196, 50, { align: "right" });
+
+            // Separator Line
+            doc.setDrawColor(200);
+            doc.line(14, 55, 196, 55);
+
+            // --- Items Table ---
+            const tableColumn = ["Item Name", "Qty", "Price", "Subtotal"];
+            const tableRows = [];
+
+            // Ensure items exist
+            const items = purchase.products || purchase.items || [];
+
+            items.forEach(item => {
+                const name = item.productName || item.name || "Product";
+                const qty = item.quantity || 1;
+                // Price logic - handle different API structures if needed
+                const price = parseFloat(item.price || item.unitPrice || 0);
+                // Alternatively calculate from subtotal if unit price missing
+                // const subtotal = parseFloat(item.subtotal || (price * qty));
+
+                const subtotal = price * qty;
+
+                tableRows.push([
+                    name,
+                    qty,
+                    `N${price.toLocaleString('en-NG', { minimumFractionDigits: 2 })}`,
+                    `N${subtotal.toLocaleString('en-NG', { minimumFractionDigits: 2 })}`
+                ]);
+            });
+
+            doc.autoTable({
+                startY: 60,
+                head: [tableColumn],
+                body: tableRows,
+                theme: 'striped',
+                headStyles: { fillColor: [44, 62, 80] },
+                styles: { fontSize: 10, cellPadding: 3 },
+            });
+
+            // --- Totals Section ---
+            const finalY = doc.lastAutoTable.finalY + 10;
+            const total = parseFloat(purchase.total || purchase.totalAmount || 0);
+
+            doc.setFont("helvetica", "bold");
+            doc.text(`Total Amount: N${total.toLocaleString('en-NG', { minimumFractionDigits: 2 })}`, 196, finalY, { align: "right" });
+
+            // --- Footer / Thank You Note ---
+            doc.setFont("helvetica", "italic");
+            doc.setFontSize(10);
+            doc.setTextColor(100);
+            doc.text("Thank you for purchasing from Shop12mart!", 105, finalY + 20, { align: "center" });
+
+            doc.setFontSize(8);
+            doc.text("If you have any questions, please contact our support.", 105, finalY + 25, { align: "center" });
+
+            // Save PDF
+            doc.save(`Shop12mart_Receipt_${purchaseId}.pdf`);
+        } catch (error) {
+            console.error("Error generating receipt PDF:", error);
+            throw new Error("Failed to generate receipt PDF");
+        }
+    },
     getAllCustomerNames: async () => {
         const response = await api.get('/api/v1/purchases/customers');
         if (!response.ok) throw new Error('Failed to fetch customer names');
