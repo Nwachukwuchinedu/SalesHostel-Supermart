@@ -178,7 +178,7 @@
                 <td class="px-4 py-4 text-right font-medium whitespace-nowrap">₦${orderTotal.toLocaleString('en-NG', { minimumFractionDigits: 2 })}</td>
                 <td class="px-4 py-4 text-right whitespace-nowrap">
                     <button class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-8 w-8">
-                        <i data-lucide="eye" class="h-4 w-4"></i>
+                        <i data-lucide="more-horizontal" class="h-4 w-4"></i>
                     </button>
                 </td>
             </tr>
