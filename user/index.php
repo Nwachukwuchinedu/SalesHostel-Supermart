@@ -119,22 +119,19 @@
                 document.getElementById('userNameDisplay').textContent = user.name;
             }
 
-            // Fetch orders for current customer
-            // Note: We need a specific endpoint for customer orders or filter purchases by customer ID
-            // Assuming PurchaseService.getAllPurchases can filter by customer or returns only own purchases for customers
-            // If not, we might need to update the API service or backend.
-            // For now, let's try fetching all purchases and filtering client-side if needed, or rely on backend to filter for "Customer" role.
-            
-            // Ideally: const res = await PurchaseService.getMyOrders();
-            // Using existing service:
-            const res = await PurchaseService.getAllPurchases(); 
-            
-            // Filter for current user if backend returns all (security risk if backend doesn't filter, but for now client-side)
-            // Assuming user.id or user._id matches customerId in purchase
-            const myOrders = res.data.filter(order => order.customerId === (user.id || user._id) || order.customerName === user.name);
-            
-            updateDashboardStats(myOrders);
-            renderRecentOrders(myOrders);
+            // Fetch data from new endpoints
+            const [statsRes, recentRes] = await Promise.all([
+                PurchaseService.getMyStats(),
+                PurchaseService.getMyRecentPurchases()
+            ]);
+
+            if (statsRes.success) {
+                updateDashboardStats(statsRes.data);
+            }
+
+            if (recentRes.success) {
+                renderRecentOrders(recentRes.data);
+            }
 
         } catch (error) {
             console.error('Error fetching customer data:', error);
@@ -142,44 +139,43 @@
         }
     }
 
-    function updateDashboardStats(orders) {
-        const totalOrders = orders.length;
-        const pendingOrders = orders.filter(o => o.paymentStatus === 'Pending' || o.status === 'Pending').length;
-        const totalSpent = orders.reduce((sum, o) => sum + (parseFloat(o.totalAmount) || 0), 0);
-
-        document.getElementById('totalOrders').textContent = totalOrders;
-        document.getElementById('pendingOrders').textContent = pendingOrders;
-        document.getElementById('totalSpent').textContent = '₦' + totalSpent.toLocaleString('en-NG', { minimumFractionDigits: 2 });
+    function updateDashboardStats(stats) {
+        document.getElementById('totalOrders').textContent = stats.totalPurchases || 0;
+        document.getElementById('pendingOrders').textContent = stats.pendingPurchases || 0;
+        document.getElementById('totalSpent').textContent = '₦' + (stats.totalSpent || 0).toLocaleString('en-NG', { minimumFractionDigits: 2 });
     }
 
     function renderRecentOrders(orders) {
         const tbody = document.getElementById('recentOrdersTableBody');
         
-        if (orders.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="5" class="h-24 text-center text-muted-foreground">No orders found.</td></tr>`;
+        if (!orders || orders.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="5" class="h-24 text-center text-muted-foreground">No recent purchases found.</td></tr>`;
             return;
         }
 
-        // Sort by date desc and take top 5
-        const recentOrders = orders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 5);
-
-        tbody.innerHTML = recentOrders.map(order => {
+        tbody.innerHTML = orders.map(order => {
             const statusColor = order.paymentStatus === 'Paid' 
                 ? 'bg-green-500/10 text-green-700 border-green-200' 
                 : order.paymentStatus === 'Pending' 
                 ? 'bg-yellow-500/10 text-yellow-700 border-yellow-200' 
                 : 'bg-gray-500/10 text-gray-700 border-gray-200';
 
+            // Handle date field variations (date or createdAt)
+            const orderDate = order.date || order.createdAt;
+
+            // Handle amount field variations (total or totalAmount) and ensure it's a number
+            const orderTotal = parseFloat(order.total || order.totalAmount || 0);
+
             return `
             <tr class="hover:bg-muted/30 transition-colors">
                 <td class="px-4 py-4 font-medium">${order.purchaseId || order._id.substring(0, 8)}</td>
-                <td class="px-4 py-4 text-muted-foreground">${new Date(order.createdAt).toLocaleDateString()}</td>
+                <td class="px-4 py-4 text-muted-foreground">${new Date(orderDate).toLocaleDateString()}</td>
                 <td class="px-4 py-4">
                     <span class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors ${statusColor}">
                         ${order.paymentStatus || order.status}
                     </span>
                 </td>
-                <td class="px-4 py-4 text-right font-medium">₦${parseFloat(order.totalAmount || 0).toLocaleString('en-NG', { minimumFractionDigits: 2 })}</td>
+                <td class="px-4 py-4 text-right font-medium">₦${orderTotal.toLocaleString('en-NG', { minimumFractionDigits: 2 })}</td>
                 <td class="px-4 py-4 text-right">
                     <button class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-8 w-8">
                         <i data-lucide="eye" class="h-4 w-4"></i>

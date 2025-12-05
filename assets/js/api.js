@@ -263,6 +263,16 @@ const PurchaseService = {
         if (!response.ok) throw new Error('Failed to fetch my purchases');
         return response.json();
     },
+    getMyStats: async () => {
+        const response = await api.get('/api/v1/purchases/my-stats');
+        if (!response.ok) throw new Error('Failed to fetch my stats');
+        return response.json();
+    },
+    getMyRecentPurchases: async (limit = 5) => {
+        const response = await api.get(`/api/v1/purchases/my-recent-purchases?limit=${limit}`);
+        if (!response.ok) throw new Error('Failed to fetch recent purchases');
+        return response.json();
+    },
     getAllCustomerNames: async () => {
         const response = await api.get('/api/v1/purchases/customers');
         if (!response.ok) throw new Error('Failed to fetch customer names');
