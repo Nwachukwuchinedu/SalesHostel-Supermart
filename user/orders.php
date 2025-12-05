@@ -34,7 +34,7 @@
                 </div>
 
                 <!-- Purchases List -->
-                <div class="glass-card rounded-xl border bg-card text-card-foreground shadow-sm fade-up stagger-2 w-full max-w-[calc(100vw-2rem)] sm:max-w-full overflow-hidden">
+                <div class="glass-card rounded-xl border bg-card text-card-foreground shadow-sm fade-up stagger-2 w-full max-w-[calc(100vw-2rem)] md:max-w-[calc(100vw-20rem)] overflow-hidden">
                     <div class="p-6">
                         <div class="relative w-full overflow-x-auto">
                             <table class="w-full caption-bottom text-sm">

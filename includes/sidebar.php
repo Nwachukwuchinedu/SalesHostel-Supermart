@@ -5,7 +5,7 @@ $nav_links = [
     ['href' => '/user/', 'label' => 'My Dashboard', 'icon' => 'user', 'roles' => ['Customer']],
     ['href' => '/user/shop', 'label' => 'Shop', 'icon' => 'shopping-bag', 'roles' => ['Customer']],
     ['href' => '/user/cart', 'label' => 'My Cart', 'icon' => 'shopping-cart', 'roles' => ['Customer']],
-    ['href' => '/user/orders', 'label' => 'My Orders', 'icon' => 'package', 'roles' => ['Customer']],
+    ['href' => '/user/orders', 'label' => 'My Purchases', 'icon' => 'package', 'roles' => ['Customer']],
     ['href' => '/dashboard/products', 'label' => 'Products', 'icon' => 'box', 'roles' => ['Admin', 'Staff']],
     ['href' => '/dashboard/supplies', 'label' => 'Supplies', 'icon' => 'truck', 'roles' => ['Admin', 'Supplier']],
     ['href' => '/dashboard/purchases', 'label' => 'Purchases', 'icon' => 'shopping-cart', 'roles' => ['Admin', 'Staff']],
