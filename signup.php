@@ -118,9 +118,9 @@ include __DIR__ . '/includes/head.php';
 
             try {
                 await AuthService.signup({ name, email, password, phone });
-                showToast('Account created successfully! Redirecting to login...', 'success');
+                showToast('Account created! Redirecting to verification...', 'success');
                 setTimeout(() => {
-                    window.location.href = '/login';
+                    window.location.href = `/verify-email?email=${encodeURIComponent(email)}`;
                 }, 1500);
             } catch (error) {
                 showToast(error.message, 'error');

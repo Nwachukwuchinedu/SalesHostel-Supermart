@@ -34,13 +34,13 @@ const api = {
             throw error;
         }
     },
-    get: async (endpoint) => {
+    get: async (endpoint, options = {}) => {
         try {
             const response = await fetch(getApiUrl(endpoint), {
                 method: 'GET',
                 headers: getAuthHeaders(),
             });
-            if (response.status === 401) {
+            if (response.status === 401 && !options.skipAuthRedirect) {
                 localStorage.removeItem('user');
                 localStorage.removeItem('accessToken');
                 window.location.href = '/login';
@@ -115,20 +115,25 @@ const AuthService = {
             window.location.href = '/login';
         }
     },
-    fetchCurrentUser: async () => {
+    fetchCurrentUser: async (skipRedirect = false) => {
         try {
-            const response = await api.get('/api/v1/auth/me');
+            const response = await api.get('/api/v1/auth/me', { skipAuthRedirect: skipRedirect });
             if (response.ok) {
                 const data = await response.json();
                 if (data.success && data.data.user) {
                     localStorage.setItem('user', JSON.stringify(data.data.user));
                     return data.data.user;
                 }
+            } else if (response.status === 401 && !skipRedirect) {
+                 // Trigger redirect manually if not skipped and api.get didn't do it (though api.get handles it if we don't pass true)
+                 // Actually api.get logic: if !skipAuthRedirect, it redirects.
+                 // So if we pass skipRedirect=false (default), api.get redirects.
+                 // If we pass skipRedirect=true, api.get DOES NOT redirect.
             }
         } catch (e) {
             console.error("Failed to fetch user", e);
         }
-        return null;
+        return null; // Return null if failed or 401 (when skipped)
     },
     getCurrentUser: () => {
         const userStr = localStorage.getItem('user');

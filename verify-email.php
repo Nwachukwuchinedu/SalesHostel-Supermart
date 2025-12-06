@@ -79,29 +79,40 @@ include __DIR__ . '/includes/head.php';
         const inputs = document.querySelectorAll('.otp-input');
         if(inputs.length > 0) inputs[0].focus();
 
-        // Get Current User Email
+        // Get Current User Email or URL Email
         let userEmail = '';
+        let isAuthenticated = false;
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const urlEmail = urlParams.get('email');
+
         try {
-            const user = await AuthService.fetchCurrentUser(); // Ensure we have latest
-            // If not logged in, maybe redirect to login? Or maybe allow verify if we came from register without login?
-            // "After registration, the user must login".
-            // So we assume user is logged in here to verify.
-            if (!user) {
-                // If checking auth fails (e.g. token expired), redirect to login
-                window.location.href = '/login';
-                return;
-            }
-            userEmail = user.email;
-            document.getElementById('userEmail').textContent = userEmail;
-            
-            if (user.isEmailVerified) {
-                showToast('Email already verified!', 'success');
-                setTimeout(() => window.location.href = '/user/', 1500);
+            const user = await AuthService.fetchCurrentUser(true); 
+            if (user) {
+                userEmail = user.email;
+                isAuthenticated = true;
+                
+                if (user.isEmailVerified) {
+                    showToast('Email already verified!', 'success');
+                    setTimeout(() => window.location.href = '/user/', 1500);
+                    return;
+                }
             }
         } catch (e) {
-            console.error("Auth check failed", e);
-            window.location.href = '/login';
+            console.log("Not authenticated, checking URL params");
         }
+
+        if (!userEmail && urlEmail) {
+            userEmail = urlEmail;
+        }
+
+        if (!userEmail) {
+            // No email found from auth or URL -> Redirect to login
+            window.location.href = '/login';
+            return;
+        }
+
+        document.getElementById('userEmail').textContent = userEmail;
 
         // OTP Input Logic
         const form = document.getElementById('verifyForm');
@@ -141,11 +152,9 @@ include __DIR__ . '/includes/head.php';
                            inp.value = pastedData[idx];
                        }
                    });
-                   // Focus last filled or next empty
                    const nextIdx = Math.min(pastedData.length, inputs.length - 1);
                    inputs[nextIdx].focus();
                    
-                   // Check if full
                    const otp = Array.from(inputs).map(i => i.value).join('');
                    if (otp.length === 6) {
                         handleVerify(otp);
@@ -177,7 +186,12 @@ include __DIR__ . '/includes/head.php';
                 await AuthService.verifyEmail(userEmail, otp);
                 showToast('Email verified successfully!', 'success');
                 setTimeout(() => {
-                    window.location.href = '/user/';
+                    if (isAuthenticated) {
+                        window.location.href = '/user/';
+                    } else {
+                        // If not logged in, redirect to login page
+                        window.location.href = '/login?verified=true';
+                    }
                 }, 1500);
             } catch (error) {
                 showToast(error.message || 'Verification failed. Please try again.', 'error');
