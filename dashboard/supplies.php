@@ -281,7 +281,7 @@ echo UI::alertDialog('delete-alert', 'Are you absolutely sure?', 'This action ca
         row.className = 'grid grid-cols-[1fr_auto_auto] items-end gap-2 p-3 border border-border/50 rounded-lg bg-background shadow-sm animate-in fade-in slide-in-from-bottom-2 duration-300';
         
         const productOptions = `<option value="">Select Product</option>` + 
-            availableProducts.map(p => `<option value="${p.id}" ${data && data.productId === p.id ? 'selected' : ''}>${p.name} (Cost: ₦${p.costPrice || 0})</option>`).join('');
+            availableProducts.map(p => `<option value="${p.id}" ${data && data.productId === p.id ? 'selected' : ''}>${p.name}</option>`).join('');
 
         row.innerHTML = `
             <div class="grid gap-1.5">
