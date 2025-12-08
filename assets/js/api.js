@@ -125,10 +125,10 @@ const AuthService = {
                     return data.data.user;
                 }
             } else if (response.status === 401 && !skipRedirect) {
-                 // Trigger redirect manually if not skipped and api.get didn't do it (though api.get handles it if we don't pass true)
-                 // Actually api.get logic: if !skipAuthRedirect, it redirects.
-                 // So if we pass skipRedirect=false (default), api.get redirects.
-                 // If we pass skipRedirect=true, api.get DOES NOT redirect.
+                // Trigger redirect manually if not skipped and api.get didn't do it (though api.get handles it if we don't pass true)
+                // Actually api.get logic: if !skipAuthRedirect, it redirects.
+                // So if we pass skipRedirect=false (default), api.get redirects.
+                // If we pass skipRedirect=true, api.get DOES NOT redirect.
             }
         } catch (e) {
             console.error("Failed to fetch user", e);
@@ -225,9 +225,15 @@ const GroupService = {
 };
 
 const UniqueNameService = {
-    getAllUniqueNames: async () => {
-        const response = await api.get('/api/v1/unique-names');
+    getAllUniqueNames: async (params = {}) => {
+        const query = new URLSearchParams(params).toString();
+        const response = await api.get(`/api/v1/unique-names?${query}`);
         if (!response.ok) throw new Error('Failed to fetch unique names');
+        return response.json();
+    },
+    getUniqueNameById: async (id) => {
+        const response = await api.get(`/api/v1/unique-names/${id}`);
+        if (!response.ok) throw new Error('Failed to fetch unique name');
         return response.json();
     },
     createUniqueName: async (data) => {
@@ -443,6 +449,38 @@ const SupplyService = {
         const response = await api.delete(`/api/v1/supplies/${id}`);
         const result = await response.json();
         if (!response.ok) throw new Error(result.message || 'Failed to delete supply');
+        return result;
+    }
+};
+
+const QuantityUnitService = {
+    getAllQuantityUnits: async (params = {}) => {
+        const query = new URLSearchParams(params).toString();
+        const response = await api.get(`/api/v1/quantity-units?${query}`);
+        if (!response.ok) throw new Error('Failed to fetch quantity units');
+        return response.json();
+    },
+    getQuantityUnitById: async (id) => {
+        const response = await api.get(`/api/v1/quantity-units/${id}`);
+        if (!response.ok) throw new Error('Failed to fetch quantity unit');
+        return response.json();
+    },
+    createQuantityUnit: async (data) => {
+        const response = await api.post('/api/v1/quantity-units', data);
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.message || 'Failed to create quantity unit');
+        return result;
+    },
+    updateQuantityUnit: async (id, data) => {
+        const response = await api.put(`/api/v1/quantity-units/${id}`, data);
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.message || 'Failed to update quantity unit');
+        return result;
+    },
+    deleteQuantityUnit: async (id) => {
+        const response = await api.delete(`/api/v1/quantity-units/${id}`);
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.message || 'Failed to delete quantity unit');
         return result;
     }
 };
