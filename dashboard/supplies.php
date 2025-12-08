@@ -278,17 +278,25 @@ echo UI::alertDialog('delete-alert', 'Are you absolutely sure?', 'This action ca
 
     function addProductRow(data = null) {
         const row = document.createElement('div');
-        row.className = 'grid grid-cols-[1fr_auto_auto] items-end gap-2 p-3 border border-border/50 rounded-lg bg-background shadow-sm animate-in fade-in slide-in-from-bottom-2 duration-300';
+        row.className = 'grid grid-cols-[1fr_auto_auto] items-end gap-2 p-3 border border-border/50 rounded-lg bg-background shadow-sm animate-in fade-in slide-in-from-bottom-2 duration-300 relative product-row';
         
-        const productOptions = `<option value="">Select Product</option>` + 
-            availableProducts.map(p => `<option value="${p.id}" ${data && data.productId === p.id ? 'selected' : ''}>${p.name}</option>`).join('');
+        let productName = '';
+        let productId = '';
+        
+        if (data && data.productId) {
+            const p = availableProducts.find(ap => ap.id === data.productId);
+            if (p) {
+                productName = p.name;
+                productId = p.id;
+            }
+        }
 
         row.innerHTML = `
-            <div class="grid gap-1.5">
+            <div class="grid gap-1.5 relative">
                 <label class="text-xs font-medium text-muted-foreground">Product</label>
-                <select name="productId[]" class="flex h-9 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-1 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
-                    ${productOptions}
-                </select>
+                <input type="text" class="product-display-input flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" placeholder="Search product..." value="${productName}" autocomplete="off">
+                <input type="hidden" name="productId[]" class="product-id-input" value="${productId}">
+                <div class="product-search-results absolute top-[60px] w-full rounded-md border bg-popover text-popover-foreground shadow-md outline-none animate-in fade-in-0 zoom-in-95 hidden z-50 max-h-60 overflow-y-auto bg-white border-border"></div>
             </div>
             <div class="grid gap-1.5">
                 <label class="text-xs font-medium text-muted-foreground">Qty</label>
@@ -302,6 +310,63 @@ echo UI::alertDialog('delete-alert', 'Are you absolutely sure?', 'This action ca
         productItemsContainer.appendChild(row);
         lucide.createIcons();
     }
+
+    // Product Search Logic (Event Delegation)
+    productItemsContainer.addEventListener('input', (e) => {
+        if (e.target.classList.contains('product-display-input')) {
+            const input = e.target;
+            const term = input.value.toLowerCase();
+            const row = input.closest('.product-row');
+            const hiddenInput = row.querySelector('.product-id-input');
+            const resultsContainer = row.querySelector('.product-search-results');
+            
+            // Reset hidden ID on input change
+            hiddenInput.value = '';
+            
+            if (term.length < 1) {
+                resultsContainer.classList.add('hidden');
+                return;
+            }
+
+            const matches = availableProducts.filter(p => (p.name || '').toLowerCase().includes(term));
+            
+            resultsContainer.innerHTML = matches.length ? matches.map(p => `
+                <div class="relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground cursor-pointer result-item" 
+                     data-id="${p.id}" data-name="${p.name}">
+                    <div>
+                        <div class="font-medium">${p.name}</div>
+                    </div>
+                </div>
+            `).join('') : '<div class="p-2 text-sm text-muted-foreground">No products found</div>';
+
+            resultsContainer.classList.remove('hidden');
+        }
+    });
+
+    productItemsContainer.addEventListener('click', (e) => {
+        // Handle Result Selection
+        const resultItem = e.target.closest('.result-item');
+        if (resultItem) {
+            const row = resultItem.closest('.product-row');
+            const input = row.querySelector('.product-display-input');
+            const hiddenInput = row.querySelector('.product-id-input');
+            const resultsContainer = row.querySelector('.product-search-results');
+
+            input.value = resultItem.dataset.name;
+            hiddenInput.value = resultItem.dataset.id;
+            resultsContainer.classList.add('hidden');
+        }
+    });
+
+    // Close Dropdowns on outside click
+    document.addEventListener('click', (e) => {
+        const results = document.querySelectorAll('.product-search-results:not(.hidden)');
+        results.forEach(res => {
+            if (!res.parentElement.contains(e.target)) {
+                res.classList.add('hidden');
+            }
+        });
+    });
 
     // Actions
     window.openDetails = async (id) => {
@@ -337,8 +402,8 @@ echo UI::alertDialog('delete-alert', 'Are you absolutely sure?', 'This action ca
             detailsContent.innerHTML = `
                 <div class="grid grid-cols-2 gap-4">
                     <div class="space-y-1">
-                        <span class="text-xs font-medium text-muted-foreground uppercase">Supplier</span>
-                        <div class="font-medium">${selectedSupply.supplierName || 'N/A'}</div>
+                        <span class="text-xs font-medium text-muted-foreground uppercase">Supply ID</span>
+                        <div class="font-medium">${selectedSupply.supplyId || 'N/A'}</div>
                     </div>
                     <div class="space-y-1">
                         <span class="text-xs font-medium text-muted-foreground uppercase">Date</span>
@@ -462,9 +527,18 @@ echo UI::alertDialog('delete-alert', 'Are you absolutely sure?', 'This action ca
         for (let i = 0; i < productIds.length; i++) {
             if (productIds[i]) {
                 const qty = parseInt(quantities[i]);
+                
+                // Find product to get Quantity Unit
+                const prod = availableProducts.find(p => p.id === productIds[i]);
+                let qUnit = null;
+                if (prod && prod.quantityUnit) {
+                    qUnit = typeof prod.quantityUnit === 'object' ? (prod.quantityUnit._id || prod.quantityUnit.id) : prod.quantityUnit;
+                }
+
                 products.push({
                     product: productIds[i],
-                    quantity: qty
+                    quantity: qty,
+                    quantityUnit: qUnit
                 });
             }
         }
