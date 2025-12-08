@@ -81,11 +81,6 @@ $supplyFormContent = '
     <input type="hidden" name="id" id="supplyId">
     <div class="space-y-6 max-h-[60vh] overflow-y-auto pr-2 custom-scrollbar">
         <div class="grid gap-2">
-            <label class="text-sm font-medium leading-none" for="supplierName">Supplier Name</label>
-            <input type="text" name="supplierName" id="supplierName" placeholder="Supplier Name" required class="flex h-10 w-full rounded-lg border border-input bg-background/50 px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-200 focus:border-primary">
-        </div>
-        
-        <div class="grid gap-2">
             <label class="text-sm font-medium leading-none">Products</label>
             <div class="p-4 space-y-4 border border-border/50 rounded-lg bg-muted/10">
                 <div id="productItems" class="space-y-3">
@@ -99,18 +94,12 @@ $supplyFormContent = '
         </div>
 
         <div class="grid gap-2">
-            <label class="text-sm font-medium leading-none" for="supplyStatus">Status</label>
-            <select name="status" id="supplyStatus" class="flex h-10 w-full items-center justify-between rounded-lg border border-input bg-background/50 px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-200 focus:border-primary">
-                <option value="Paid">Paid</option>
-                <option value="Pending">Pending</option>
-            </select>
+            <label class="text-sm font-medium leading-none" for="supplyNotes">Notes (Optional)</label>
+            <textarea name="notes" id="supplyNotes" placeholder="Add any notes..." class="flex min-h-[80px] w-full rounded-lg border border-input bg-background/50 px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-200 focus:border-primary resize-y"></textarea>
         </div>
     </div>
 
-    <div class="flex justify-between items-center pt-4 border-t border-border/50">
-        <div class="text-lg font-bold text-primary">
-            Total Cost: <span id="totalCostDisplay">₦0.00</span>
-        </div>
+    <div class="flex justify-end items-center pt-4 border-t border-border/50">
         <div class="flex gap-2">
             <button type="button" onclick="document.getElementById(\'supply-modal\').classList.add(\'hidden\')" class="inline-flex items-center justify-center whitespace-nowrap rounded-lg text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2">
                 Cancel
@@ -289,7 +278,7 @@ echo UI::alertDialog('delete-alert', 'Are you absolutely sure?', 'This action ca
 
     function addProductRow(data = null) {
         const row = document.createElement('div');
-        row.className = 'grid grid-cols-[1fr_auto_auto_auto] items-end gap-2 p-3 border border-border/50 rounded-lg bg-background shadow-sm animate-in fade-in slide-in-from-bottom-2 duration-300';
+        row.className = 'grid grid-cols-[1fr_auto_auto] items-end gap-2 p-3 border border-border/50 rounded-lg bg-background shadow-sm animate-in fade-in slide-in-from-bottom-2 duration-300';
         
         const productOptions = `<option value="">Select Product</option>` + 
             availableProducts.map(p => `<option value="${p.id}" ${data && data.productId === p.id ? 'selected' : ''}>${p.name} (Cost: ₦${p.costPrice || 0})</option>`).join('');
@@ -303,11 +292,7 @@ echo UI::alertDialog('delete-alert', 'Are you absolutely sure?', 'This action ca
             </div>
             <div class="grid gap-1.5">
                 <label class="text-xs font-medium text-muted-foreground">Qty</label>
-                <input type="number" name="quantity[]" placeholder="Qty" value="${data ? data.quantity : 1}" min="1" class="flex h-9 w-20 rounded-md border border-input bg-background px-3 py-1 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
-            </div>
-            <div class="grid gap-1.5">
-                <label class="text-xs font-medium text-muted-foreground">Cost</label>
-                <input type="number" name="cost[]" placeholder="Cost" value="${data ? data.costPrice : ''}" min="0" step="0.01" class="flex h-9 w-24 rounded-md border border-input bg-background px-3 py-1 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                <input type="number" name="quantity[]" placeholder="Qty" value="${data ? data.quantity : 1}" min="1" class="flex h-9 w-24 rounded-md border border-input bg-background px-3 py-1 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
             </div>
             <button type="button" class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-destructive/10 text-destructive hover:bg-destructive/20 h-9 w-9 mb-[1px]" onclick="this.parentElement.remove(); lucide.createIcons();">
                 <i data-lucide="trash-2" class="h-4 w-4"></i>
@@ -389,18 +374,26 @@ echo UI::alertDialog('delete-alert', 'Are you absolutely sure?', 'This action ca
             selectedSupply = {...supply, id: supply._id || supply.id};
             
             document.getElementById('supplyId').value = selectedSupply.id;
-            document.getElementById('supplierName').value = selectedSupply.supplierName;
-            document.getElementById('supplyStatus').value = selectedSupply.paymentStatus || selectedSupply.status;
+            document.getElementById('supplyId').value = selectedSupply.id;
+            document.getElementById('supplyNotes').value = selectedSupply.notes || '';
             
             productItemsContainer.innerHTML = '';
             if (selectedSupply.products) {
                 selectedSupply.products.forEach(p => {
-                    // Find product ID if not directly available (mock logic might need adjustment)
-                    const prod = availableProducts.find(ap => ap.name === p.productName);
+                    // Robust ID finding (Handle 'product' or 'productId')
+                    let pId = p.productId;
+                    if (!pId && p.product) {
+                        pId = typeof p.product === 'object' ? (p.product._id || p.product.id) : p.product;
+                    }
+                    
+                    if (!pId && p.productName) {
+                         const prod = availableProducts.find(ap => ap.name === p.productName);
+                         if (prod) pId = prod.id;
+                    }
+
                     addProductRow({
-                        productId: p.productId || (prod ? prod.id : ''),
-                        quantity: p.quantity,
-                        costPrice: p.costPrice || (p.totalCost / p.quantity)
+                        productId: pId || '',
+                        quantity: p.quantity
                     });
                 });
             }
@@ -408,9 +401,6 @@ echo UI::alertDialog('delete-alert', 'Are you absolutely sure?', 'This action ca
             supplyModalTitle.textContent = 'Edit Supply';
             detailsModal.classList.add('hidden');
             supplyModal.classList.remove('hidden');
-            
-            // Calculate total after populating
-            setTimeout(calculateTotalCost, 100);
         } catch (error) {
             showToast('Failed to fetch supply for editing', 'error');
         }
@@ -421,44 +411,15 @@ echo UI::alertDialog('delete-alert', 'Are you absolutely sure?', 'This action ca
         deleteAlert.classList.remove('hidden');
     };
 
-    // Total Cost Calculation
-    function calculateTotalCost() {
-        const costInputs = document.querySelectorAll('input[name="cost[]"]');
-        let total = 0;
-        costInputs.forEach(input => {
-            total += parseFloat(input.value || 0);
-        });
-        document.getElementById('totalCostDisplay').textContent = '₦' + total.toFixed(2);
-    }
-
-    // Event delegation for cost inputs
-    productItemsContainer.addEventListener('input', (e) => {
-        if (e.target.name === 'cost[]') {
-            calculateTotalCost();
-        }
-    });
-
-    // Update addProductRow to trigger calculation on removal
-    const originalAddProductRow = addProductRow;
-    addProductRow = function(data = null) {
-        originalAddProductRow(data);
-        calculateTotalCost();
-    };
-
-    // Override remove button click to recalculate
-    productItemsContainer.addEventListener('click', (e) => {
-        if (e.target.closest('button') && e.target.closest('button').classList.contains('bg-destructive/10')) {
-            setTimeout(calculateTotalCost, 0); // Wait for element to be removed
-        }
-    });
+    // Total Cost Calculation (Removed - handled by backend)
 
     // Event Listeners
     addSupplyBtn.addEventListener('click', () => {
         supplyForm.reset();
         document.getElementById('supplyId').value = '';
+        document.getElementById('supplyNotes').value = '';
         productItemsContainer.innerHTML = '';
         addProductRow();
-        calculateTotalCost();
         supplyModalTitle.textContent = 'Add New Supply';
         supplyModal.classList.remove('hidden');
     });
@@ -491,39 +452,31 @@ echo UI::alertDialog('delete-alert', 'Are you absolutely sure?', 'This action ca
         const formData = new FormData(supplyForm);
         const id = formData.get('id');
         
-        const supplierName = formData.get('supplierName');
-        const status = formData.get('status');
+        const notes = formData.get('notes');
         const productIds = formData.getAll('productId[]');
         const quantities = formData.getAll('quantity[]');
         const costs = formData.getAll('cost[]');
 
-        const items = [];
-        let totalAmount = 0;
+        const products = [];
 
         for (let i = 0; i < productIds.length; i++) {
             if (productIds[i]) {
                 const qty = parseInt(quantities[i]);
-                const cost = parseFloat(costs[i] || 0);
-                items.push({
-                    productId: productIds[i],
-                    quantity: qty,
-                    costPrice: cost
+                products.push({
+                    product: productIds[i],
+                    quantity: qty
                 });
-                totalAmount += cost * qty;
             }
         }
 
-        if (items.length === 0) {
+        if (products.length === 0) {
             showToast('Please select at least one product', 'error');
             return;
         }
 
         const supplyData = {
-            supplierName,
-            status, // Note: Backend might expect 'paymentStatus' or 'status' depending on implementation
-            paymentStatus: status,
-            items,
-            totalAmount
+            products,
+            notes
         };
 
         try {
