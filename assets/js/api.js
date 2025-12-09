@@ -591,3 +591,12 @@ const PublicService = {
         }
     }
 };
+
+const AnalyticsService = {
+    getDashboardAnalytics: async () => {
+        const response = await api.get('/api/v1/analytics/dashboard');
+        if (!response.ok) throw new Error('Failed to fetch dashboard analytics');
+        return response.json();
+    }
+};
+
