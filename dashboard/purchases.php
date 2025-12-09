@@ -456,11 +456,10 @@ echo UI::alertDialog('delete-alert', 'Are you absolutely sure?', 'This action ca
                             ${selectedPurchase.products.map(p => {
                                 const prod = availableProducts.find(ap => ap.name === (p.name || p.productName));
                                 const price = prod ? parseFloat(prod.sellingPrice || 0) : 0;
-                                const unit = p.quantityUnit ? (typeof p.quantityUnit === 'object' ? p.quantityUnit.name : p.quantityUnit) : '';
                                 return `
                                 <tr>
                                     <td class="p-4">${p.name || p.productName}</td>
-                                    <td class="p-4">${p.quantity} ${unit}</td>
+                                    <td class="p-4">${p.quantity} ${p.quantityUnit || ''}</td>
                                     <td class="p-4 text-right">₦${price.toFixed(2)}</td>
                                 </tr>
                             `;}).join('')}
@@ -529,10 +528,9 @@ echo UI::alertDialog('delete-alert', 'Are you absolutely sure?', 'This action ca
                     ${purchase.products.map(item => {
                         const prod = availableProducts.find(ap => ap.name === (item.name || item.productName));
                         const price = prod ? parseFloat(prod.sellingPrice || 0) : 0;
-                        const unit = item.quantityUnit ? (typeof item.quantityUnit === 'object' ? item.quantityUnit.name : item.quantityUnit) : '';
                         return `
                         <div class="flex justify-between text-sm">
-                            <span>${item.quantity}${unit ? ' ' + unit : ''} x ${item.name || item.productName}</span>
+                            <span>${item.quantity}x ${item.name || item.productName}</span>
                             <span class="font-medium">₦${(price * item.quantity).toFixed(2)}</span>
                         </div>
                     `;}).join('')}
@@ -844,47 +842,6 @@ echo UI::alertDialog('delete-alert', 'Are you absolutely sure?', 'This action ca
     searchInput.addEventListener('input', filterPurchases);
     statusFilter.addEventListener('change', filterPurchases);
     dateFilter.addEventListener('change', filterPurchases);
-
-    // Actions
-    window.markAsPaid = async (id) => {
-        try {
-            await PurchaseService.updatePurchase(id, { paymentStatus: 'Paid' });
-            showToast('Purchase marked as Paid', 'success');
-            fetchData();
-        } catch (error) {
-            console.error(error);
-            showToast('Failed to update status', 'error');
-        }
-    };
-
-    window.markAsPending = async (id) => {
-        try {
-            await PurchaseService.updatePurchase(id, { paymentStatus: 'Pending' });
-            showToast('Purchase marked as Pending', 'success');
-            fetchData();
-        } catch (error) {
-            console.error(error);
-            showToast('Failed to update status', 'error');
-        }
-    };
-
-    window.openDeleteAlert = (id) => {
-        purchaseToDelete = id;
-        deleteAlert.classList.remove('hidden');
-    };
-
-    confirmDeleteBtn.addEventListener('click', async () => {
-        if (!purchaseToDelete) return;
-        try {
-            await PurchaseService.deletePurchase(purchaseToDelete);
-            showToast('Purchase deleted', 'success');
-            deleteAlert.classList.add('hidden');
-            fetchData();
-        } catch (error) {
-            console.error(error);
-            showToast('Failed to delete purchase', 'error');
-        }
-    });
 
     // Initial Load
     fetchData();
