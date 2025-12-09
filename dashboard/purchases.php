@@ -86,13 +86,13 @@ include __DIR__ . '/../includes/ui/components.php';
 $purchaseFormContent = '
 <form id="purchaseForm" class="grid gap-6">
     <input type="hidden" name="id" id="purchaseId">
-    <div class="space-y-6 max-h-[60vh] overflow-y-auto pr-2 custom-scrollbar">
-        <div class="grid gap-2">
-            <label class="text-sm font-medium leading-none" for="customerName">Customer</label>
-            <select name="customerName" id="customerName" class="flex h-11 w-full items-center justify-between rounded-lg border border-input bg-background/50 px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-200 focus:border-primary" required>
-                <option value="">Select a customer</option>
-                <!-- Options populated via JS -->
-            </select>
+    <div class="space-y-6 max-h-[70vh] overflow-y-auto pr-2 custom-scrollbar">
+        <!-- Customer Search -->
+        <div class="grid gap-2 relative">
+            <label class="text-sm font-medium leading-none">Customer</label>
+            <input type="text" id="customerSearchInput" class="flex h-10 w-full rounded-lg border border-input bg-background/50 px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-200 focus:border-primary" placeholder="Search customer..." autocomplete="off">
+            <input type="hidden" name="customer" id="customerId" required>
+            <div id="customerSearchResults" class="absolute top-[70px] w-full rounded-md border bg-popover text-popover-foreground shadow-md outline-none animate-in fade-in-0 zoom-in-95 hidden z-50 max-h-60 overflow-y-auto bg-white border-border"></div>
         </div>
 
         <div class="grid gap-2">
@@ -109,31 +109,41 @@ $purchaseFormContent = '
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div class="grid gap-2">
-                <label class="text-sm font-medium leading-none">Payment Status</label>
-                <select name="paymentStatus" id="paymentStatus" class="flex h-11 w-full items-center justify-between rounded-lg border border-input bg-background/50 px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-200 focus:border-primary">
-                    <option value="Pending">Pending</option>
-                    <option value="Paid">Paid</option>
-                    <option value="Partial">Partial</option>
-                    <option value="Cancelled">Cancelled</option>
-                    <option value="Refunded">Refunded</option>
+             <div class="grid gap-2">
+                <label class="text-sm font-medium leading-none">Payment Method</label>
+                <select name="paymentMethod" id="paymentMethod" class="flex h-10 w-full rounded-lg border border-input bg-background/50 px-3 py-2 text-sm focus:border-primary outline-none">
+                    <option value="Cash">Cash</option>
+                    <option value="Card">Card</option>
+                    <option value="Transfer">Transfer</option>
+                    <option value="Check">Check</option>
+                    <option value="Other">Other</option>
                 </select>
             </div>
-            <div class="grid gap-2">
-                <label class="text-sm font-medium leading-none">Delivery Status</label>
-                <select name="deliveryStatus" id="deliveryStatus" class="flex h-11 w-full items-center justify-between rounded-lg border border-input bg-background/50 px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-200 focus:border-primary">
-                    <option value="Pending">Pending</option>
-                    <option value="Processing">Processing</option>
-                    <option value="Shipped">Shipped</option>
-                    <option value="Delivered">Delivered</option>
-                    <option value="Cancelled">Cancelled</option>
-                </select>
+             <div class="grid gap-2">
+                <label class="text-sm font-medium leading-none">Payment Reference (Optional)</label>
+                <input type="text" name="paymentReference" id="paymentReference" class="flex h-10 w-full rounded-lg border border-input bg-background/50 px-3 py-2 text-sm focus:border-primary outline-none" placeholder="e.g. Transaction ID">
+            </div>
+        </div>
+
+        <div class="grid gap-2">
+             <label class="text-sm font-medium leading-none">Pick Up Fee (Optional)</label>
+             <input type="number" name="pickUpFee" id="pickUpFee" class="flex h-10 w-full rounded-lg border border-input bg-background/50 px-3 py-2 text-sm focus:border-primary outline-none" placeholder="0.00">
+        </div>
+
+        <div class="space-y-2 border p-3 rounded-lg border-border/50">
+            <h4 class="text-sm font-medium">Delivery Address (Optional)</h4>
+            <div class="grid grid-cols-2 gap-2">
+                 <input type="text" name="street" id="addrStreet" class="flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm outline-none" placeholder="Street">
+                 <input type="text" name="city" id="addrCity" class="flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm outline-none" placeholder="City">
+                 <input type="text" name="state" id="addrState" class="flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm outline-none" placeholder="State">
+                 <input type="text" name="country" id="addrCountry" class="flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm outline-none" placeholder="Country">
+                 <input type="text" name="postalCode" id="addrZip" class="flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm outline-none" placeholder="Postal Code">
             </div>
         </div>
 
         <div class="grid gap-2">
             <label class="text-sm font-medium leading-none">Notes</label>
-            <textarea name="notes" id="purchaseNotes" placeholder="Add any notes for this purchase..." class="flex min-h-[80px] w-full rounded-lg border border-input bg-background/50 px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-200 focus:border-primary"></textarea>
+            <textarea name="notes" id="purchaseNotes" placeholder="Add any notes..." class="flex min-h-[80px] w-full rounded-lg border border-input bg-background/50 px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-200 focus:border-primary resize-y"></textarea>
         </div>
     </div>
 
@@ -245,6 +255,7 @@ echo UI::alertDialog('delete-alert', 'Are you absolutely sure?', 'This action ca
     let allPurchases = [];
     let availableProducts = [];
     let availableCustomers = [];
+    let availableQuantityUnits = [];
     let selectedPurchase = null;
     let purchaseToDelete = null;
 
@@ -280,7 +291,7 @@ echo UI::alertDialog('delete-alert', 'Are you absolutely sure?', 'This action ca
             const [purchasesRes, productsRes, customersRes] = await Promise.all([
                 PurchaseService.getAllPurchases(),
                 ProductService.getAllProducts(),
-                PurchaseService.getAllCustomerNames() // Assuming this method exists or we use getAllUsers with role filter
+                PurchaseService.getAllCustomerNames()
             ]);
             
             allPurchases = purchasesRes.data.map(p => ({...p, id: p._id || p.id}));
@@ -288,16 +299,11 @@ echo UI::alertDialog('delete-alert', 'Are you absolutely sure?', 'This action ca
             availableCustomers = customersRes.data || [];
             
             renderPurchases(allPurchases);
-            updateCustomerSelect();
+            // customer search is dynamic now
         } catch (error) {
             console.error(error);
             showToast('Failed to fetch data', 'error');
         }
-    }
-
-    function updateCustomerSelect() {
-        customerSelect.innerHTML = '<option value="">Select a customer</option>' + 
-            availableCustomers.map(c => `<option value="${c._id}">${c.name}</option>`).join('');
     }
 
     function renderPurchases(purchases) {
@@ -374,30 +380,26 @@ echo UI::alertDialog('delete-alert', 'Are you absolutely sure?', 'This action ca
 
     function addProductRow(data = null) {
         const row = document.createElement('div');
-        row.className = 'grid grid-cols-[1fr_auto_auto_auto] items-end gap-2 p-3 border border-border/50 rounded-lg bg-background shadow-sm animate-in fade-in slide-in-from-bottom-2 duration-300';
+        row.className = 'grid grid-cols-[1fr_auto_auto] items-end gap-2 p-3 border border-border/50 rounded-lg bg-background shadow-sm animate-in fade-in slide-in-from-bottom-2 duration-300 relative product-row';
         
-        const productOptions = `<option value="">Select Product</option>` + 
-            availableProducts.map(p => `<option value="${p.id}" data-price="${p.sellingPrice}" ${data && data.productId === p.id ? 'selected' : ''}>${p.name}</option>`).join('');
+        let productName = '';
+        let productId = '';
+
+        if (data && data.productId) {
+             const p = availableProducts.find(ap => ap.id === data.productId);
+             if (p) { productName = p.name; productId = p.id; }
+        }
 
         row.innerHTML = `
-            <div class="grid gap-1.5">
+            <div class="grid gap-1.5 relative">
                 <label class="text-xs font-medium text-muted-foreground">Item</label>
-                <select name="productId[]" class="flex h-9 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-1 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" onchange="calculateTotal()">
-                    ${productOptions}
-                </select>
+                <input type="text" class="product-display-input flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm outline-none placeholder:text-muted-foreground focus:ring-2 focus:ring-ring" placeholder="Search product..." value="${productName}" autocomplete="off">
+                <input type="hidden" name="productId[]" class="product-id-input" value="${productId}">
+                <div class="product-search-results absolute top-[60px] w-full rounded-md border bg-popover text-popover-foreground shadow-md outline-none animate-in fade-in-0 zoom-in-95 hidden z-50 max-h-60 overflow-y-auto bg-white border-border"></div>
             </div>
             <div class="grid gap-1.5">
                 <label class="text-xs font-medium text-muted-foreground">Qty</label>
-                <input type="number" name="quantity[]" placeholder="1" value="${data ? data.quantity : 1}" min="1" class="flex h-9 w-16 rounded-md border border-input bg-background px-3 py-1 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" oninput="calculateTotal()">
-            </div>
-            <div class="grid gap-1.5">
-                <label class="text-xs font-medium text-muted-foreground">Unit</label>
-                 <select name="quantityUnit[]" class="flex h-9 w-20 items-center justify-between rounded-md border border-input bg-background px-3 py-1 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
-                    <option value="pcs" ${data && data.quantityUnit === 'pcs' ? 'selected' : ''}>pcs</option>
-                    <option value="kg" ${data && data.quantityUnit === 'kg' ? 'selected' : ''}>kg</option>
-                    <option value="ltr" ${data && data.quantityUnit === 'ltr' ? 'selected' : ''}>ltr</option>
-                    <option value="box" ${data && data.quantityUnit === 'box' ? 'selected' : ''}>box</option>
-                </select>
+                <input type="number" name="quantity[]" placeholder="1" value="${data ? data.quantity : 1}" min="1" class="qty-input flex h-9 w-16 rounded-md border border-input bg-background px-3 py-1 text-sm outline-none focus:ring-2 focus:ring-ring">
             </div>
             <button type="button" class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-destructive/10 text-destructive hover:bg-destructive/20 h-9 w-9 mb-[1px]" onclick="this.parentElement.remove(); calculateTotal(); lucide.createIcons();">
                 <i data-lucide="trash-2" class="h-4 w-4"></i>
@@ -410,17 +412,24 @@ echo UI::alertDialog('delete-alert', 'Are you absolutely sure?', 'This action ca
 
     function calculateTotal() {
         let total = 0;
-        const rows = productItemsContainer.children;
-        for (let row of rows) {
-            const select = row.querySelector('select[name="productId[]"]');
-            const input = row.querySelector('input[name="quantity[]"]');
-            if (select && input) {
-                const option = select.options[select.selectedIndex];
-                const price = parseFloat(option.getAttribute('data-price') || 0);
-                const qty = parseInt(input.value || 0);
-                total += price * qty;
+        const rows = productItemsContainer.querySelectorAll('.product-row');
+        rows.forEach(row => {
+            const prodId = row.querySelector('.product-id-input').value;
+            const qty = parseFloat(row.querySelector('.qty-input').value || 0);
+            
+            if (prodId) {
+                const prod = availableProducts.find(p => p.id === prodId);
+                if (prod) {
+                    const price = parseFloat(prod.sellingPrice || prod.price || 0);
+                    total += price * qty;
+                }
             }
-        }
+        });
+        
+        // Add Pickup Fee
+        const pickupFee = parseFloat(document.getElementById('pickUpFee').value || 0);
+        total += pickupFee;
+
         document.getElementById('totalDisplay').textContent = '₦' + total.toFixed(2);
     }
 
@@ -428,7 +437,8 @@ echo UI::alertDialog('delete-alert', 'Are you absolutely sure?', 'This action ca
     window.openDetails = async (id) => {
         try {
             const res = await PurchaseService.getPurchaseById(id);
-            selectedPurchase = {...res.data, id: res.data._id || res.data.id};
+            const purchase = res.data;
+            selectedPurchase = {...purchase, id: purchase._id || purchase.id};
             
             let productsHtml = '';
             if (selectedPurchase.products && selectedPurchase.products.length > 0) {
@@ -439,17 +449,21 @@ echo UI::alertDialog('delete-alert', 'Are you absolutely sure?', 'This action ca
                             <tr>
                                 <th class="h-10 px-4 text-left font-medium">Product</th>
                                 <th class="h-10 px-4 text-left font-medium">Qty</th>
-                                <th class="h-10 px-4 text-right font-medium">Price</th>
+                                <th class="h-10 px-4 text-right font-medium">Price (Current)</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-border/50">
-                            ${selectedPurchase.products.map(p => `
+                            ${selectedPurchase.products.map(p => {
+                                const prod = availableProducts.find(ap => ap.name === (p.name || p.productName));
+                                const price = prod ? parseFloat(prod.sellingPrice || 0) : 0;
+                                const unit = p.quantityUnit ? (typeof p.quantityUnit === 'object' ? p.quantityUnit.name : p.quantityUnit) : '';
+                                return `
                                 <tr>
                                     <td class="p-4">${p.name || p.productName}</td>
-                                    <td class="p-4">${p.quantity} ${p.quantityUnit || ''}</td>
-                                    <td class="p-4 text-right">₦${(p.price || 0).toFixed(2)}</td>
+                                    <td class="p-4">${p.quantity} ${unit}</td>
+                                    <td class="p-4 text-right">₦${price.toFixed(2)}</td>
                                 </tr>
-                            `).join('')}
+                            `;}).join('')}
                         </tbody>
                     </table>
                 </div>`;
@@ -467,7 +481,7 @@ echo UI::alertDialog('delete-alert', 'Are you absolutely sure?', 'This action ca
                     </div>
                     <div class="space-y-1">
                         <span class="text-xs font-medium text-muted-foreground uppercase">Payment</span>
-                        <div><span class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors ${selectedPurchase.paymentStatus === 'Paid' ? 'bg-green-500/10 text-green-700 border-green-200' : 'bg-yellow-500/10 text-yellow-700 border-yellow-200'}">${selectedPurchase.paymentStatus}</span></div>
+                        <div><span class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors ${selectedPurchase.paymentStatus === 'Paid' ? 'bg-green-500/10 text-green-700 border-green-200' : 'bg-yellow-500/10 text-yellow-700 border-yellow-200'}">${selectedPurchase.paymentStatus || 'N/A'}</span></div>
                     </div>
                     <div class="space-y-1">
                         <span class="text-xs font-medium text-muted-foreground uppercase">Delivery</span>
@@ -488,6 +502,7 @@ echo UI::alertDialog('delete-alert', 'Are you absolutely sure?', 'This action ca
             
             detailsModal.classList.remove('hidden');
         } catch (error) {
+            console.error(error);
             showToast('Failed to fetch details', 'error');
         }
     };
@@ -511,12 +526,16 @@ echo UI::alertDialog('delete-alert', 'Are you absolutely sure?', 'This action ca
                 </div>
                 
                 <div class="border-y border-dashed border-border py-4 space-y-2 mb-6">
-                    ${purchase.products.map(item => `
+                    ${purchase.products.map(item => {
+                        const prod = availableProducts.find(ap => ap.name === (item.name || item.productName));
+                        const price = prod ? parseFloat(prod.sellingPrice || 0) : 0;
+                        const unit = item.quantityUnit ? (typeof item.quantityUnit === 'object' ? item.quantityUnit.name : item.quantityUnit) : '';
+                        return `
                         <div class="flex justify-between text-sm">
-                            <span>${item.quantity}x ${item.name || item.productName}</span>
-                            <span class="font-medium">₦${((item.price || 0) * item.quantity).toFixed(2)}</span>
+                            <span>${item.quantity}${unit ? ' ' + unit : ''} x ${item.name || item.productName}</span>
+                            <span class="font-medium">₦${(price * item.quantity).toFixed(2)}</span>
                         </div>
-                    `).join('')}
+                    `;}).join('')}
                 </div>
                 
                 <div class="flex justify-between font-bold text-lg mb-6">
@@ -531,6 +550,7 @@ echo UI::alertDialog('delete-alert', 'Are you absolutely sure?', 'This action ca
              
              receiptModal.classList.remove('hidden');
         } catch (error) {
+             console.error(error);
              showToast('Failed to fetch receipt', 'error');
         }
     };
@@ -542,20 +562,38 @@ echo UI::alertDialog('delete-alert', 'Are you absolutely sure?', 'This action ca
             selectedPurchase = {...purchase, id: purchase._id || purchase.id};
             
             document.getElementById('purchaseId').value = selectedPurchase.id;
-            document.getElementById('customerName').value = selectedPurchase.customer?._id || selectedPurchase.customer;
-            document.getElementById('paymentStatus').value = selectedPurchase.paymentStatus;
-            document.getElementById('deliveryStatus').value = selectedPurchase.deliveryStatus || 'Pending';
+            
+            // Set Customer
+            const custId = selectedPurchase.customer?._id || selectedPurchase.customer;
+            document.getElementById('customerId').value = custId;
+            const cust = availableCustomers.find(c => c.id === custId || c._id === custId);
+            document.getElementById('customerSearchInput').value = cust ? cust.name : (selectedPurchase.customerName || '');
+
+            document.getElementById('paymentMethod').value = selectedPurchase.paymentMethod || 'Cash';
+            document.getElementById('paymentReference').value = selectedPurchase.paymentReference || '';
+            document.getElementById('pickUpFee').value = selectedPurchase.pickUpFee || '';
+            
+            // Address
+            if (selectedPurchase.deliveryAddress) {
+                document.getElementById('addrStreet').value = selectedPurchase.deliveryAddress.street || '';
+                document.getElementById('addrCity').value = selectedPurchase.deliveryAddress.city || '';
+                document.getElementById('addrState').value = selectedPurchase.deliveryAddress.state || '';
+                document.getElementById('addrCountry').value = selectedPurchase.deliveryAddress.country || '';
+                document.getElementById('addrZip').value = selectedPurchase.deliveryAddress.postalCode || '';
+            }
+
             document.getElementById('purchaseNotes').value = selectedPurchase.notes || '';
             
             productItemsContainer.innerHTML = '';
             if (selectedPurchase.products) {
                 selectedPurchase.products.forEach(p => {
-                    // Find product ID if not directly available
+                    // Match by name since ID is not in response
                     const prod = availableProducts.find(ap => ap.name === (p.name || p.productName));
+                    const pId = prod ? prod.id : '';
+
                     addProductRow({
-                        productId: p.productId || (prod ? prod.id : ''),
-                        quantity: p.quantity,
-                        quantityUnit: p.quantityUnit
+                        productId: pId,
+                        quantity: p.quantity
                     });
                 });
             }
@@ -599,11 +637,13 @@ echo UI::alertDialog('delete-alert', 'Are you absolutely sure?', 'This action ca
     addPurchaseBtn.addEventListener('click', () => {
         purchaseForm.reset();
         document.getElementById('purchaseId').value = '';
+        document.getElementById('customerId').value = '';
+        document.getElementById('purchaseNotes').value = '';
         productItemsContainer.innerHTML = '';
         addProductRow();
-        calculateTotal();
         purchaseModalTitle.textContent = 'Create New Purchase';
         purchaseModal.classList.remove('hidden');
+        calculateTotal();
     });
 
     addProductItemBtn.addEventListener('click', () => {
@@ -634,60 +674,151 @@ echo UI::alertDialog('delete-alert', 'Are you absolutely sure?', 'This action ca
         const formData = new FormData(purchaseForm);
         const id = formData.get('id');
         
-        const customer = formData.get('customerName');
-        const paymentStatus = formData.get('paymentStatus');
-        const deliveryStatus = formData.get('deliveryStatus');
+        const customer = formData.get('customer');
+        const paymentMethod = formData.get('paymentMethod');
+        const paymentReference = formData.get('paymentReference');
+        const pickUpFee = parseFloat(formData.get('pickUpFee') || 0);
         const notes = formData.get('notes');
+        
+        const street = formData.get('street');
+        const city = formData.get('city');
+        const state = formData.get('state');
+        const country = formData.get('country');
+        const postalCode = formData.get('postalCode');
+
         const productIds = formData.getAll('productId[]');
         const quantities = formData.getAll('quantity[]');
-        const quantityUnits = formData.getAll('quantityUnit[]');
 
-        const items = [];
-        let totalAmount = 0;
-
+        const products = [];
         for (let i = 0; i < productIds.length; i++) {
             if (productIds[i]) {
-                const qty = parseInt(quantities[i]);
-                const product = availableProducts.find(p => p.id === productIds[i]);
-                const price = product ? parseFloat(product.sellingPrice) : 0;
-                
-                items.push({
+                products.push({
                     product: productIds[i],
-                    quantity: qty,
-                    quantityUnit: quantityUnits[i],
-                    price: price
+                    quantity: parseInt(quantities[i])
                 });
-                totalAmount += price * qty;
             }
         }
 
-        if (items.length === 0) {
-            showToast('Please select at least one product', 'error');
-            return;
-        }
+        if (!customer) { showToast('Please select a customer', 'error'); return; }
+        if (products.length === 0) { showToast('Please select at least one product', 'error'); return; }
 
-        const purchaseData = {
+        const payload = {
             customer,
-            paymentStatus,
-            deliveryStatus,
+            products,
+            paymentMethod,
+            paymentReference,
+            pickUpFee,
             notes,
-            products: items,
-            totalAmount
+            deliveryAddress: (street || city || state) ? { street, city, state, country, postalCode } : undefined
         };
 
         try {
             if (id) {
-                await PurchaseService.updatePurchase(id, purchaseData);
+                await PurchaseService.updatePurchase(id, payload);
                 showToast('Purchase updated successfully', 'success');
             } else {
-                await PurchaseService.createPurchase(purchaseData);
+                await PurchaseService.createPurchase(payload);
                 showToast('Purchase created successfully', 'success');
             }
             purchaseModal.classList.add('hidden');
             fetchData();
         } catch (error) {
+            console.error(error);
             showToast(error.message, 'error');
         }
+    });
+
+    // -- Search Event Listeners --
+
+    // Customer Search
+    const customerInput = document.getElementById('customerSearchInput');
+    const customerHidden = document.getElementById('customerId');
+    const customerResults = document.getElementById('customerSearchResults');
+
+    if (customerInput) {
+        customerInput.addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            customerHidden.value = ''; // Reset ID
+            if (term.length < 1) { customerResults.classList.add('hidden'); return; }
+            
+            const matches = availableCustomers.filter(c => c.name.toLowerCase().includes(term));
+            customerResults.innerHTML = matches.length ? matches.map(c => `
+                <div class="p-2 hover:bg-accent cursor-pointer text-sm result-item" data-id="${c.id}" data-name="${c.name}">
+                    <div class="font-medium">${c.name}</div>
+                    ${c.email ? `<div class="text-xs text-muted-foreground">${c.email}</div>` : ''}
+                </div>
+            `).join('') : '<div class="p-2 text-sm text-muted-foreground">No customers found</div>';
+            customerResults.classList.remove('hidden');
+        });
+
+        customerResults.addEventListener('click', (e) => {
+            const item = e.target.closest('.result-item');
+            if (item) {
+                customerInput.value = item.dataset.name;
+                customerHidden.value = item.dataset.id;
+                customerResults.classList.add('hidden');
+            }
+        });
+    }
+
+    // Product Search (Delegation)
+    productItemsContainer.addEventListener('input', (e) => {
+        // Product Search
+        if (e.target.classList.contains('product-display-input')) {
+            const input = e.target;
+            const term = input.value.toLowerCase();
+            const row = input.closest('.product-row');
+            const hidden = row.querySelector('.product-id-input');
+            const results = row.querySelector('.product-search-results');
+            
+            hidden.value = ''; 
+            calculateTotal();
+
+            if (term.length < 1) { results.classList.add('hidden'); return; }
+
+            const matches = availableProducts.filter(p => p.name.toLowerCase().includes(term));
+            results.innerHTML = matches.length ? matches.map(p => `
+                 <div class="p-2 hover:bg-accent cursor-pointer text-sm result-item" data-id="${p.id}" data-name="${p.name}">
+                    <div class="font-medium">${p.name}</div>
+                    <div class="text-xs text-muted-foreground">Price: ₦${p.sellingPrice || 0}</div>
+                </div>
+            `).join('') : '<div class="p-2 text-sm text-muted-foreground">No products found</div>';
+            results.classList.remove('hidden');
+        }
+
+        // Qty Change
+        if (e.target.classList.contains('qty-input') || e.target.id === 'pickUpFee') {
+            calculateTotal();
+        }
+    });
+    
+    // PickUp Fee Global Listener
+    document.getElementById('pickUpFee').addEventListener('input', calculateTotal);
+
+    productItemsContainer.addEventListener('click', (e) => {
+        // Handle Selections
+        if (e.target.closest('.result-item')) {
+            const item = e.target.closest('.result-item');
+            const results = item.parentElement;
+            const row = results.closest('.product-row');
+            
+            if (row.querySelector('.product-search-results') === results) {
+                // Product Selected
+                const input = row.querySelector('.product-display-input');
+                const hidden = row.querySelector('.product-id-input');
+                input.value = item.dataset.name;
+                hidden.value = item.dataset.id;
+                calculateTotal();
+            }
+            results.classList.add('hidden');
+        }
+    });
+
+    // Close Dropdowns on outside click
+    document.addEventListener('click', (e) => {
+        document.querySelectorAll('.product-search-results:not(.hidden), #customerSearchResults:not(.hidden)').forEach(el => {
+            if (!el.parentElement.contains(e.target)) el.classList.add('hidden');
+        });
     });
 
     // Filtering
@@ -713,6 +844,47 @@ echo UI::alertDialog('delete-alert', 'Are you absolutely sure?', 'This action ca
     searchInput.addEventListener('input', filterPurchases);
     statusFilter.addEventListener('change', filterPurchases);
     dateFilter.addEventListener('change', filterPurchases);
+
+    // Actions
+    window.markAsPaid = async (id) => {
+        try {
+            await PurchaseService.updatePurchase(id, { paymentStatus: 'Paid' });
+            showToast('Purchase marked as Paid', 'success');
+            fetchData();
+        } catch (error) {
+            console.error(error);
+            showToast('Failed to update status', 'error');
+        }
+    };
+
+    window.markAsPending = async (id) => {
+        try {
+            await PurchaseService.updatePurchase(id, { paymentStatus: 'Pending' });
+            showToast('Purchase marked as Pending', 'success');
+            fetchData();
+        } catch (error) {
+            console.error(error);
+            showToast('Failed to update status', 'error');
+        }
+    };
+
+    window.openDeleteAlert = (id) => {
+        purchaseToDelete = id;
+        deleteAlert.classList.remove('hidden');
+    };
+
+    confirmDeleteBtn.addEventListener('click', async () => {
+        if (!purchaseToDelete) return;
+        try {
+            await PurchaseService.deletePurchase(purchaseToDelete);
+            showToast('Purchase deleted', 'success');
+            deleteAlert.classList.add('hidden');
+            fetchData();
+        } catch (error) {
+            console.error(error);
+            showToast('Failed to delete purchase', 'error');
+        }
+    });
 
     // Initial Load
     fetchData();
