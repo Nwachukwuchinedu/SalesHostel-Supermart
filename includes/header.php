@@ -5,7 +5,7 @@
         <div class="container mx-auto flex h-16 items-center justify-between px-4 md:px-6">
             <a href="/" class="flex items-center gap-2">
                 <i data-lucide="shopping-basket" class="h-6 w-6 text-primary"></i>
-                <span class="font-headline text-lg font-semibold bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
+                <span class="font-headline text-lg font-semibold bg-gradient-to-r from-primary to-orange-600 bg-clip-text text-transparent">
                     Shop12mart
                 </span>
             </a>
