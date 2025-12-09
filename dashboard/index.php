@@ -73,8 +73,8 @@
                     <!-- Chart -->
                     <div class="glass-card rounded-xl lg:col-span-4 flex flex-col">
                         <div class="p-6 border-b border-border/50">
-                            <h3 class="font-semibold text-lg">Revenue & Sales Overview</h3>
-                            <p class="text-sm text-muted-foreground">Monthly revenue and sales performance for the current year.</p>
+                            <h3 class="font-semibold text-lg">Revenue Overview</h3>
+                            <p class="text-sm text-muted-foreground">Monthly revenue performance for the current year.</p>
                         </div>
                         <div class="p-6 flex-1 min-h-[350px]">
                             <canvas id="salesChart" width="100%" height="350"></canvas>
@@ -376,57 +376,30 @@
 
         const labels = chartData.map(d => d.name);
         const revenueData = chartData.map(d => d.revenue);
-        const salesData = chartData.map(d => d.sales);
         
         const style = getComputedStyle(document.body);
         const primaryColor = `hsl(${style.getPropertyValue('--primary').trim().split(' ').join(', ')})`;
         const gridColor = `rgba(0,0,0,0.05)`;
 
         new Chart(salesChartCanvas, {
-            type: 'line',
+            type: 'bar',
             data: {
                 labels: labels,
-                datasets: [
-                    {
-                        label: 'Revenue',
-                        data: revenueData,
-                        borderColor: primaryColor,
-                        backgroundColor: 'rgba(59, 130, 246, 0.1)', // Light blue background
-                        borderWidth: 2,
-                        tension: 0.4,
-                        fill: false, // Don't fill area
-                        yAxisID: 'y'
-                    },
-                    {
-                        label: 'Sales Count',
-                        data: salesData,
-                        borderColor: '#f97316', // Orange for sales
-                        backgroundColor: 'rgba(249, 115, 22, 0.1)',
-                        borderWidth: 2,
-                        tension: 0.4,
-                        fill: false,
-                        yAxisID: 'y1'
-                    }
-                ]
+                datasets: [{
+                    label: 'Total Revenue',
+                    data: revenueData,
+                    backgroundColor: primaryColor,
+                    borderRadius: 6,
+                    barThickness: 24,
+                }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                interaction: {
-                    mode: 'index',
-                    intersect: false,
-                },
                 plugins: {
-                    legend: {
-                         display: true,
-                         position: 'top',
-                         labels: {
-                             usePointStyle: true,
-                             boxWidth: 8
-                         }
-                    },
+                    legend: { display: false },
                     tooltip: {
-                        backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                        backgroundColor: 'rgba(255, 255, 255, 0.9)',
                         titleColor: '#000',
                         bodyColor: '#000',
                         borderColor: 'rgba(0,0,0,0.1)',
@@ -435,17 +408,13 @@
                         cornerRadius: 8,
                         titleFont: { size: 14, weight: 'bold' },
                         bodyFont: { size: 13 },
-                        displayColors: true,
+                        displayColors: false,
                         callbacks: {
                             label: function(context) {
                                 let label = context.dataset.label || '';
                                 if (label) label += ': ';
                                 if (context.parsed.y !== null) {
-                                    if (context.dataset.yAxisID === 'y') {
-                                        label += new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN' }).format(context.parsed.y);
-                                    } else {
-                                        label += context.parsed.y;
-                                    }
+                                    label += new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN' }).format(context.parsed.y);
                                 }
                                 return label;
                             }
@@ -458,29 +427,13 @@
                         ticks: { font: { size: 12 } }
                     },
                     y: {
-                        type: 'linear',
-                        display: true,
-                        position: 'left',
                         grid: { color: gridColor, borderDash: [4, 4] },
                         border: { display: false },
                         ticks: {
                             callback: function(value) { return '₦' + value; },
                             font: { size: 11 },
                             padding: 10
-                        },
-                        title: { display: false, text: 'Revenue' }
-                    },
-                    y1: {
-                        type: 'linear',
-                        display: true,
-                        position: 'right',
-                        grid: { drawOnChartArea: false }, // only want the grid lines for one axis to show up
-                        border: { display: false },
-                        ticks: {
-                            font: { size: 11 },
-                            padding: 10
-                        },
-                        title: { display: false, text: 'Sales' }
+                        }
                     }
                 }
             }
