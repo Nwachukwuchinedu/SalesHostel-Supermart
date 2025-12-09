@@ -340,7 +340,7 @@ include 'includes/header.php';
                             <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
                                 <button onclick='addToCart(${JSON.stringify({id: product.id, name: product.name, price: product.sellingPrice, image: product.images[0] || null}).replace(/'/g, "&#39;")})' class="w-full bg-primary text-primary-foreground py-2 rounded-lg font-medium text-sm shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">Add to Cart</button>
                             </div>
-                            ${product.quantityAvailable < 10 ? `<span class="absolute top-2 right-2 bg-red-500 text-white text-[10px] font-bold px-2 py-1 rounded-full">Low Stock</span>` : ''}
+                            ${product.quantityAvailable < 10 ? `<span class="absolute top-2 right-2 bg-red-500 text-white text-[10px] font-bold px-2 py-1 rounded-full">(${product.quantityAvailable} Available)</span>` : ''}
                         </div>
                         <div class="p-4 space-y-2">
                             <div class="flex justify-between items-start">
